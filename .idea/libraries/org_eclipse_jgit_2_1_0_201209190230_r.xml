@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="org.eclipse.jgit-2.1.0.201209190230-r">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jgit/org.eclipse.jgit-2.1.0.201209190230-r.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ini4j/ini4j-0.5.2-patched.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/trilead-ssh2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
