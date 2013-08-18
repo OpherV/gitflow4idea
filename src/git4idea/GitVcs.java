@@ -80,6 +80,7 @@ import git4idea.roots.GitRootDetectInfo;
 import git4idea.roots.GitRootDetector;
 import git4idea.status.GitChangeProvider;
 import git4idea.ui.branch.GitBranchWidget;
+import git4idea.ui.branch.GitFlowWidget;
 import git4idea.update.GitUpdateEnvironment;
 import git4idea.vfs.GitVFSListener;
 import org.jetbrains.annotations.NotNull;
@@ -154,6 +155,7 @@ public class GitVcs extends AbstractVcs<CommittedChangeList> {
   private final GitCommitAndPushExecutor myCommitAndPushExecutor;
   private final GitExecutableValidator myExecutableValidator;
   private GitBranchWidget myBranchWidget;
+  private GitFlowWidget myGitflowWidget;
 
   private GitVersion myVersion = GitVersion.NULL; // version of Git which this plugin uses.
   private static final int MAX_CONSOLE_OUTPUT_SIZE = 10000;
@@ -338,6 +340,10 @@ public class GitVcs extends AbstractVcs<CommittedChangeList> {
     GitProjectLogManager.getInstance(myProject).activate();
 
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    //activate gitflow widget
+    myGitflowWidget = new GitFlowWidget(myProject);
+    DvcsUtil.installStatusBarWidget(myProject, myGitflowWidget);
+
       myBranchWidget = new GitBranchWidget(myProject);
       DvcsUtil.installStatusBarWidget(myProject, myBranchWidget);
     }
@@ -378,6 +384,11 @@ public class GitVcs extends AbstractVcs<CommittedChangeList> {
       DvcsUtil.removeStatusBarWidget(myProject, myBranchWidget);
       myBranchWidget = null;
     }
+
+     if (myGitflowWidget!= null) {
+          DvcsUtil.removeStatusBarWidget(myProject, myGitflowWidget);
+         myGitflowWidget = null;
+     }
     ((GitCommitsSequentialIndex) ServiceManager.getService(GitCommitsSequentially.class)).deactivate();
   }
 

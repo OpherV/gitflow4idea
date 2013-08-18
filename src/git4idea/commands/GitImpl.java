@@ -420,7 +420,7 @@ public class GitImpl implements Git {
   /**
    * Runs the given {@link GitLineHandler} in the current thread and returns the {@link GitCommandResult}.
    */
-  private static GitCommandResult run(@NotNull GitLineHandler handler) {
+  protected static GitCommandResult run(@NotNull GitLineHandler handler) {
     final List<String> errorOutput = new ArrayList<String>();
     final List<String> output = new ArrayList<String>();
     final AtomicInteger exitCode = new AtomicInteger();

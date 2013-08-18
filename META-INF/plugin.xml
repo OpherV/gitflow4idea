@@ -1,10 +1,10 @@
 <idea-plugin>
   <name>Git Integration</name>
-  <id>Git4Idea</id>
+  <id>Gitflow4Idea</id>
   <description>Gitflow!</description>
   <version>8.1</version>
   <category>VCS Integration</category>
-  <vendor url="http://svn.jetbrains.org/idea/Trunk/bundled/git4idea/" logo="/general/ijLogo.png">JetBrains</vendor>
+  <vendor url="http://www.opherv.com" logo="/general/ijLogo.png">Opher Vishnia</vendor>
 
   <depends>com.intellij.modules.vcs</depends>
 
@@ -160,6 +160,8 @@
                         serviceImplementation="git4idea.remote.GitRememberedInputs"/>
     <applicationService serviceInterface="git4idea.commands.Git"
                         serviceImplementation="git4idea.commands.GitImpl"/>
+    <applicationService serviceInterface="git4idea.commands.Gitflow"
+                          serviceImplementation="git4idea.commands.GitflowImpl"/>
 
     <applicationService serviceInterface="git4idea.GitPlatformFacade"
                         serviceImplementation="git4idea.GitPlatformFacadeImpl" />
