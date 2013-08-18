@@ -15,6 +15,8 @@
  */
 package git4idea.ui.branch;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,7 +26,9 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
@@ -33,8 +37,9 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.Consumer;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.ActionGroup;
 import git4idea.GitUtil;
+import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.*;
 import git4idea.config.GitVcsSettings;
@@ -119,10 +124,8 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
             return null;
         }
 
-        DefaultActionGroup popupGroup = new DefaultActionGroup(null, false);
-        popupGroup.addAction(new StartFeatureAction(myProject));
-        popupGroup.addAction(new FinishFeatureAction(myProject));
-        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
+        ActionGroup popupGroup = new GitflowActions(project).getActions();
+        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
                 null, null);
 
         return listPopup;
@@ -191,54 +194,5 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
             return text + "\n" + "Root: " + repo.getRoot().getName();
         }
         return text;
-    }
-
-
-
-
-    private static class StartFeatureAction extends DumbAwareAction {
-        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        private final Project myProject;
-        GitRepository repo;
-        ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
-
-        StartFeatureAction(@NotNull Project project) {
-            super("Start Feature");
-            myProject = project;
-
-            repo = GitBranchUtil.getCurrentRepository(myProject);
-            repos.add(repo);
-        }
-
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-
-            GitCommandResult res;
-
-           String featureName = Messages.showInputDialog(myProject, "Enter the name of new feature:", "New Feature", Messages.getQuestionIcon(), "",
-                    GitNewBranchNameValidator.newInstance(repos));
-
-            if (featureName!=null){
-               res=  myGitflow.startFeature(repo,featureName,null);
-            }
-
-        }
-
-    }
-
-    private static class FinishFeatureAction extends DumbAwareAction {
-        Gitflow myGitflow = (Gitflow) ServiceManager.getService(Git.class);
-        private final Project myProject;
-
-        FinishFeatureAction(@NotNull Project project) {
-            super("Finish Feature");
-            myProject = project;
-        }
-
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-
-        }
-
     }
 }

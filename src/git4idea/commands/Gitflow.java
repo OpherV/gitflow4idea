@@ -2,6 +2,7 @@ package git4idea.commands;
 
 import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -14,8 +15,16 @@ import java.util.List;
  */
 public interface Gitflow extends Git {
 
+    public GitCommandResult initRepo(@NotNull GitRepository repository,
+                                     @Nullable GitLineHandlerListener... listeners);
+
     GitCommandResult startFeature(@NotNull GitRepository repository,
                                   @NotNull String featureName,
-                                  @NotNull GitLineHandlerListener... listeners);
+                                  @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult finishFeature(@NotNull GitRepository repository,
+                                  @NotNull String featureName,
+                                  @Nullable GitLineHandlerListener... listeners);
+
 
 }

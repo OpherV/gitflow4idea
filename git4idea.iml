@@ -8,9 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="resources" />
     <orderEntry type="library" name="org.eclipse.jgit-2.1.0.201209190230-r" level="project" />
     <orderEntry type="module" module-name="rt" />
-    <orderEntry type="module" module-name="resources" />
   </component>
 </module>
 
