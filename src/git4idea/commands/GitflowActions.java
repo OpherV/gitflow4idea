@@ -10,11 +10,16 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
+import git4idea.GitUtil;
 import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
+import git4idea.repo.GitRepositoryManager;
+import git4idea.ui.GitflowBranchChooseDialog;
+import git4idea.ui.branch.GitMultiRootBranchConfig;
 import git4idea.validators.GitNewBranchNameValidator;
 import org.jetbrains.annotations.NotNull;
+
 
 import java.util.ArrayList;
 
@@ -41,6 +46,8 @@ public class GitflowActions {
         actionGroup.addSeparator();
         actionGroup.add(new StartFeatureAction(myProject));
         actionGroup.add(new FinishFeatureAction(myProject));
+        actionGroup.addSeparator();
+        actionGroup.add(new PullFeatureAction(myProject));
 
         return actionGroup;
     }
@@ -65,7 +72,8 @@ public class GitflowActions {
             repos.add(repo);
 
             GitCommandResult res;
-            res=  myGitflow.initRepo(repo, new lineHandler().init(myProject));
+            res=  myGitflow.initRepo(repo, new gitFlowErrorsListener().init(myProject),
+                                           new lineHandler().init(myProject));
 
         }
 
@@ -138,16 +146,44 @@ public class GitflowActions {
 
     }
 
+    private static class PullFeatureAction extends DumbAwareAction{
+        private final Project myProject;
+        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
+        GitRepositoryManager myRepositoryManager;
+        GitMultiRootBranchConfig myMultiRootBranchConfig;
+
+        PullFeatureAction(@NotNull Project project){
+            super("Pull Feature");
+            myProject = project;
+            GitRepositoryManager myRepositoryManager = GitUtil.getRepositoryManager(myProject);
+            myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+
+            ArrayList<String> remoteBranches = new ArrayList<String>(myMultiRootBranchConfig.getRemoteBranches());
+            if (remoteBranches.isEmpty()){
+                GitflowBranchChooseDialog branchChoose = new GitflowBranchChooseDialog(myProject,remoteBranches);
+                branchChoose.show();
+            }
+            else{
+                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "No remote branches", NotificationType.ERROR).notify(myProject);
+            }
+
+        }
+    }
+
 
     private static class gitFlowErrorsListener extends gitflowLineHandler{
 
         @Override
         public void onLineAvailable(String line, Key outputType) {
             if (line.contains("'flow' is not a git command")){
-                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Gitflow is not installed", NotificationType.WARNING).notify(myProject);
+                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Gitflow is not installed", NotificationType.ERROR).notify(myProject);
             }
             if (line.contains("Not a gitflow-enabled repo yet")){
-                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Not a gitflow-enabled repo yet. Please init git flow", NotificationType.WARNING).notify(myProject);
+                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Not a gitflow-enabled repo yet. Please init git flow", NotificationType.ERROR).notify(myProject);
             }
         }
 

@@ -82,7 +82,7 @@ public class GitMultiRootBranchConfig {
   }  
 
   @NotNull
-  Collection<String> getRemoteBranches() {
+  public Collection<String> getRemoteBranches() {
     return getCommonBranches(false);
   }
 
