@@ -160,8 +160,8 @@
                         serviceImplementation="git4idea.remote.GitRememberedInputs"/>
     <applicationService serviceInterface="git4idea.commands.Git"
                         serviceImplementation="git4idea.commands.GitImpl"/>
-    <applicationService serviceInterface="git4idea.commands.Gitflow"
-                          serviceImplementation="git4idea.commands.GitflowImpl"/>
+    <applicationService serviceInterface="git4idea.gitflow.Gitflow"
+                          serviceImplementation="git4idea.gitflow.GitflowImpl"/>
 
     <applicationService serviceInterface="git4idea.GitPlatformFacade"
                         serviceImplementation="git4idea.GitPlatformFacadeImpl" />

@@ -1,5 +1,6 @@
-package git4idea.commands;
+package git4idea.gitflow;
 
+import git4idea.commands.*;
 import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: 8/18/13
  * Time: 6:15 PM
  */
-public class GitflowImpl extends GitImpl implements Gitflow{
+public class GitflowImpl extends GitImpl implements Gitflow {
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      @Nullable GitLineHandlerListener... listeners) {

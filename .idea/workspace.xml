@@ -8,8 +8,8 @@
     <ignored path="git4idea.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/plugin.xml" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376837566268" ignored="false" />
-    <file path="/a.dummy" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376924721599" ignored="false" />
-    <file path="/GitFlowWidget.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376855169790" ignored="false" />
+    <file path="/a.dummy" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1377012749236" ignored="false" />
+    <file path="/GitFlowWidget.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1377001342405" ignored="false" />
     <file path="/Dummy.txt" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376810780799" ignored="false" />
     <file path="/GitVcs.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376734580398" ignored="false" />
     <file path="/java.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376734868659" ignored="false" />
@@ -20,10 +20,13 @@
     <file path="/GitflowImp.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376839006143" ignored="false" />
     <file path="/GitflowImpl.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376913256267" ignored="false" />
     <file path="/FocusManagerImpl.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376849310601" ignored="false" />
-    <file path="/GitflowActions.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376925411250" ignored="false" />
+    <file path="/GitflowActions.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1377013004091" ignored="false" />
     <file path="/GitFlowBranchChooseDialog.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376920423857" ignored="false" />
     <file path="/GitMultiRootBranchConfig.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376923706946" ignored="false" />
     <file path="/GitflowBranchChooseDialog.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376925095416" ignored="false" />
+    <file path="/GitflowConfigUtil.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376999099164" ignored="false" />
+    <file path="/BranchUtil.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1376994773104" ignored="false" />
+    <file path="/ConfigUtil.java" changelist="407dd753-1b7a-42f0-af2f-6f32277739da" time="1377008067241" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,74 +93,75 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GitflowActions.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/git4idea/commands/GitflowActions.java">
+      <file leaf-file-name="GitflowActions.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/gitflow/GitflowActions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="180" column="20" selection-start="6358" selection-end="6358" vertical-scroll-proportion="-15.68">
+            <state line="161" column="0" selection-start="5543" selection-end="5543" vertical-scroll-proportion="1.336299">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1893#1908#0" expanded="true" />
-                <element signature="e#5771#5779#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GitResetDialog.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitResetDialog.java">
+      <file leaf-file-name="ConfigUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/gitflow/ConfigUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="149" column="18" selection-start="4181" selection-end="4188" vertical-scroll-proportion="-5.1">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1128#1166#0" expanded="true" />
-                <element signature="e#1246#1285#0" expanded="true" />
-                <element signature="e#1363#1401#0" expanded="true" />
-                <element signature="e#2423#2457#0" expanded="true" />
-                <element signature="e#2480#2515#0" expanded="true" />
-                <element signature="e#2909#2991#0" expanded="true" />
-                <element signature="e#2984#2985#0" expanded="true" />
-                <element signature="e#3129#3172#0" expanded="true" />
-              </folding>
+            <state line="27" column="48" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GitflowBranchChooseDialog.form" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.form">
-          <provider selected="true" editor-type-id="ui-designer">
-            <state />
+      <file leaf-file-name="GitFlowWidget.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitFlowWidget.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="180" column="47" selection-start="5731" selection-end="5731" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GitflowImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/gitflow/GitflowImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="61" selection-start="830" selection-end="830" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GitConfigUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/config/GitConfigUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="114" column="31" selection-start="3976" selection-end="3984" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="GitflowBranchChooseDialog.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="56" selection-start="701" selection-end="701" vertical-scroll-proportion="-14.92">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="13" column="79" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GitBranchPopup.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitBranchPopup.java">
+      <file leaf-file-name="GitBranchWidget.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitBranchWidget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="37" selection-start="2580" selection-end="2580" vertical-scroll-proportion="-3.2">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3850#4734#0" expanded="true" />
-                <element signature="e#3863#3873#0" expanded="true" />
-                <element signature="e#4727#4728#0" expanded="true" />
-              </folding>
+            <state line="50" column="12" selection-start="2086" selection-end="2101" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GitMultiRootBranchConfig.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitMultiRootBranchConfig.java">
+      <file leaf-file-name="GitBranchWorker.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/git4idea/branch/GitBranchWorker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="48" selection-start="2519" selection-end="2519" vertical-scroll-proportion="-10.88">
+            <state line="170" column="6" selection-start="7571" selection-end="7591" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -181,22 +185,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/git4idea/commands/GitImpl.java" />
-        <option value="$PROJECT_DIR$/src/git4idea/ui/branch/GitFlowPopup.java" />
-        <option value="$PROJECT_DIR$/src/git4idea/commands/GitCommand.java" />
-        <option value="$PROJECT_DIR$/../intellij-community-idea-129.713/platform/platform-impl/src/com/intellij/openapi/wm/impl/FocusManagerImpl.java" />
-        <option value="$PROJECT_DIR$/src/git4idea/GitVcs.java" />
-        <option value="$PROJECT_DIR$/src/git4idea/ui/branch/GitFlowWidget.java" />
         <option value="$PROJECT_DIR$/src/git4idea/commands/Gitflow.java" />
         <option value="$PROJECT_DIR$/src/git4idea/commands/GitflowImpl.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/GitFlowBranchChooseDialog.form" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/GitFlowBranchChooseDialog.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/branch/GitBranchPopup.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/branch/GitMultiRootBranchConfig.java" />
-        <option value="$PROJECT_DIR$/src/git4idea/commands/GitflowActions.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/GitResetDialog.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.java" />
         <option value="$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.form" />
+        <option value="$PROJECT_DIR$/src/git4idea/config/GitflowConfigUtil.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/gitflow/GitflowConfigUtil.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/commands/GitflowActions.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/gitflow/BranchUtil.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/ui/branch/GitFlowWidget.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/gitflow/ConfigUtil.java" />
+        <option value="$PROJECT_DIR$/src/git4idea/gitflow/GitflowActions.java" />
       </list>
     </option>
   </component>
@@ -232,7 +236,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -380,7 +383,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" />
+              <option name="myItemId" value="GitflowBranchChooseDialog" />
               <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -402,12 +405,74 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
+              <option name="myItemId" value="gitflow" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gitflow4idea" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="GitflowBranchChooseDialog" />
-              <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gitflow4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gitflow4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="git4idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="branch" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -426,6 +491,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -443,12 +509,12 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -468,19 +534,6 @@
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -508,6 +561,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -620,25 +686,25 @@
     <frame x="-9" y="-9" width="1938" height="1050" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32977587" sideWeight="0.5950226" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32973504" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32977587" sideWeight="0.5950226" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2760181" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924226" sideWeight="0.59706545" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40497738" sideWeight="0.52454644" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40497738" sideWeight="0.4754536" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23959444" sideWeight="0.27149323" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29185522" sideWeight="0.52435315" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2697517" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23959444" sideWeight="0.27149323" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37443438" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32918552" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5950226" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23959444" sideWeight="0.5950226" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23959444" sideWeight="0.7081448" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924226" sideWeight="0.59706545" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26923078" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -709,133 +775,102 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitRepositoryComboboxListCellRenderer.java">
+    <entry file="file://$PROJECT_DIR$/src/git4idea/history/browser/GitProjectLogManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="13" selection-start="1071" selection-end="1071" vertical-scroll-proportion="0.32922536">
+        <state line="116" column="29" selection-start="4712" selection-end="4712" vertical-scroll-proportion="0.3462185" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/stash/GitShelveUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="76" selection-start="5504" selection-end="5504" vertical-scroll-proportion="-20.56" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/openapi/vcs/changes/VcsAnnotationRefresher.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="17" selection-start="179" selection-end="179" vertical-scroll-proportion="0.14190318" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/branch/GitBranchUiHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="10" selection-start="1530" selection-end="1530" vertical-scroll-proportion="0.25714287">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitTagDialog.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
+    <entry file="file://$PROJECT_DIR$/src/git4idea/repo/GitRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="160" column="7" selection-start="5421" selection-end="5421" vertical-scroll-proportion="0.6983871" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/branch/GitBranchUtil.java">
+    <entry file="file://$PROJECT_DIR$/src/git4idea/gitflow/ConfigUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="61" selection-start="7485" selection-end="7485" vertical-scroll-proportion="-6.147163">
+        <state line="27" column="48" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitFlowWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="180" column="47" selection-start="5731" selection-end="5731" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/repo/GitRepositoryChangeListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="17" selection-start="816" selection-end="816" vertical-scroll-proportion="0.25714287" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/annotate/GitRepositoryForAnnotationsListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="72" selection-start="1844" selection-end="1857" vertical-scroll-proportion="0.71777004" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/repo/GitRepositoryUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="23" selection-start="3160" selection-end="3160" vertical-scroll-proportion="0.6319328" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/repo/GitRepositoryManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="7" selection-start="2103" selection-end="2103" vertical-scroll-proportion="1.0571429">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/git4idea/actions/GitMerge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="26" selection-start="2982" selection-end="2989" vertical-scroll-proportion="0.55263156" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitBranchWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="55" selection-start="3269" selection-end="3269" vertical-scroll-proportion="-18.04">
+        <state line="50" column="12" selection-start="2086" selection-end="2101" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitBranchPopup.java">
+    <entry file="file://$PROJECT_DIR$/src/git4idea/branch/GitBrancherImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="37" selection-start="2580" selection-end="2580" vertical-scroll-proportion="-3.2">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3850#4734#0" expanded="true" />
-            <element signature="e#3863#3873#0" expanded="true" />
-            <element signature="e#4727#4728#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/branch/GitMultiRootBranchConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="48" selection-start="2519" selection-end="2519" vertical-scroll-proportion="-10.88">
+        <state line="51" column="37" selection-start="1827" selection-end="1827" vertical-scroll-proportion="-4.76">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/actions/GitResetHead.java">
+    <entry file="file://$PROJECT_DIR$/src/git4idea/branch/GitBranchWorker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="29" selection-start="1658" selection-end="1658" vertical-scroll-proportion="-16.4">
+        <state line="170" column="6" selection-start="7571" selection-end="7591" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_25/jre/lib/rt.jar!/javax/swing/JComponent.class">
+    <entry file="file://$PROJECT_DIR$/src/git4idea/gitflow/GitflowActions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="22" selection-start="163" selection-end="163" vertical-scroll-proportion="0.13843648">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/notification/NotificationType.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="12" selection-start="167" selection-end="167" vertical-scroll-proportion="0.17">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/ui/popup/PopupFactoryImpl.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="251" column="0" selection-start="21370" selection-end="21370" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/GitContentRevision.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="10" selection-start="3390" selection-end="3390" vertical-scroll-proportion="2.3978946">
+        <state line="161" column="0" selection-start="5543" selection-end="5543" vertical-scroll-proportion="1.336299">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitResetDialog.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/commands/GitflowActions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="180" column="20" selection-start="6358" selection-end="6358" vertical-scroll-proportion="-15.68">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1893#1908#0" expanded="true" />
-            <element signature="e#5771#5779#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="56" selection-start="701" selection-end="701" vertical-scroll-proportion="-14.92">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitResetDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="149" column="18" selection-start="4181" selection-end="4188" vertical-scroll-proportion="-5.1">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1128#1166#0" expanded="true" />
-            <element signature="e#1246#1285#0" expanded="true" />
-            <element signature="e#1363#1401#0" expanded="true" />
-            <element signature="e#2423#2457#0" expanded="true" />
-            <element signature="e#2480#2515#0" expanded="true" />
-            <element signature="e#2909#2991#0" expanded="true" />
-            <element signature="e#2984#2985#0" expanded="true" />
-            <element signature="e#3129#3172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/git4idea/ui/GitflowBranchChooseDialog.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
       </provider>
     </entry>
   </component>

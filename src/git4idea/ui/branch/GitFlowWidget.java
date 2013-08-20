@@ -15,43 +15,27 @@
  */
 package git4idea.ui.branch;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.Consumer;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import git4idea.GitUtil;
-import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
-import git4idea.commands.*;
 import git4idea.config.GitVcsSettings;
+import git4idea.gitflow.GitflowActions;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
-import git4idea.validators.GitNewBranchNameValidator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import git4idea.gitflow.BranchUtil;
 
 import java.awt.event.MouseEvent;
 
@@ -133,7 +117,7 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
 
     @Override
     public String getSelectedValue() {
-        return "Gitflow";
+        return myText;
     }
 
     @NotNull
@@ -174,7 +158,10 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
                 }
 
                 int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
-                myText = StringUtil.shortenTextWithEllipsis(GitBranchUtil.getDisplayableBranchText(repo), maxLength, 5);
+
+                boolean hasGitflow = BranchUtil.hasGitflow(project);
+
+                myText = hasGitflow ? "Gitflow": "No Gitflow";
                 myTooltip = getDisplayableBranchTooltip(repo);
                 myStatusBar.updateWidget(ID());
                 mySettings.setRecentRoot(repo.getRoot().getPath());
