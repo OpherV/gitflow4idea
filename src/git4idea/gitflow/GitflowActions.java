@@ -15,20 +15,16 @@ import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
-import git4idea.gitflow.Gitflow;
 import git4idea.repo.GitRepository;
-import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.repo.GitRepositoryManager;
-import git4idea.stash.GitStashUtils;
-import git4idea.ui.GitflowBranchChooseDialog;
+import git4idea.gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
 import git4idea.validators.GitNewBranchNameValidator;
-import git4idea.gitflow.BranchUtil;
 import org.jetbrains.annotations.NotNull;
 
 
-import javax.swing.event.ChangeEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -63,10 +59,11 @@ public class GitflowActions {
             //feature only actions
             if (BranchUtil.isCurrentbranchFeature(myProject)){
                 actionGroup.add(new FinishFeatureAction(myProject));
+                actionGroup.add(new PublishFeatureAction().init(myProject));
             }
             actionGroup.addSeparator();
 
-            actionGroup.add(new PullFeatureAction(myProject));
+            actionGroup.add(new PullFeatureAction().init(myProject));
         }
         return actionGroup;
     }
@@ -151,11 +148,10 @@ public class GitflowActions {
         public void actionPerformed(AnActionEvent e) {
             GitCommandResult res;
             GitRepository repo = GitBranchUtil.getCurrentRepository(myProject);
-            String currentBranch = GitBranchUtil.getBranchNameOrRev(repo);
-            if (currentBranch.isEmpty()==false){
+            String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+            if (currentBranchName.isEmpty()==false){
 
-                String featurePrefix=ConfigUtil.getFeaturePrefix(myProject);
-                String featureName = currentBranch.replace(featurePrefix,"");
+                String featureName = ConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
                 res=  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener().init(myProject) );
                 repo.update();
             }
@@ -164,31 +160,79 @@ public class GitflowActions {
 
     }
 
-    private static class PullFeatureAction extends DumbAwareAction{
-        private final Project myProject;
-        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        GitRepositoryManager myRepositoryManager;
-        GitMultiRootBranchConfig myMultiRootBranchConfig;
+    private static class PublishFeatureAction extends GitFlowAction{
+        PublishFeatureAction(){
+            super("Publish Feature");
+        }
 
-        PullFeatureAction(@NotNull Project project){
+        @Override
+        public void actionPerformed(AnActionEvent anActionEvent) {
+            String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,currentBranchName);
+            myGitflow.publishFeature(repo,featureName,new gitFlowErrorsListener().init(myProject));
+        }
+    }
+
+    private static class PullFeatureAction extends GitFlowAction{
+
+        PullFeatureAction(){
             super("Pull Feature");
-            myProject = project;
-            GitRepositoryManager myRepositoryManager = GitUtil.getRepositoryManager(myProject);
-            myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
         }
 
         @Override
         public void actionPerformed(AnActionEvent e) {
 
+            String featurePrefix = ConfigUtil.getFeaturePrefix(myProject);
+
             ArrayList<String> remoteBranches = new ArrayList<String>(myMultiRootBranchConfig.getRemoteBranches());
-            if (remoteBranches.isEmpty()){
-                GitflowBranchChooseDialog branchChoose = new GitflowBranchChooseDialog(myProject,remoteBranches);
+            ArrayList<String> remoteFeatureBranches = new ArrayList<String>();
+
+            //get only the branches with the proper prefix
+            for(Iterator<String> i = remoteBranches.iterator(); i.hasNext(); ) {
+                String item = i.next();
+                if (item.contains(featurePrefix)){
+                    remoteFeatureBranches.add(item);
+                }
+            }
+
+            if (remoteBranches.size()>0){
+                GitflowBranchChooseDialog branchChoose = new GitflowBranchChooseDialog(myProject,remoteFeatureBranches);
+
                 branchChoose.show();
+                if (branchChoose.isOK()){
+                    String branchName= branchChoose.getSelectedBranchName();
+                    String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,branchName);
+                    String remoteName=ConfigUtil.getRemoteNameFromBranch(myProject,branchName);
+                    myGitflow.pullFeature(repo,featureName, remoteName, new gitFlowErrorsListener().init(myProject));
+                }
             }
             else{
                 new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "No remote branches", NotificationType.ERROR).notify(myProject);
             }
 
+        }
+    }
+
+
+    private static abstract class GitFlowAction extends DumbAwareAction{
+        protected Project myProject;
+        protected Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
+        protected GitRepositoryManager myRepositoryManager;
+        protected GitMultiRootBranchConfig myMultiRootBranchConfig;
+        protected GitRepository repo;
+        protected String currentBranchName;
+
+        GitFlowAction(String featureName){
+            super(featureName);
+        }
+
+        protected GitFlowAction init(@NotNull Project project){
+            myProject = project;
+            myRepositoryManager = GitUtil.getRepositoryManager(myProject);
+            myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
+            repo = GitBranchUtil.getCurrentRepository(myProject);
+            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
+
+            return this;
         }
     }
 

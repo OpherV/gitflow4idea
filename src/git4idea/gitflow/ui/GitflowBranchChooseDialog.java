@@ -1,4 +1,4 @@
-package git4idea.ui;
+package git4idea.gitflow.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -13,13 +13,13 @@ public class GitflowBranchChooseDialog extends DialogWrapper {
     private JList branchList;
 
 
-    public GitflowBranchChooseDialog(Project project, List<String> branchList) {
+    public GitflowBranchChooseDialog(Project project, List<String> branchNames) {
         super(project, true);
 
         setModal(true);
 
         setTitle("Choose Branch");
-        branchList.addAll(branchList);
+        branchList.setListData(branchNames.toArray());
 
         init();
     }
@@ -28,5 +28,9 @@ public class GitflowBranchChooseDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         return contentPane;
+    }
+
+    public String getSelectedBranchName(){
+        return branchList.getSelectedValue().toString();
     }
 }

@@ -59,4 +59,39 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
+
+    public GitCommandResult publishFeature(@NotNull GitRepository repository,
+                                          @NotNull String featureName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("feature");
+        h.addParameters("publish");
+        h.addParameters(featureName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult pullFeature(@NotNull GitRepository repository,
+                                           @NotNull String featureName,
+                                           @NotNull String remoteName,
+                                           @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("feature");
+        h.addParameters("pull");
+        h.addParameters(remoteName);
+        h.addParameters(featureName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
 }

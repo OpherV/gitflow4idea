@@ -54,6 +54,16 @@ public class ConfigUtil {
         return featurePrefix;
     }
 
+    public static String getFeatureNameFromBranch(Project project, String branchName){
+        String featurePrefix=ConfigUtil.getFeaturePrefix(project);
+        return branchName.substring(branchName.indexOf(featurePrefix)+featurePrefix.length(),branchName.length());
+    }
+
+
+    public static String getRemoteNameFromBranch(Project project, String branchName){
+        return branchName.substring(0,branchName.indexOf("/"));
+    }
+
 
 
 }
