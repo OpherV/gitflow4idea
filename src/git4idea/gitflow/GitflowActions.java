@@ -6,6 +6,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -105,34 +107,31 @@ public class GitflowActions {
 
     }
 
-    private static class StartFeatureAction extends DumbAwareAction {
-        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        private final Project myProject;
-        GitRepository repo;
+    private static class StartFeatureAction extends GitFlowAction {
         ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
 
         StartFeatureAction(@NotNull Project project) {
             super("Start Feature");
-            myProject = project;
-
-            repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
         }
 
         @Override
         public void actionPerformed(AnActionEvent e) {
-            GitCommandResult res;
 
             String featureName = Messages.showInputDialog(myProject, "Enter the name of new feature:", "New Feature", Messages.getQuestionIcon(), "",
                     GitNewBranchNameValidator.newInstance(repos));
 
             if (featureName!=null){
-                res=  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener().init(myProject) );
-                repo.update();
+                runAsync("Starting new feature",featureName);
             }
 
         }
 
+        @Override
+        protected void asyncTask() {
+            GitCommandResult res=  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener().init(myProject) );
+            repo.update();
+        }
     }
 
     private static class FinishFeatureAction extends DumbAwareAction {
@@ -233,6 +232,17 @@ public class GitflowActions {
             currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
 
             return this;
+        }
+
+        protected void asyncTask(){}
+
+        protected void runAsync(String title){
+            new Task.Backgroundable(myProject,title,false){
+                @Override
+                public void run(@NotNull ProgressIndicator indicator) {
+                    asyncTask();
+                }
+            }.queue();
         }
     }
 
