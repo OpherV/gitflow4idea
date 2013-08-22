@@ -27,6 +27,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
+
+    //feature
+
     public GitCommandResult startFeature(@NotNull GitRepository repository,
                                          @NotNull String featureName,
                                          @Nullable GitLineHandlerListener... listeners) {
@@ -93,5 +96,74 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
         return run(h);
     }
+
+
+    //release
+
+    public GitCommandResult startRelease(@NotNull GitRepository repository,
+                                         @NotNull String releaseName,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("release");
+        h.addParameters("start");
+        h.addParameters(releaseName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult finishRelease(@NotNull GitRepository repository,
+                                          @NotNull String releaseName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("release");
+        h.addParameters("finish");
+        h.addParameters(releaseName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+
+    public GitCommandResult publishRelease(@NotNull GitRepository repository,
+                                           @NotNull String releaseName,
+                                           @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("release");
+        h.addParameters("publish");
+        h.addParameters(releaseName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult trackRelease(@NotNull GitRepository repository,
+                                        @NotNull String releaseName,
+                                        @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitCommand.FLOW);
+        h.setSilent(false);
+
+        h.addParameters("release");
+        h.addParameters("track");
+        h.addParameters(releaseName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
 
 }

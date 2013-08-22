@@ -21,7 +21,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
@@ -32,10 +31,10 @@ import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.config.GitVcsSettings;
 import git4idea.gitflow.GitflowActions;
+import git4idea.gitflow.GitflowBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import org.jetbrains.annotations.NotNull;
-import git4idea.gitflow.BranchUtil;
 
 import java.awt.event.MouseEvent;
 
@@ -160,7 +159,7 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
 
                 actions = new GitflowActions(project);
 
-                boolean hasGitflow = BranchUtil.hasGitflow(project);
+                boolean hasGitflow = actions.hasGitflow();
 
                 myText = hasGitflow ? "Gitflow": "No Gitflow";
                 myTooltip = getDisplayableBranchTooltip(repo);

@@ -68,9 +68,29 @@ public class ConfigUtil {
         return featurePrefix;
     }
 
+    public static String getReleasePrefix(Project project){
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        String releasePrefix=null;
+
+        try{
+            releasePrefix = GitConfigUtil.getValue(project,root,PREFIX_RELEASE);
+        }
+        catch (VcsException e) {
+            GitUIUtil.notifyError(project,"Config error",null,false,e);
+        }
+        return releasePrefix;
+    }
+
     public static String getFeatureNameFromBranch(Project project, String branchName){
         String featurePrefix=ConfigUtil.getFeaturePrefix(project);
         return branchName.substring(branchName.indexOf(featurePrefix)+featurePrefix.length(),branchName.length());
+    }
+
+    public static String getReleaseNameFromBranch(Project project, String branchName){
+        String releasePrefix=ConfigUtil.getReleasePrefix(project);
+        return branchName.substring(branchName.indexOf(releasePrefix) + releasePrefix.length(), branchName.length());
     }
 
 

@@ -21,6 +21,9 @@ public interface Gitflow extends Git {
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      @Nullable GitLineHandlerListener... listeners);
 
+
+    // feature
+
     GitCommandResult startFeature(@NotNull GitRepository repository,
                                   @NotNull String featureName,
                                   @Nullable GitLineHandlerListener... listeners);
@@ -38,5 +41,25 @@ public interface Gitflow extends Git {
                                     @NotNull String remoteName,
                                     @Nullable GitLineHandlerListener... listeners);
 
+
+    //release
+
+    GitCommandResult startRelease(@NotNull GitRepository repository,
+                                  @NotNull String releaseName,
+                                  @Nullable GitLineHandlerListener... listeners);
+
+
+    GitCommandResult finishRelease(@NotNull GitRepository repository,
+                                   @NotNull String releaseName,
+                                   @Nullable GitLineHandlerListener... listeners);
+
+
+    GitCommandResult publishRelease(@NotNull GitRepository repository,
+                                    @NotNull String releaseName,
+                                    @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult trackRelease(@NotNull GitRepository repository,
+                                 @NotNull String releaseName,
+                                 @Nullable GitLineHandlerListener... listeners);
 
 }
