@@ -6,13 +6,13 @@ import com.intellij.openapi.project.Project;
 import git4idea.branch.GitBranchUtil;
 import git4idea.config.GitConfigUtil;
 import git4idea.repo.GitRepository;
+import git4idea.util.GitUIUtil;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Opher
+ * User: OpherV
  * Date: 8/20/13
  * Time: 12:39 PM
- * To change this template use File | Settings | File Templates.
  */
 public class ConfigUtil {
 
@@ -27,16 +27,30 @@ public class ConfigUtil {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
         VirtualFile root = repo.getRoot();
 
-
         String masterBranch=null;
         try{
             masterBranch = GitConfigUtil.getValue(project, root, BRANCH_MASTER);
         }
         catch (VcsException e) {
-
+            GitUIUtil.notifyError(project,"Config error",null,false,e);
         }
 
         return masterBranch;
+    }
+
+    public static String getDevelopBranch(Project project){
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        String developBranch=null;
+        try{
+            developBranch = GitConfigUtil.getValue(project, root, BRANCH_DEVELOP);
+        }
+        catch (VcsException e) {
+            GitUIUtil.notifyError(project,"Config error",null,false,e);
+        }
+
+        return developBranch;
     }
 
     public static String getFeaturePrefix(Project project){
@@ -49,7 +63,7 @@ public class ConfigUtil {
             featurePrefix = GitConfigUtil.getValue(project,root,PREFIX_FEATURE);
         }
         catch (VcsException e) {
-
+            GitUIUtil.notifyError(project,"Config error",null,false,e);
         }
         return featurePrefix;
     }

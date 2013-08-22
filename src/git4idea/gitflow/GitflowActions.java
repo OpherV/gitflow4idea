@@ -21,6 +21,7 @@ import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import git4idea.gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
+import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,48 +40,67 @@ import java.util.Iterator;
  */
 public class GitflowActions {
     Project myProject;
+    Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
+    GitRepositoryManager myRepositoryManager;
+    GitMultiRootBranchConfig myMultiRootBranchConfig;
+    GitRepository repo;
+    String currentBranchName;
+
+    String featurePrefix;
+    String masterBranch;
+    String developBranch;
 
     public GitflowActions(@NotNull Project project){
         myProject=project;
+
+
+        myRepositoryManager = GitUtil.getRepositoryManager(myProject);
+        myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
+        repo = GitBranchUtil.getCurrentRepository(myProject);
+        if (repo!=null){
+            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
+        }
+
+        featurePrefix = ConfigUtil.getFeaturePrefix(myProject);
+        masterBranch= ConfigUtil.getMasterBranch(myProject);
+        developBranch= ConfigUtil.getDevelopBranch(myProject);
     }
 
 
     public ActionGroup getActions(){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(myProject);
+//        GitRepository repo = GitBranchUtil.getCurrentRepository(myProject);
 
 
         DefaultActionGroup actionGroup= new DefaultActionGroup(null, false);
 
         //gitflow not setup
         if (BranchUtil.hasGitflow(myProject)!=true){
-            actionGroup.add(new InitRepo(myProject));
+            actionGroup.add(new InitRepo());
         }
         else{
-            actionGroup.add(new StartFeatureAction(myProject));
+
+            actionGroup.addSeparator("Feature Actions");
+            actionGroup.add(new StartFeatureAction());
 
             //feature only actions
             if (BranchUtil.isCurrentbranchFeature(myProject)){
-                actionGroup.add(new FinishFeatureAction(myProject));
-                actionGroup.add(new PublishFeatureAction().init(myProject));
-            }
-            actionGroup.addSeparator();
+                actionGroup.add(new FinishFeatureAction());
 
-            actionGroup.add(new PullFeatureAction().init(myProject));
+                //can't publish feature if it's already published
+                if (BranchUtil.isCurrentFeaturePublished(myProject)==false){
+                    actionGroup.add(new PublishFeatureAction());
+                }
+            }
+            actionGroup.add(new PullFeatureAction());
         }
         return actionGroup;
     }
 
-    private static class InitRepo extends DumbAwareAction {
-        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        private final Project myProject;
-        GitRepository repo;
+    private class InitRepo extends DumbAwareAction {
         ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
 
-        InitRepo(@NotNull Project project) {
+        InitRepo() {
             super("Init Repo");
-            myProject = project;
-
-            repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
         }
 
@@ -89,9 +109,22 @@ public class GitflowActions {
             repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
 
-            GitCommandResult res;
-            res=  myGitflow.initRepo(repo, new gitFlowErrorsListener().init(myProject),
-                                           new lineHandler().init(myProject));
+
+            new Task.Backgroundable(myProject,"Initializing repo",false){
+                @Override
+                public void run(@NotNull ProgressIndicator indicator) {
+                    GitCommandResult res;
+                    res=  myGitflow.initRepo(repo, new gitFlowErrorsListener(),
+                            new lineHandler());
+
+                    String publishedFeatureMessage = String.format("Initialized gitflow repo");
+
+                    GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
+
+                    repo.update();
+                }
+            }.queue();
+
 
         }
 
@@ -107,10 +140,10 @@ public class GitflowActions {
 
     }
 
-    private static class StartFeatureAction extends GitFlowAction {
-        ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
+    private class StartFeatureAction extends DumbAwareAction {
+        private ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
 
-        StartFeatureAction(@NotNull Project project) {
+        StartFeatureAction() {
             super("Start Feature");
             repos.add(repo);
         }
@@ -118,60 +151,83 @@ public class GitflowActions {
         @Override
         public void actionPerformed(AnActionEvent e) {
 
-            String featureName = Messages.showInputDialog(myProject, "Enter the name of new feature:", "New Feature", Messages.getQuestionIcon(), "",
+            final String featureName = Messages.showInputDialog(myProject, "Enter the name of new feature:", "New Feature", Messages.getQuestionIcon(), "",
                     GitNewBranchNameValidator.newInstance(repos));
 
             if (featureName!=null){
-                runAsync("Starting new feature",featureName);
+                    new Task.Backgroundable(myProject,"Starting feature "+featureName,false){
+                        @Override
+                        public void run(@NotNull ProgressIndicator indicator) {
+                            GitCommandResult res=  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener());
+                            repo.update();
+
+                            String startedFeatureMessage = String.format("A new branch '%s/%s' was created, based on '%s'", featurePrefix, featureName, developBranch);
+                            GitUIUtil.notifySuccess(myProject, featureName, startedFeatureMessage );
+                        }
+                    }.queue();
+
             }
 
         }
-
-        @Override
-        protected void asyncTask() {
-            GitCommandResult res=  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener().init(myProject) );
-            repo.update();
-        }
     }
 
-    private static class FinishFeatureAction extends DumbAwareAction {
-        Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        private final Project myProject;
+    private class FinishFeatureAction extends DumbAwareAction{
 
-        FinishFeatureAction(@NotNull Project project) {
+        FinishFeatureAction() {
             super("Finish Feature");
-            myProject = project;
         }
 
         @Override
         public void actionPerformed(AnActionEvent e) {
-            GitCommandResult res;
-            GitRepository repo = GitBranchUtil.getCurrentRepository(myProject);
+
             String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
             if (currentBranchName.isEmpty()==false){
 
-                String featureName = ConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
-                res=  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener().init(myProject) );
-                repo.update();
+                final String featureName = ConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+
+                new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        GitCommandResult res=  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener());
+                        repo.update();
+
+                        String finishedFeatureMessage = String.format("The feature branch '%s/%s' was merged into '%s'", featurePrefix, featureName, "Develop");
+
+                        GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
+                    }
+                }.queue();
             }
 
         }
 
     }
 
-    private static class PublishFeatureAction extends GitFlowAction{
+    private class PublishFeatureAction extends DumbAwareAction{
         PublishFeatureAction(){
             super("Publish Feature");
         }
 
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
-            String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,currentBranchName);
-            myGitflow.publishFeature(repo,featureName,new gitFlowErrorsListener().init(myProject));
+            final String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,currentBranchName);
+
+
+            new Task.Backgroundable(myProject,"Publishing feature "+featureName,false){
+                @Override
+                public void run(@NotNull ProgressIndicator indicator) {
+                    myGitflow.publishFeature(repo,featureName,new gitFlowErrorsListener());
+                    repo.update();
+
+                    String publishedFeatureMessage = String.format("A new remote branch '%s/%s' was created", featurePrefix, featureName);
+
+                    GitUIUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
+                }
+            }.queue();
+
         }
     }
 
-    private static class PullFeatureAction extends GitFlowAction{
+    private class PullFeatureAction extends DumbAwareAction{
 
         PullFeatureAction(){
             super("Pull Feature");
@@ -179,8 +235,6 @@ public class GitflowActions {
 
         @Override
         public void actionPerformed(AnActionEvent e) {
-
-            String featurePrefix = ConfigUtil.getFeaturePrefix(myProject);
 
             ArrayList<String> remoteBranches = new ArrayList<String>(myMultiRootBranchConfig.getRemoteBranches());
             ArrayList<String> remoteFeatureBranches = new ArrayList<String>();
@@ -201,7 +255,7 @@ public class GitflowActions {
                     String branchName= branchChoose.getSelectedBranchName();
                     String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,branchName);
                     String remoteName=ConfigUtil.getRemoteNameFromBranch(myProject,branchName);
-                    myGitflow.pullFeature(repo,featureName, remoteName, new gitFlowErrorsListener().init(myProject));
+                    myGitflow.pullFeature(repo,featureName, remoteName, new gitFlowErrorsListener());
                 }
             }
             else{
@@ -212,42 +266,8 @@ public class GitflowActions {
     }
 
 
-    private static abstract class GitFlowAction extends DumbAwareAction{
-        protected Project myProject;
-        protected Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-        protected GitRepositoryManager myRepositoryManager;
-        protected GitMultiRootBranchConfig myMultiRootBranchConfig;
-        protected GitRepository repo;
-        protected String currentBranchName;
 
-        GitFlowAction(String featureName){
-            super(featureName);
-        }
-
-        protected GitFlowAction init(@NotNull Project project){
-            myProject = project;
-            myRepositoryManager = GitUtil.getRepositoryManager(myProject);
-            myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
-            repo = GitBranchUtil.getCurrentRepository(myProject);
-            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
-
-            return this;
-        }
-
-        protected void asyncTask(){}
-
-        protected void runAsync(String title){
-            new Task.Backgroundable(myProject,title,false){
-                @Override
-                public void run(@NotNull ProgressIndicator indicator) {
-                    asyncTask();
-                }
-            }.queue();
-        }
-    }
-
-
-    private static class gitFlowErrorsListener extends gitflowLineHandler{
+    private class gitFlowErrorsListener extends gitflowLineHandler{
 
         @Override
         public void onLineAvailable(String line, Key outputType) {
@@ -261,13 +281,7 @@ public class GitflowActions {
 
     };
 
-    private static abstract class gitflowLineHandler implements GitLineHandlerListener {
-        Project myProject;
-
-        public GitLineHandlerListener init(@NotNull Project project){
-            myProject=project;
-            return this;
-        }
+    private abstract class gitflowLineHandler implements GitLineHandlerListener {
 
         @Override
         public void onLineAvailable(String line, Key outputType) {}

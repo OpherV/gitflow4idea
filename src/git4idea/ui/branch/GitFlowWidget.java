@@ -51,14 +51,13 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
     private volatile String myTooltip = "";
     private final String myMaxString;
 
+    private GitflowActions actions;
+
     public GitFlowWidget(Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
         mySettings = GitVcsSettings.getInstance(project);
         myMaxString = "Git: Rebasing master";
-
-
-
     }
 
     @Override
@@ -108,7 +107,7 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
             return null;
         }
 
-        ActionGroup popupGroup = new GitflowActions(project).getActions();
+        ActionGroup popupGroup = actions.getActions();
         ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
                 null, null);
 
@@ -158,6 +157,8 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
                 }
 
                 int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
+
+                actions = new GitflowActions(project);
 
                 boolean hasGitflow = BranchUtil.hasGitflow(project);
 
