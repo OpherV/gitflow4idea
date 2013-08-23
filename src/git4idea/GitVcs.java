@@ -80,7 +80,7 @@ import git4idea.roots.GitRootDetectInfo;
 import git4idea.roots.GitRootDetector;
 import git4idea.status.GitChangeProvider;
 import git4idea.ui.branch.GitBranchWidget;
-import git4idea.ui.branch.GitFlowWidget;
+import git4idea.gitflow.ui.GitFlowWidget;
 import git4idea.update.GitUpdateEnvironment;
 import git4idea.vfs.GitVFSListener;
 import org.jetbrains.annotations.NotNull;

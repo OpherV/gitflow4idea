@@ -71,10 +71,10 @@ public class GitflowActions {
             currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
         }
 
-        featurePrefix = ConfigUtil.getFeaturePrefix(myProject);
-        releasePrefix = ConfigUtil.getReleasePrefix(myProject);
-        masterBranch= ConfigUtil.getMasterBranch(myProject);
-        developBranch= ConfigUtil.getDevelopBranch(myProject);
+        featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject);
+        releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject);
+        masterBranch= GitflowConfigUtil.getMasterBranch(myProject);
+        developBranch= GitflowConfigUtil.getDevelopBranch(myProject);
 
         noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
         noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
@@ -239,7 +239,7 @@ public class GitflowActions {
             String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
             if (currentBranchName.isEmpty()==false){
 
-                final String featureName = ConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                final String featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
 
                 new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
                     @Override
@@ -265,7 +265,7 @@ public class GitflowActions {
 
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
-            final String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,currentBranchName);
+            final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
 
 
             new Task.Backgroundable(myProject,"Publishing feature "+featureName,false){
@@ -309,8 +309,8 @@ public class GitflowActions {
                 branchChoose.show();
                 if (branchChoose.isOK()){
                     String branchName= branchChoose.getSelectedBranchName();
-                    final String featureName=ConfigUtil.getFeatureNameFromBranch(myProject,branchName);
-                    final String remoteName=ConfigUtil.getRemoteNameFromBranch(myProject,branchName);
+                    final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, branchName);
+                    final String remoteName= GitflowConfigUtil.getRemoteNameFromBranch(myProject, branchName);
 
 
                     new Task.Backgroundable(myProject,"Pulling feature"+featureName,false){
@@ -379,7 +379,7 @@ public class GitflowActions {
             String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
             if (currentBranchName.isEmpty()==false){
 
-                final String releaseName = ConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                final String releaseName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
 
                 new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
                     @Override
@@ -405,7 +405,7 @@ public class GitflowActions {
 
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
-            final String releaseName=ConfigUtil.getReleaseNameFromBranch(myProject,currentBranchName);
+            final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
 
 
             new Task.Backgroundable(myProject,"Publishing release "+releaseName,false){
@@ -449,7 +449,7 @@ public class GitflowActions {
                 branchChoose.show();
                 if (branchChoose.isOK()){
                     String branchName= branchChoose.getSelectedBranchName();
-                    final String releaseName=ConfigUtil.getReleaseNameFromBranch(myProject,branchName);
+                    final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, branchName);
 
 
                     new Task.Backgroundable(myProject,"Tracking release "+releaseName,false){
