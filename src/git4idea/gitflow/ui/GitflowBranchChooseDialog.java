@@ -8,6 +8,12 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.List;
 
+/**
+ *  Dialog for choosing branches
+ *
+ * @author Opher Vishnia / opherv.com / opherv@gmail.com
+ */
+
 public class GitflowBranchChooseDialog extends DialogWrapper {
     private JPanel contentPane;
     private JList branchList;

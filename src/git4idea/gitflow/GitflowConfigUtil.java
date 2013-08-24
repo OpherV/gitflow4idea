@@ -9,11 +9,13 @@ import git4idea.repo.GitRepository;
 import git4idea.util.GitUIUtil;
 
 /**
- * Created with IntelliJ IDEA.
- * User: OpherV
- * Date: 8/20/13
- * Time: 12:39 PM
+ *
+ *
+ * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
+
+//TODO maybe have this as a singleton instead of static
+
 public class GitflowConfigUtil {
 
     public static final String BRANCH_MASTER = "gitflow.branch.master";

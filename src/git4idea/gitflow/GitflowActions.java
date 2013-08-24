@@ -32,13 +32,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Opher
- * Date: 18/08/13
- * Time: 22:38
-
-
- All actions associated with gitflow
+ * All actions associated with Gitflow
+ *
+ * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
 public class GitflowActions {
     Project myProject;

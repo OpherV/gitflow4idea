@@ -1,10 +1,10 @@
 <idea-plugin>
-  <name>Git Integration</name>
+  <name>Git & Git Flow Integration</name>
   <id>Gitflow4Idea</id>
-  <description>Gitflow!</description>
-  <version>8.1</version>
+  <description>Git & Git Flow Integration. Based on the original git4idea 8.1 plugin</description>
+  <version>0.1</version>
   <category>VCS Integration</category>
-  <vendor url="http://www.opherv.com" logo="/general/ijLogo.png">Opher Vishnia</vendor>
+  <vendor url="https://github.com/OpherV/gitflow4idea">Opher Vishnia</vendor>
 
   <depends>com.intellij.modules.vcs</depends>
 

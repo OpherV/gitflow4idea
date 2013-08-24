@@ -8,10 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Opher
- * Date: 8/18/13
- * Time: 6:15 PM
+ *
+ *
+ * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
 public class GitflowImpl extends GitImpl implements Gitflow {
 

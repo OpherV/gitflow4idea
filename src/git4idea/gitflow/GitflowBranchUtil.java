@@ -16,10 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Opher
- * Date: 8/20/13
- * Time: 1:08 PM
+ *
+ *
+ * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
 public class GitflowBranchUtil {
 
