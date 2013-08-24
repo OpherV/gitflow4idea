@@ -3,6 +3,7 @@ package git4idea.gitflow;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
+import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public interface Gitflow extends Git {
 
     GitCommandResult pullFeature(@NotNull GitRepository repository,
                                     @NotNull String featureName,
-                                    @NotNull String remoteName,
+                                    @NotNull GitRemote remote,
                                     @Nullable GitLineHandlerListener... listeners);
 
 
@@ -51,6 +52,7 @@ public interface Gitflow extends Git {
 
     GitCommandResult finishRelease(@NotNull GitRepository repository,
                                    @NotNull String releaseName,
+                                   @NotNull String tagMessage,
                                    @Nullable GitLineHandlerListener... listeners);
 
 
@@ -60,6 +62,17 @@ public interface Gitflow extends Git {
 
     GitCommandResult trackRelease(@NotNull GitRepository repository,
                                  @NotNull String releaseName,
+                                 @Nullable GitLineHandlerListener... listeners);
+
+    //hotfix
+
+    GitCommandResult startHotfix(@NotNull GitRepository repository,
+                                 @NotNull String hotfixName,
+                                 @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult finishHotfix(@NotNull GitRepository repository,
+                                 @NotNull String hotfixName,
+                                 @NotNull String tagMessage,
                                  @Nullable GitLineHandlerListener... listeners);
 
 }

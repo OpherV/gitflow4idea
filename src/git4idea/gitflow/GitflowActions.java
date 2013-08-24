@@ -17,12 +17,14 @@ import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
+import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import git4idea.gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
 import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -42,7 +44,6 @@ public class GitflowActions {
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     GitRepositoryManager myRepositoryManager;
-    GitMultiRootBranchConfig myMultiRootBranchConfig;
     GitRepository repo;
     GitflowBranchUtil branchUtil;
 
@@ -50,6 +51,7 @@ public class GitflowActions {
 
     String featurePrefix;
     String releasePrefix;
+    String hotfixPrefix;
     String masterBranch;
     String developBranch;
 
@@ -65,7 +67,6 @@ public class GitflowActions {
         branchUtil=new GitflowBranchUtil(project);
 
         myRepositoryManager = GitUtil.getRepositoryManager(myProject);
-        myMultiRootBranchConfig = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
         repo = GitBranchUtil.getCurrentRepository(myProject);
         if (repo!=null){
             currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
@@ -73,6 +74,7 @@ public class GitflowActions {
 
         featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject);
         releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject);
+        hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject);
         masterBranch= GitflowConfigUtil.getMasterBranch(myProject);
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject);
 
@@ -128,7 +130,7 @@ public class GitflowActions {
 
             actionGroup.addSeparator("Release");
             actionGroup.add(new StartReleaseAction());
-            //feature only actions
+            //release only actions
             if (branchUtil.isCurrentBranchRelease()){
                 actionGroup.add(new FinishReleaseAction());
 
@@ -144,7 +146,14 @@ public class GitflowActions {
             }
 
 
+            //HOTFIX ACTIONS
+            actionGroup.addSeparator("Hotfix");
 
+            //master only actions
+            actionGroup.add(new StartHotfixAction());
+            if (branchUtil.isCurrentBranchHotfix()){
+                actionGroup.add(new FinishHotixAction());
+            }
 
         }
         return actionGroup;
@@ -162,18 +171,21 @@ public class GitflowActions {
         public void actionPerformed(AnActionEvent e) {
             repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
-
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+            final LineHandler localLineHandler = new LineHandler();
 
             new Task.Backgroundable(myProject,"Initializing repo",false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult res;
-                    res=  myGitflow.initRepo(repo, new gitFlowErrorsListener(),
-                            new lineHandler());
+                    GitCommandResult result = myGitflow.initRepo(repo, errorLineHandler, localLineHandler);
 
-                    String publishedFeatureMessage = String.format("Initialized gitflow repo");
-
-                    GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
+                    if (result.success()){
+                        String publishedFeatureMessage = String.format("Initialized gitflow repo");
+                        GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
+                    }
+                    else{
+                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors()+" "+localLineHandler.getErrors());
+                    }
 
                     repo.update();
                 }
@@ -182,11 +194,11 @@ public class GitflowActions {
 
         }
 
-        private class lineHandler extends gitflowLineHandler{
+        private class LineHandler extends gitflowLineHandler{
             @Override
             public void onLineAvailable(String line, Key outputType) {
                 if (line.contains("Already initialized for gitflow")){
-                    new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Repo already initialized for gitflow", NotificationType.WARNING).notify(myProject);
+                   myErrors.add("Repo already initialized for gitflow");
                 }
 
             }
@@ -209,16 +221,25 @@ public class GitflowActions {
 
             final String featureName = Messages.showInputDialog(myProject, "Enter the name of new feature:", "New Feature", Messages.getQuestionIcon(), "",
                     GitNewBranchNameValidator.newInstance(repos));
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
             if (featureName!=null){
                     new Task.Backgroundable(myProject,"Starting feature "+featureName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
-                            GitCommandResult res=  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener());
+                            GitCommandResult result =  myGitflow.startFeature(repo,featureName,new gitFlowErrorsListener());
+
+
+                            if (result.success()){
+                                String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, developBranch);
+                                GitUIUtil.notifySuccess(myProject, featureName, startedFeatureMessage );
+                            }
+                            else{
+                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            }
+
                             repo.update();
 
-                            String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, developBranch);
-                            GitUIUtil.notifySuccess(myProject, featureName, startedFeatureMessage );
                         }
                     }.queue();
 
@@ -240,16 +261,24 @@ public class GitflowActions {
             if (currentBranchName.isEmpty()==false){
 
                 final String featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
                 new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult res=  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener());
+                        GitCommandResult result =  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener());
+
+
+                        if (result.success()){
+                            String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
+                            GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
+                        }
+                        else{
+                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        }
+
                         repo.update();
 
-                        String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
-
-                        GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                     }
                 }.queue();
             }
@@ -266,17 +295,24 @@ public class GitflowActions {
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
             final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
-
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
             new Task.Backgroundable(myProject,"Publishing feature "+featureName,false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    myGitflow.publishFeature(repo,featureName,new gitFlowErrorsListener());
+                    GitCommandResult result = myGitflow.publishFeature(repo,featureName,new gitFlowErrorsListener());
+
+                    if (result.success()){
+                        String publishedFeatureMessage = String.format("A new remote branch '%s%s' was created", featurePrefix, featureName);
+                        GitUIUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
+                    }
+                    else{
+                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                    }
+
                     repo.update();
 
-                    String publishedFeatureMessage = String.format("A new remote branch '%s%s' was created", featurePrefix, featureName);
 
-                    GitUIUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
                 }
             }.queue();
 
@@ -292,7 +328,7 @@ public class GitflowActions {
         @Override
         public void actionPerformed(AnActionEvent e) {
 
-            ArrayList<String> remoteBranches = new ArrayList<String>(myMultiRootBranchConfig.getRemoteBranches());
+            ArrayList<String> remoteBranches = branchUtil.getRemoteBranchNames();
             ArrayList<String> remoteFeatureBranches = new ArrayList<String>();
 
             //get only the branches with the proper prefix
@@ -310,18 +346,25 @@ public class GitflowActions {
                 if (branchChoose.isOK()){
                     String branchName= branchChoose.getSelectedBranchName();
                     final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, branchName);
-                    final String remoteName= GitflowConfigUtil.getRemoteNameFromBranch(myProject, branchName);
+                    final GitRemote remote=branchUtil.getRemoteByBranch(branchName);
+                    final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
-
-                    new Task.Backgroundable(myProject,"Pulling feature"+featureName,false){
+                    new Task.Backgroundable(myProject,"Pulling feature "+featureName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
-                            myGitflow.pullFeature(repo,featureName, remoteName, new gitFlowErrorsListener());
+                            GitCommandResult result = myGitflow.pullFeature(repo,featureName, remote, errorLineHandler);
+
+                            if (result.success()){
+                                String pulledFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
+                                GitUIUtil.notifySuccess(myProject, featureName, pulledFeatureMessage);
+
+                            }
+                            else{
+                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            }
+
                             repo.update();
 
-                            String pulledFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
-
-                            GitUIUtil.notifySuccess(myProject, featureName, pulledFeatureMessage);
                         }
                     }.queue();
                 }
@@ -349,16 +392,24 @@ public class GitflowActions {
 
             final String releaseName = Messages.showInputDialog(myProject, "Enter the name of new release:", "New Release", Messages.getQuestionIcon(), "",
                     GitNewBranchNameValidator.newInstance(repos));
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
             if (releaseName!=null){
                 new Task.Backgroundable(myProject,"Starting release "+releaseName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult res=  myGitflow.startRelease(repo, releaseName, new gitFlowErrorsListener());
+                        GitCommandResult result=  myGitflow.startRelease(repo, releaseName, errorLineHandler);
+
+                        if (result.success()){
+                            String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", releasePrefix, releaseName, developBranch);
+                            GitUIUtil.notifySuccess(myProject, releaseName, startedReleaseMessage );
+                        }
+                        else{
+                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        }
+
                         repo.update();
 
-                        String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", releasePrefix, releaseName, developBranch);
-                        GitUIUtil.notifySuccess(myProject, releaseName, startedReleaseMessage );
                     }
                 }.queue();
 
@@ -379,19 +430,32 @@ public class GitflowActions {
             String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
             if (currentBranchName.isEmpty()==false){
 
-                final String releaseName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                final String releaseName = GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
+                final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+                String defaultTagMessage="Tagging version "+releaseName;
 
-                new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
-                    @Override
-                    public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult res=  myGitflow.finishRelease(repo, releaseName, new gitFlowErrorsListener());
-                        repo.update();
+                final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
 
-                        String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", featurePrefix, releaseName, developBranch, masterBranch);
+                if (tagMessage!=null){
+                    new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
+                        @Override
+                        public void run(@NotNull ProgressIndicator indicator) {
+                            GitCommandResult result =  myGitflow.finishRelease(repo, releaseName, tagMessage, errorLineHandler);
 
-                        GitUIUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
-                    }
-                }.queue();
+                            if (result.success()){
+                                String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", featurePrefix, releaseName, developBranch, masterBranch);
+                                GitUIUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
+                            }
+                            else{
+                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            }
+
+                            repo.update();
+
+                        }
+                    }.queue();
+
+                }
             }
 
         }
@@ -406,17 +470,22 @@ public class GitflowActions {
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
             final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
-
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
             new Task.Backgroundable(myProject,"Publishing release "+releaseName,false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    myGitflow.publishRelease(repo, releaseName, new gitFlowErrorsListener());
+                    GitCommandResult result = myGitflow.publishRelease(repo, releaseName, errorLineHandler);
+
+                    if (result.success()){
+                        String publishedReleaseMessage = String.format("A new remote branch '%s%s' was created", releasePrefix, releaseName);
+                        GitUIUtil.notifySuccess(myProject, releaseName, publishedReleaseMessage);
+                    }
+                    else{
+                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                    }
+
                     repo.update();
-
-                    String publishedReleaseMessage = String.format("A new remote branch '%s%s' was created", releasePrefix, releaseName);
-
-                    GitUIUtil.notifySuccess(myProject, releaseName, publishedReleaseMessage);
                 }
             }.queue();
 
@@ -432,7 +501,7 @@ public class GitflowActions {
         @Override
         public void actionPerformed(AnActionEvent e) {
 
-            ArrayList<String> remoteBranches = new ArrayList<String>(myMultiRootBranchConfig.getRemoteBranches());
+            ArrayList<String> remoteBranches = branchUtil.getRemoteBranchNames();
             ArrayList<String> remoteReleaseBranches = new ArrayList<String>();
 
             //get only the branches with the proper prefix
@@ -450,17 +519,22 @@ public class GitflowActions {
                 if (branchChoose.isOK()){
                     String branchName= branchChoose.getSelectedBranchName();
                     final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, branchName);
-
+                    final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
                     new Task.Backgroundable(myProject,"Tracking release "+releaseName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
-                            myGitflow.trackRelease(repo, releaseName, new gitFlowErrorsListener());
+                            GitCommandResult result = myGitflow.trackRelease(repo, releaseName, errorLineHandler);
+
+                            if (result.success()){
+                                String trackedReleaseMessage = String.format(" A new remote tracking branch '%s$s' was created", releasePrefix, releaseName);
+                                GitUIUtil.notifySuccess(myProject, releaseName, trackedReleaseMessage);
+                            }
+                            else{
+                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            }
+
                             repo.update();
-
-                            String trackedReleaseMessage = String.format(" A new remote tracking branch '%s$s' was created", releasePrefix, releaseName);
-
-                            GitUIUtil.notifySuccess(myProject, releaseName, trackedReleaseMessage);
                         }
                     }.queue();
                 }
@@ -473,16 +547,106 @@ public class GitflowActions {
     }
 
 
+    //hotfix actions
+
+    private class StartHotfixAction extends DumbAwareAction {
+        private ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
+
+        StartHotfixAction() {
+            super("Start Hotfix");
+            repos.add(repo);
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+
+            final String hotfixName = Messages.showInputDialog(myProject, "Enter the name of the new hotfix:", "New Hotfix", Messages.getQuestionIcon(), "",
+                    GitNewBranchNameValidator.newInstance(repos));
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+
+            if (hotfixName!=null){
+                new Task.Backgroundable(myProject,"Starting hotfix "+hotfixName,false){
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        GitCommandResult result =  myGitflow.startHotfix(repo, hotfixName, errorLineHandler);
+
+                        if (result.success()){
+                            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, developBranch);
+                            GitUIUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage );
+                        }
+                        else{
+                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        }
+
+                        repo.update();
+
+                    }
+                }.queue();
+
+            }
+
+        }
+    }
+
+    private class FinishHotixAction extends DumbAwareAction{
+
+        FinishHotixAction() {
+            super("Finish Hotfix");
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+
+            String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+
+
+            if (currentBranchName.isEmpty()==false){
+
+                //TODO HOTFIX NAME
+                final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, currentBranchName);
+
+                String defaultTagMessage="Tagging version "+hotfixName;
+
+                final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Hotfix", Messages.getQuestionIcon(), defaultTagMessage, null);
+                final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+
+                if (tagMessage!=null){
+                    new Task.Backgroundable(myProject,"Finishing hotfix "+hotfixName,false){
+                        @Override
+                        public void run(@NotNull ProgressIndicator indicator) {
+                            GitCommandResult result=  myGitflow.finishHotfix(repo, hotfixName, tagMessage, errorLineHandler);
+
+                            if (result.success()){
+                                String finishedHotfixMessage = String.format("The hotfix branch '%s%s' was merged into '%s' and '%s'", hotfixPrefix, hotfixName, developBranch, masterBranch);
+                                GitUIUtil.notifySuccess(myProject, hotfixName, finishedHotfixMessage);
+                            }
+                            else{
+                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            }
+
+                            repo.update();
+
+                        }
+                    }.queue();
+                }
+            }
+
+        }
+
+    }
+
 
     private class gitFlowErrorsListener extends gitflowLineHandler{
+
+        //TODO handle fatal errors
 
         @Override
         public void onLineAvailable(String line, Key outputType) {
             if (line.contains("'flow' is not a git command")){
-                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Gitflow is not installed", NotificationType.ERROR).notify(myProject);
+                GitUIUtil.notifyError(myProject,"Error","Gitflow is not installed");
             }
             if (line.contains("Not a gitflow-enabled repo yet")){
-                new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "Not a gitflow-enabled repo yet. Please init git flow", NotificationType.ERROR).notify(myProject);
+                GitUIUtil.notifyError(myProject,"Error","Not a gitflow-enabled repo yet. Please init git flow");
             }
         }
 
@@ -491,15 +655,24 @@ public class GitflowActions {
 
     //generic line handler (should handle errors etc)
     private abstract class gitflowLineHandler implements GitLineHandlerListener {
+        ArrayList<String> myErrors=new ArrayList<String>();
 
         @Override
-        public void onLineAvailable(String line, Key outputType) {}
+        public void onLineAvailable(String line, Key outputType) {
+                if (line.contains("fatal") || line.contains("Fatal")){
+                    myErrors.add(line);
+                }
+            }
 
         @Override
         public void processTerminated(int exitCode) {}
 
         @Override
         public void startFailed(Throwable exception) {}
+
+        public String getErrors(){
+            return StringUtils.join(myErrors,",");
+        }
     }
 
 

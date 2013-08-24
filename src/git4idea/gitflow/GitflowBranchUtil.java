@@ -5,6 +5,7 @@ import git4idea.GitLocalBranch;
 import git4idea.GitRemoteBranch;
 import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
+import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
@@ -28,8 +29,10 @@ public class GitflowBranchUtil {
     GitMultiRootBranchConfig myMultiRootBranchConfig;
 
     String currentBranchName;
+    String branchnameMaster;
     String prefixFeature;
     String prefixRelease;
+    String prefixHotfix;
 
     GitflowBranchUtil(Project project){
         myProject=project;
@@ -40,8 +43,11 @@ public class GitflowBranchUtil {
 
         currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
 
+
+        branchnameMaster= GitflowConfigUtil.getMasterBranch(project);
         prefixFeature = GitflowConfigUtil.getFeaturePrefix(project);
         prefixRelease = GitflowConfigUtil.getReleasePrefix(project);
+        prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project);
     }
 
     public boolean hasGitflow(){
@@ -51,6 +57,10 @@ public class GitflowBranchUtil {
         return hasGitflow;
     }
 
+    public boolean isCurrentBranchMaster(){
+        return currentBranchName.startsWith(branchnameMaster);
+    }
+
     public boolean isCurrentBranchFeature(){
         return currentBranchName.startsWith(prefixFeature);
     }
@@ -58,6 +68,10 @@ public class GitflowBranchUtil {
 
     public boolean isCurrentBranchRelease(){
         return currentBranchName.startsWith(prefixRelease);
+    }
+
+    public boolean isCurrentBranchHotfix(){
+        return currentBranchName.startsWith(prefixHotfix);
     }
 
     //checks whether the current branch also exists on the remote
@@ -95,41 +109,47 @@ public class GitflowBranchUtil {
         return outputBranches;
     }
 
-    private ArrayList<String> getRemoteBranchNames(){
+    public ArrayList<String> getRemoteBranchNames(){
         ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
 
         for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
             GitRemoteBranch branch = i.next();
-            branchNameList.add(branch.toString());
+            branchNameList.add(branch.getName());
         }
 
         return branchNameList;
     }
 
-    private ArrayList<String> getLocalBranchNames(){
+
+    public ArrayList<String> getLocalBranchNames(){
         ArrayList<GitLocalBranch> localBranches = new ArrayList<GitLocalBranch>(repo.getBranches().getLocalBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
 
         for(Iterator<GitLocalBranch> i = localBranches.iterator(); i.hasNext(); ) {
             GitLocalBranch branch = i.next();
-            branchNameList.add(branch.toString());
+            branchNameList.add(branch.getName());
         }
 
         return branchNameList;
     }
 
-    private ArrayList<String> getRemoteBranchNames(Collection<GitRemoteBranch> branches){
 
-        ArrayList<GitRemoteBranch> localBranches = new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
-        ArrayList<String> branchNameList = new ArrayList<String>();
 
-        for(Iterator<GitRemoteBranch> i = branches.iterator(); i.hasNext(); ) {
+    public GitRemote getRemoteByBranch(String branchName){
+        GitRemote remote=null;
+
+        ArrayList<GitRemoteBranch> remoteBranches= new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
+
+        for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
             GitRemoteBranch branch = i.next();
-            branchNameList.add(branch.toString());
+            if (branch.getName()==branchName){
+                remote=branch.getRemote();
+                break;
+            }
         }
 
-        return branchNameList;
+        return remote;
     }
 
     public boolean areAllBranchesPulled(String prefix){
