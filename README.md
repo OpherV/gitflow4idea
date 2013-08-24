@@ -1,4 +1,4 @@
-# Git Flow Intergration for Intellij
+# Git Flow Integration for Intellij
 
 
 An intelliJ plugin providing a UI layer for git-flow, which in itself is a collection of Git extensions to provide high-level repository operations for Vincent [Driessen's branching model](http://nvie.com/git-model).
