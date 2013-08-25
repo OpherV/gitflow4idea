@@ -1,3 +1,4 @@
 *.class
 /.project
 .idea
+*.zip
