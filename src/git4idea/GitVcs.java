@@ -340,9 +340,9 @@ public class GitVcs extends AbstractVcs<CommittedChangeList> {
     GitProjectLogManager.getInstance(myProject).activate();
 
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
-    //activate gitflow widget
-    myGitflowWidget = new GitFlowWidget(myProject);
-    DvcsUtil.installStatusBarWidget(myProject, myGitflowWidget);
+      //activate gitflow widget
+      myGitflowWidget = new GitFlowWidget(myProject);
+      DvcsUtil.installStatusBarWidget(myProject, myGitflowWidget);
 
       myBranchWidget = new GitBranchWidget(myProject);
       DvcsUtil.installStatusBarWidget(myProject, myBranchWidget);
