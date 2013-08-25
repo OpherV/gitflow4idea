@@ -5,6 +5,8 @@ An intelliJ plugin providing a UI layer for git-flow, which in itself is a colle
 
 **This plugin is in early alpha**
 
+![screenshot](http://opherv.github.io/gitflow4idea/images/gitflow.jpg)
+
 ## Getting started
 
 For the best introduction to get started with `git flow`, please read Jeff Kreeftmeijer's blog post:
