@@ -20,7 +20,7 @@ Or have a look at this [cheat sheet](http://danielkummer.github.io/git-flow-chea
 This plugin was created by [Opher Vishnia](http://www.opherv.com), after I couldn't find any similar implementation.
 I saw this [suggestion page](http://youtrack.jetbrains.com/issue/IDEA-65491) on the JetBrains site has more than 220 likes and 60 comments, and decided to pick up the glove :)
 
-Huge shoutout to Kirill Likhodedov, who wrote much of the original git4idea plugin, without which this plugin could not exist
+Huge shoutout [to Kirill Likhodedov](https://github.com/klikh), who wrote much of the original git4idea plugin, without which this plugin could not exist
 
 ## Installation
 
