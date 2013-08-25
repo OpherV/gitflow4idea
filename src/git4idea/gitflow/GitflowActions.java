@@ -74,11 +74,14 @@ public class GitflowActions {
         masterBranch= GitflowConfigUtil.getMasterBranch(myProject);
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject);
 
-        noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
-        noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
-
-        pulledAllFeatureBranches = branchUtil.areAllBranchesPulled(featurePrefix);
-        pulledAllReleaseBranches = branchUtil.areAllBranchesPulled(releasePrefix);
+        if (releasePrefix!=null){
+            noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
+            pulledAllReleaseBranches = branchUtil.areAllBranchesPulled(releasePrefix);
+        }
+        if (featurePrefix!=null){
+            noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
+            pulledAllFeatureBranches = branchUtil.areAllBranchesPulled(featurePrefix);
+        }
 
 
     }
