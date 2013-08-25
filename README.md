@@ -28,6 +28,8 @@ Download the [latest release](https://github.com/OpherV/gitflow4idea/releases) o
 
 This will replace the original Git Integration plugin
 
+(The plugin requires that you have [Vanilla Git Flow](https://github.com/nvie/gitflow) \ [AVH edition](https://github.com/petervanderdoes/gitflow) installed)
+
 ## Caveats
 
 While the plugin is operational and contains all basic functions (init/feature/release/hotfix), it is in its very early stages and may contains bugs. With your help I'll be able to find and zap them all.
