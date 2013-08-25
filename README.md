@@ -22,9 +22,9 @@ Huge shoutout to Kirill Likhodedov, who wrote much of the original git4idea plug
 
 ## Installation
 
-Download the latest release of the plugin and install it via the plugin manager.
+Download the [latest release](https://github.com/OpherV/gitflow4idea/releases) of the plugin and install it via the plugin manager.
 
-**Be sure to switch off the old Git Integration plugin!**
+This will replace the original Git Integration plugin
 
 ## Caveats
 
