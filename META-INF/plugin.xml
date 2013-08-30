@@ -2,7 +2,7 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.1</version>
+    <version>0.2</version>
     <category>VCS Integration</category>
     <vendor url="https://github.com/OpherV/gitflow4idea">Opher Vishnia</vendor>
 
