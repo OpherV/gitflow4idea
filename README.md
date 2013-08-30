@@ -5,6 +5,8 @@ An intelliJ plugin providing a UI layer for git-flow, which in itself is a colle
 
 **This plugin is in early alpha**
 
+![screenshot](http://opherv.github.io/gitflow4idea/images/gitflow.jpg)
+
 ## Getting started
 
 For the best introduction to get started with `git flow`, please read Jeff Kreeftmeijer's blog post:
@@ -16,15 +18,17 @@ Or have a look at this [cheat sheet](http://danielkummer.github.io/git-flow-chea
 ## Who and why
 
 This plugin was created by [Opher Vishnia](http://www.opherv.com), after I couldn't find any similar implementation.
-I saw this [suggestion page](http://youtrack.jetbrains.com/issue/IDEA-65491) on the JetBrains site has more than 220 likes and 60 comments, and decided to pick up the glove :)
+I saw this [suggestion page](http://youtrack.jetbrains.com/issue/IDEA-65491) on the JetBrains site has more than 220 likes and 60 comments, and decided to take up the gauntlet :)
 
-Huge shoutout to Kirill Likhodedov, who wrote much of the original git4idea plugin, without which this plugin could not exist
+Huge shoutout [to Kirill Likhodedov](https://github.com/klikh), who wrote much of the original git4idea plugin, without which this plugin could not exist
 
 ## Installation
 
-Download the latest release of the plugin and install it via the plugin manager.
+Download the [latest release](https://github.com/OpherV/gitflow4idea/releases) of the plugin and install it via the plugin manager.
 
-**Be sure to switch off the old Git Integration plugin!**
+This will replace the original Git Integration plugin
+
+(The plugin requires that you have [Vanilla Git Flow](https://github.com/nvie/gitflow) \ [AVH edition](https://github.com/petervanderdoes/gitflow) installed)
 
 ## Caveats
 
