@@ -26,9 +26,9 @@ Huge shoutout [to Kirill Likhodedov](https://github.com/klikh), who wrote much o
 
 Download the [latest release](https://github.com/OpherV/gitflow4idea/releases) of the plugin and install it via the plugin manager.
 
-This will replace the original Git Integration plugin
-
 (The plugin requires that you have [Vanilla Git Flow](https://github.com/nvie/gitflow) \ [AVH edition](https://github.com/petervanderdoes/gitflow) installed)
+
+Once I gather enough feedback, I will post the plugin to the JetBrains plugin repo so it can be downloaded from within IntelliJ
 
 ## Caveats
 
