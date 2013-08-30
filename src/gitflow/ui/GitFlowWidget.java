@@ -42,20 +42,18 @@ import java.awt.event.MouseEvent;
  * Status bar widget which displays actions for git flow
  * @author Kirill Likhodedov, Opher Vishnia
  */
-public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
+public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
         GitRepositoryChangeListener {
-    private final GitVcsSettings mySettings;
     private volatile String myText = "";
     private volatile String myTooltip = "";
     private final String myMaxString;
 
     private GitflowActions actions;
 
-    public GitFlowWidget(Project project) {
+    public GitflowWidget(Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
-        mySettings = GitVcsSettings.getInstance(project);
         myMaxString = "Git: Rebasing master";
     }
 
@@ -67,7 +65,7 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
     @NotNull
     @Override
     public String ID() {
-        return GitFlowWidget.class.getName();
+        return GitflowWidget.class.getName();
     }
 
     @Override
@@ -164,7 +162,6 @@ public class GitFlowWidget extends EditorBasedWidget implements StatusBarWidget.
                 myText = hasGitflow ? "Gitflow": "No Gitflow";
                 myTooltip = getDisplayableBranchTooltip(repo);
                 myStatusBar.updateWidget(ID());
-                mySettings.setRecentRoot(repo.getRoot().getPath());
             }
         });
     }

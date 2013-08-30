@@ -20,11 +20,11 @@ import java.lang.reflect.Method;
 
 public class GitflowImpl extends GitImpl implements Gitflow {
 
-    //we must use reflection to add this command
+    //we must use reflection to add this command, since the git4idea implementation doesn't expose it
     private GitCommand GitflowCommand(){
         Method m= null;
         try {
-            m = GitCommand.class.getDeclaredMethod("write");
+            m = GitCommand.class.getDeclaredMethod("write",String.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         GitCommand command = null;
 
         try {
-            command = (GitCommand) m.invoke("flow");//now its ok
+            command = (GitCommand) m.invoke(null,"flow");//now its ok
         } catch (IllegalAccessException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (InvocationTargetException e) {
@@ -42,6 +42,30 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
 
         return command;
+    }
+
+    //we must use reflection to add this command, since the git4idea implementation doesn't expose it
+    private static GitCommandResult run(@org.jetbrains.annotations.NotNull git4idea.commands.GitLineHandler handler){
+         Method m = null;
+        try {
+            m = GitImpl.class.getDeclaredMethod("run",GitLineHandler.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        m.setAccessible(true);//Abracadabra
+
+        GitCommandResult result = null;
+
+        try {
+            result = (GitCommandResult ) m.invoke(null, handler);//now its ok
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return result;
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
-    <name>Git + Git Flow Integration</name>
+    <name>Git Flow Integration</name>
     <id>Gitflow</id>
-    <description>Git + Git Flow Integration.</description>
+    <description>Git Flow Integration</description>
     <version>0.1</version>
     <category>VCS Integration</category>
     <vendor url="https://github.com/OpherV/gitflow4idea">Opher Vishnia</vendor>
@@ -11,4 +11,14 @@
 
 
 
+    <project-components>
+        <component>
+            <implementation-class>gitflow.GitflowComponent</implementation-class>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="gitflow.Gitflow"
+                            serviceImplementation="gitflow.GitflowImpl"/>
+    </extensions>
 </idea-plugin>
