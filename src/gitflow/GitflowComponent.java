@@ -3,8 +3,11 @@ package gitflow;
 import com.intellij.dvcs.DvcsUtil;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
+import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
 import gitflow.ui.GitflowWidget;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +51,10 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
         //git repo present
         if (ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots().length>0){
             myGitflowWidget  = new GitflowWidget(myProject);
-            DvcsUtil.installStatusBarWidget(myProject, myGitflowWidget );
+            StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+            if (statusBar != null) {
+                statusBar.addWidget(myGitflowWidget, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
+            }
         }
         else{
             if (myGitflowWidget!=null){
