@@ -9,6 +9,8 @@
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
 
+    <idea-version since-build="129" until-build="129.9999"/>
+
 
 
     <project-components>
