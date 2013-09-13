@@ -136,6 +136,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
+
+    // feature pull seems to be kind of useless. see
+    // http://stackoverflow.com/questions/18412750/why-doesnt-git-flow-feature-pull-track
     public GitCommandResult pullFeature(@NotNull GitRepository repository,
                                            @NotNull String featureName,
                                            @NotNull GitRemote remote,
@@ -146,6 +149,23 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("feature");
         h.addParameters("pull");
         h.addParameters(remote.getName());
+        h.addParameters(featureName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult trackFeature(@NotNull GitRepository repository,
+                                        @NotNull String featureName,
+                                        @NotNull GitRemote remote,
+                                        @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        h.setUrl(remote.getFirstUrl());
+        h.setSilent(false);
+        h.addParameters("feature");
+        h.addParameters("track");
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {

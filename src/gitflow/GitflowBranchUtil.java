@@ -151,7 +151,7 @@ public class GitflowBranchUtil {
         return remote;
     }
 
-    public boolean areAllBranchesPulled(String prefix){
+    public boolean areAllBranchesTracked(String prefix){
 
 
         ArrayList<String> localBranches = filterBranchListByPrefix(getLocalBranchNames() , prefix) ;

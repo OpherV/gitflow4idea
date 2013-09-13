@@ -21,7 +21,6 @@ import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import gitflow.ui.GitflowBranchChooseDialog;
-import git4idea.ui.branch.GitMultiRootBranchConfig;
 import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
 import org.apache.commons.lang.StringUtils;
@@ -54,8 +53,8 @@ public class GitflowActions {
     boolean noRemoteTrackBranches;
     boolean noRemoteFeatureBranches;
 
-    boolean pulledAllFeatureBranches;
-    boolean pulledAllReleaseBranches;
+    boolean trackedAllFeatureBranches;
+    boolean trackedAllReleaseBranches;
 
     public GitflowActions(@NotNull Project project){
         myProject=project;
@@ -76,11 +75,11 @@ public class GitflowActions {
 
         if (releasePrefix!=null){
             noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
-            pulledAllReleaseBranches = branchUtil.areAllBranchesPulled(releasePrefix);
+            trackedAllReleaseBranches = branchUtil.areAllBranchesTracked(releasePrefix);
         }
         if (featurePrefix!=null){
             noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
-            pulledAllFeatureBranches = branchUtil.areAllBranchesPulled(featurePrefix);
+            trackedAllFeatureBranches = branchUtil.areAllBranchesTracked(featurePrefix);
         }
 
 
@@ -119,9 +118,9 @@ public class GitflowActions {
                 }
             }
 
-            //make sure there's a feature to pull, and that not all features are pulled
-            if (noRemoteFeatureBranches ==false && pulledAllFeatureBranches==false){
-                actionGroup.add(new PullFeatureAction());
+            //make sure there's a feature to track, and that not all features are track
+            if (noRemoteFeatureBranches ==false && trackedAllFeatureBranches ==false){
+                actionGroup.add(new TrackFeatureAction());
             }
 
 
@@ -139,8 +138,8 @@ public class GitflowActions {
                 }
             }
 
-            //make sure there's something to track and that not all features are pulled
-            if (noRemoteTrackBranches==false  && pulledAllReleaseBranches==false){
+            //make sure there's something to track and that not all features are tracked
+            if (noRemoteTrackBranches==false  && trackedAllReleaseBranches ==false){
                 actionGroup.add(new TrackReleaseAction());
             }
 
@@ -318,10 +317,10 @@ public class GitflowActions {
         }
     }
 
-    private class PullFeatureAction extends DumbAwareAction{
+    private class TrackFeatureAction extends DumbAwareAction{
 
-        PullFeatureAction(){
-            super("Pull Feature");
+        TrackFeatureAction(){
+            super("Track Feature");
         }
 
         @Override
@@ -348,14 +347,14 @@ public class GitflowActions {
                     final GitRemote remote=branchUtil.getRemoteByBranch(branchName);
                     final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
-                    new Task.Backgroundable(myProject,"Pulling feature "+featureName,false){
+                    new Task.Backgroundable(myProject,"Tracking feature "+featureName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
-                            GitCommandResult result = myGitflow.pullFeature(repo,featureName, remote, errorLineHandler);
+                            GitCommandResult result = myGitflow.trackFeature(repo, featureName, remote, errorLineHandler);
 
                             if (result.success()){
-                                String pulledFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
-                                GitUIUtil.notifySuccess(myProject, featureName, pulledFeatureMessage);
+                                String trackedFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
+                                GitUIUtil.notifySuccess(myProject, featureName, trackedFeatureMessage);
 
                             }
                             else{

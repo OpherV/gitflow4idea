@@ -40,6 +40,10 @@ public interface Gitflow extends Git {
                                     @NotNull GitRemote remote,
                                     @Nullable GitLineHandlerListener... listeners);
 
+    GitCommandResult trackFeature(@NotNull GitRepository repository,
+                                 @NotNull String featureName,
+                                 @NotNull GitRemote remote,
+                                 @Nullable GitLineHandlerListener... listeners);
 
     //release
 
