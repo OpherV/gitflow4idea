@@ -4,7 +4,7 @@
     <description>Git Flow Integration</description>
     <version>0.3.1</version>
     <category>VCS Integration</category>
-    <vendor url="https://github.com/OpherV/gitflow4idea">Opher Vishnia</vendor>
+    <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
