@@ -1,10 +1,11 @@
 package gitflow;
 
+import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.project.Project;
 import git4idea.commands.*;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -205,6 +206,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
+        if(pushOnReleaseFinish(repository.getProject())) {
+            h.addParameters("-p");
+        }
         h.addParameters("-m");
         h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
         h.addParameters(releaseName);
@@ -215,6 +219,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
+    private boolean pushOnReleaseFinish(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
+    }
 
     public GitCommandResult publishRelease(@NotNull GitRepository repository,
                                            @NotNull String releaseName,
