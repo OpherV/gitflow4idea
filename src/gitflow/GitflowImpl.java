@@ -71,7 +71,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     @Nullable GitLineHandlerListener... listeners) {
+                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
+        if(!initOptions.isUseDefaults()) {
+            configureBranches(initOptions, repository.getProject());
+        }
+
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
 
@@ -81,9 +85,27 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        GitCommandResult result =  run(h);
+
+        if(result.success() && !initOptions.isUseDefaults()) {
+            configurePrefixes(initOptions, repository.getProject());
+        }
+
+        return result;
     }
 
+    private void configureBranches(GitflowInitOptions initOptions, Project project) {
+        GitflowConfigUtil.setMasterBranch(project, initOptions.getProductionBranch());
+        GitflowConfigUtil.setDevelopBranch(project, initOptions.getDevelopmentBranch());
+    }
+
+    private void configurePrefixes(GitflowInitOptions initOptions, Project project) {
+        GitflowConfigUtil.setFeaturePrefix(project, initOptions.getFeaturePrefix());
+        GitflowConfigUtil.setReleasePrefix(project, initOptions.getReleasePrefix());
+        GitflowConfigUtil.setHotfixPrefix(project, initOptions.getHotfixPrefix());
+        GitflowConfigUtil.setSupportPrefix(project, initOptions.getSupportPrefix());
+        GitflowConfigUtil.setVersionPrefix(project, initOptions.getVersionPrefix());
+    }
 
     //feature
 

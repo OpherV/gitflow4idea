@@ -23,6 +23,7 @@ import git4idea.repo.GitRepositoryManager;
 import gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import gitflow.ui.GitflowInitOptionsDialog;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -169,26 +170,33 @@ public class GitflowActions {
         public void actionPerformed(AnActionEvent e) {
             repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
-            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
-            final LineHandler localLineHandler = new LineHandler();
 
-            new Task.Backgroundable(myProject,"Initializing repo",false){
-                @Override
-                public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result = myGitflow.initRepo(repo, errorLineHandler, localLineHandler);
+            GitflowInitOptionsDialog optionsDialog = new GitflowInitOptionsDialog(myProject, branchUtil.getLocalBranchNames());
+            optionsDialog.show();
 
-                    if (result.success()){
-                        String publishedFeatureMessage = String.format("Initialized gitflow repo");
-                        GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
+            if(optionsDialog.isOK()) {
+                final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+                final LineHandler localLineHandler = new LineHandler();
+                final GitflowInitOptions initOptions = optionsDialog.getOptions();
+
+                new Task.Backgroundable(myProject,"Initializing repo",false){
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        GitCommandResult result = myGitflow.initRepo(repo, initOptions, errorLineHandler, localLineHandler);
+
+                        if (result.success()){
+                            String publishedFeatureMessage = String.format("Initialized gitflow repo");
+                            GitUIUtil.notifySuccess(myProject, "Gitflow", publishedFeatureMessage);
+                        }
+                        else{
+                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors()+" "+localLineHandler.getErrors());
+                        }
+
+                        repo.update();
+                        branchUtil = new GitflowBranchUtil(myProject);
                     }
-                    else{
-                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors()+" "+localLineHandler.getErrors());
-                    }
-
-                    repo.update();
-                }
-            }.queue();
-
+                }.queue();
+            }
 
         }
 
