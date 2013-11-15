@@ -19,7 +19,6 @@ import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import git4idea.repo.GitRepositoryManager;
 import gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
@@ -38,7 +37,6 @@ import java.util.Iterator;
 public class GitflowActions {
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
-    GitRepositoryManager myRepositoryManager;
     GitRepository repo;
     GitflowBranchUtil branchUtil;
 
@@ -61,7 +59,6 @@ public class GitflowActions {
 
         branchUtil=new GitflowBranchUtil(project);
 
-        myRepositoryManager = GitUtil.getRepositoryManager(myProject);
         repo = GitBranchUtil.getCurrentRepository(myProject);
         if (repo!=null){
             currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
