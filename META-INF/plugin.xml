@@ -22,5 +22,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="gitflow.Gitflow"
                             serviceImplementation="gitflow.GitflowImpl"/>
+        <projectConfigurable instance="gitflow.GitflowConfigurable" />
     </extensions>
 </idea-plugin>
