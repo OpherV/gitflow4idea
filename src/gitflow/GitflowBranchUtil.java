@@ -7,7 +7,6 @@ import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import git4idea.repo.GitRepositoryManager;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
 
 
@@ -24,8 +23,6 @@ public class GitflowBranchUtil {
 
     Project myProject;
     GitRepository repo;
-    GitRepositoryManager myRepositoryManager;
-    GitMultiRootBranchConfig myMultiRootBranchConfig;
 
     String currentBranchName;
     String branchnameMaster;
@@ -37,11 +34,7 @@ public class GitflowBranchUtil {
         myProject=project;
         repo = GitBranchUtil.getCurrentRepository(project);
 
-        myRepositoryManager = GitUtil.getRepositoryManager(project);
-        myMultiRootBranchConfig  = new GitMultiRootBranchConfig(myRepositoryManager.getRepositories());
-
         currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
-
 
         branchnameMaster= GitflowConfigUtil.getMasterBranch(project);
         prefixFeature = GitflowConfigUtil.getFeaturePrefix(project);
