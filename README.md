@@ -3,8 +3,6 @@
 
 An intelliJ plugin providing a UI layer for git-flow, which in itself is a collection of Git extensions to provide high-level repository operations for Vincent [Driessen's branching model](http://nvie.com/git-model).
 
-**This plugin is in early alpha**
-
 ![screenshot](http://opherv.github.io/gitflow4idea/images/gitflow.jpg)
 
 ## Getting started
@@ -32,7 +30,7 @@ Once I gather enough feedback, I will post the plugin to the JetBrains plugin re
 
 ## Caveats
 
-While the plugin is operational and contains all basic functions (init/feature/release/hotfix), it is in its very early stages and may contains bugs. With your help I'll be able to find and zap them all.
+While the plugin is operational and contains all basic functions (init/feature/release/hotfix), it may contains bugs. With your help I'll be able to find and zap them all.
 
 ## Helping out
 
@@ -51,3 +49,6 @@ I have worked hard on this plugin on my spare time. If you feel it is useful to 
 
 This plugin is under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
 Copyright 2013, Opher Vishnia.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/OpherV/gitflow4idea/trend.png)](https://bitdeli.com/free "Bitdeli Badge") 
