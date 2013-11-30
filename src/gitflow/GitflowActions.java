@@ -1,10 +1,9 @@
 package gitflow;
 
+import com.intellij.ide.DataManager;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -12,6 +11,9 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
+import com.intellij.openapi.vfs.VirtualFile;
+import git4idea.GitPlatformFacade;
 import git4idea.GitUtil;
 import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
@@ -39,6 +41,7 @@ public class GitflowActions {
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     GitRepository repo;
     GitflowBranchUtil branchUtil;
+    private VcsDirtyScopeManager myDirtyScopeManager;
 
     String currentBranchName;
 
@@ -151,6 +154,7 @@ public class GitflowActions {
             }
 
         }
+
         return actionGroup;
     }
 
@@ -261,7 +265,7 @@ public class GitflowActions {
                 new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult result =  myGitflow.finishFeature(repo,featureName,new gitFlowErrorsListener());
+                        GitCommandResult result =  myGitflow.finishFeature(repo,featureName,errorLineHandler);
 
 
                         if (result.success()){
@@ -269,11 +273,22 @@ public class GitflowActions {
                             GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                         }
                         else{
+
                             GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+
                         }
 
                         repo.update();
 
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        super.onSuccess();
+
+                        if (errorLineHandler.hasMergeError){
+                            runMergeTool();
+                        }
                     }
                 }.queue();
             }
@@ -630,10 +645,22 @@ public class GitflowActions {
 
     }
 
+    public void runMergeTool(){
+
+         GitRepository rep = myRepositoryManager.getRepositories().get(0);
+        VirtualFile root = rep.getRoot();
+        ServiceManager.getService(myProject, GitPlatformFacade.class).hardRefresh(root);
+        rep.update();
+
+        git4idea.actions.GitResolveConflictsAction resolveAction= new git4idea.actions.GitResolveConflictsAction();
+        AnActionEvent e = new AnActionEvent(null, DataManager.getInstance().getDataContext(), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
+        resolveAction.actionPerformed(e);
+    }
+
 
     private class gitFlowErrorsListener extends gitflowLineHandler{
 
-        //TODO handle fatal errors
+        boolean hasMergeError=false;
 
         @Override
         public void onLineAvailable(String line, Key outputType) {
@@ -642,6 +669,9 @@ public class GitflowActions {
             }
             if (line.contains("Not a gitflow-enabled repo yet")){
                 GitUIUtil.notifyError(myProject,"Error","Not a gitflow-enabled repo yet. Please init git flow");
+            }
+            if (line.contains("There were merge conflicts")){
+                hasMergeError=true;
             }
         }
 
