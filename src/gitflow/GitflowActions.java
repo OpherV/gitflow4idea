@@ -646,12 +646,6 @@ public class GitflowActions {
     }
 
     public void runMergeTool(){
-
-         GitRepository rep = myRepositoryManager.getRepositories().get(0);
-        VirtualFile root = rep.getRoot();
-        ServiceManager.getService(myProject, GitPlatformFacade.class).hardRefresh(root);
-        rep.update();
-
         git4idea.actions.GitResolveConflictsAction resolveAction= new git4idea.actions.GitResolveConflictsAction();
         AnActionEvent e = new AnActionEvent(null, DataManager.getInstance().getDataContext(), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
         resolveAction.actionPerformed(e);
