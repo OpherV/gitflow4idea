@@ -1,6 +1,7 @@
 package gitflow;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.SaveAndSyncHandlerImpl;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;
@@ -11,14 +12,14 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import git4idea.GitPlatformFacade;
-import git4idea.GitUtil;
+import com.intellij.openapi.vcs.VcsException;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.ui.Messages;
 import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
+import git4idea.merge.GitMerger;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import gitflow.ui.GitflowBranchChooseDialog;
@@ -26,6 +27,7 @@ import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import java.util.ArrayList;
@@ -41,7 +43,9 @@ public class GitflowActions {
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     GitRepository repo;
     GitflowBranchUtil branchUtil;
-    private VcsDirtyScopeManager myDirtyScopeManager;
+
+    VirtualFileManager virtualFileMananger;
+
 
     String currentBranchName;
 
@@ -59,10 +63,12 @@ public class GitflowActions {
 
     public GitflowActions(@NotNull Project project){
         myProject=project;
-
         branchUtil=new GitflowBranchUtil(project);
+        virtualFileMananger = VirtualFileManager.getInstance();
 
         repo = GitBranchUtil.getCurrentRepository(myProject);
+
+
         if (repo!=null){
             currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
         }
@@ -183,7 +189,7 @@ public class GitflowActions {
                         GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
                     }
                     else{
-                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors()+" "+localLineHandler.getErrors());
+                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();
@@ -234,7 +240,7 @@ public class GitflowActions {
                                 GitUIUtil.notifySuccess(myProject, featureName, startedFeatureMessage );
                             }
                             else{
-                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                                GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                             }
 
                             repo.update();
@@ -249,8 +255,15 @@ public class GitflowActions {
 
     private class FinishFeatureAction extends DumbAwareAction{
 
+        String customFeatureName=null;
+
         FinishFeatureAction() {
             super("Finish Feature");
+        }
+
+        FinishFeatureAction(String name) {
+            super("Finish Feature");
+            customFeatureName=name;
         }
 
         @Override
@@ -259,7 +272,15 @@ public class GitflowActions {
             String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
             if (currentBranchName.isEmpty()==false){
 
-                final String featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                final AnActionEvent event=e;
+                final String featureName;
+                // Check if a feature name was specified, otherwise take name from current branch
+                if (customFeatureName!=null){
+                    featureName = customFeatureName;
+                }
+                else{
+                    featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                }
                 final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
                 new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
@@ -272,13 +293,14 @@ public class GitflowActions {
                             String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
                             GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                         }
-                        else{
-
-                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        else if(errorLineHandler.hasMergeError){
 
                         }
+                        else {
 
-                        repo.update();
+                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+
+                        }
 
                     }
 
@@ -286,8 +308,41 @@ public class GitflowActions {
                     public void onSuccess() {
                         super.onSuccess();
 
+
+                        //ugly, but required for intellij to catch up with the external changes made by
+                        //the CLI before being able to run the merge tool
+                        virtualFileMananger.syncRefresh();
+                        try {
+                            Thread.sleep(500);
+                        }
+                        catch (InterruptedException ignored) {
+                        }
+
+
+                        //TODO: refactor this logic to work in case of finishRelease as well
                         if (errorLineHandler.hasMergeError){
                             runMergeTool();
+                            repo.update();
+
+                            //if merge was completed successfully, finish the action
+                            //note that if it wasn't intellij is left in the "merging state", and git4idea provides no UI way to resolve it
+                            int answer = Messages.showYesNoDialog(myProject, "Was the merge completed succesfully?",  "Merge", Messages.getQuestionIcon());
+                            if (answer==0){
+                                GitMerger gitMerger=new GitMerger(myProject);
+
+                                try {
+                                    gitMerger.mergeCommit(gitMerger.getMergingRoots());
+                                } catch (VcsException e1) {
+                                    GitUIUtil.notifyError(myProject,"Error","Error committing merge result");
+                                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                }
+
+                                FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
+                                completeFinishFeatureAction.actionPerformed(event);
+
+                            }
+
+
                         }
                     }
                 }.queue();
@@ -317,7 +372,7 @@ public class GitflowActions {
                         GitUIUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
                     }
                     else{
-                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();
@@ -370,7 +425,7 @@ public class GitflowActions {
 
                             }
                             else{
-                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                                GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                             }
 
                             repo.update();
@@ -415,7 +470,7 @@ public class GitflowActions {
                             GitUIUtil.notifySuccess(myProject, releaseName, startedReleaseMessage );
                         }
                         else{
-                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                         }
 
                         repo.update();
@@ -447,6 +502,7 @@ public class GitflowActions {
                 final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
 
                 if (tagMessage!=null){
+
                     new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
@@ -457,12 +513,21 @@ public class GitflowActions {
                                 GitUIUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
                             }
                             else{
-                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                                GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                             }
 
-                            repo.update();
+
 
                         }
+
+                        @Override
+                        public void onSuccess() {
+                            super.onSuccess();
+
+                            virtualFileMananger.syncRefresh();
+                            repo.update();
+                        }
+
                     }.queue();
 
                 }
@@ -492,7 +557,7 @@ public class GitflowActions {
                         GitUIUtil.notifySuccess(myProject, releaseName, publishedReleaseMessage);
                     }
                     else{
-                        GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();
@@ -541,7 +606,7 @@ public class GitflowActions {
                                 GitUIUtil.notifySuccess(myProject, releaseName, trackedReleaseMessage);
                             }
                             else{
-                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                                GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                             }
 
                             repo.update();
@@ -585,7 +650,7 @@ public class GitflowActions {
                             GitUIUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage );
                         }
                         else{
-                            GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                         }
 
                         repo.update();
@@ -631,7 +696,7 @@ public class GitflowActions {
                                 GitUIUtil.notifySuccess(myProject, hotfixName, finishedHotfixMessage);
                             }
                             else{
-                                GitUIUtil.notifyError(myProject,"Error",result.getErrorOutputAsHtmlString()+" "+errorLineHandler.getErrors());
+                                GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
                             }
 
                             repo.update();
@@ -650,6 +715,21 @@ public class GitflowActions {
         AnActionEvent e = new AnActionEvent(null, DataManager.getInstance().getDataContext(), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
         resolveAction.actionPerformed(e);
     }
+
+    private abstract class gitflowTask extends Task.Backgroundable {
+            public gitflowTask(@Nullable Project project, @NotNull String title) {
+                super(project, title);
+            }
+
+        @Override
+        public void onSuccess() {
+            super.onSuccess();
+
+        }
+    }
+
+
+
 
 
     private class gitFlowErrorsListener extends gitflowLineHandler{
