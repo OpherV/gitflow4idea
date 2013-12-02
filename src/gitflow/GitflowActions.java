@@ -646,7 +646,7 @@ public class GitflowActions {
                         GitCommandResult result =  myGitflow.startHotfix(repo, hotfixName, errorLineHandler);
 
                         if (result.success()){
-                            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, developBranch);
+                            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, masterBranch);
                             GitUIUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage );
                         }
                         else{
