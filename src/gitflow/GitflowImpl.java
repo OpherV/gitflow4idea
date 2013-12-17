@@ -38,9 +38,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         try {
             command = (GitCommand) m.invoke(null,"flow");//now its ok
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return command;
@@ -62,9 +62,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         try {
             result = (GitCommandResult ) m.invoke(null, handler);//now its ok
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return result;
@@ -309,8 +309,33 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
+        if (pushOnHotfixFinish(repository.getProject())) {
+            h.addParameters("-p");
+        }
         h.addParameters("-m");
         h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+        h.addParameters(hotfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    private boolean pushOnHotfixFinish(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_HOTFIX, false);
+    }
+
+    public GitCommandResult publishHotfix(@NotNull GitRepository repository,
+                                          @NotNull String hotfixName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+
+        h.setSilent(false);
+
+        h.addParameters("hotfix");
+        h.addParameters("publish");
         h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {
