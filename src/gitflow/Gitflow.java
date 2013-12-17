@@ -18,7 +18,7 @@ import java.util.List;
 public interface Gitflow extends Git {
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     @Nullable GitLineHandlerListener... listeners);
+                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners);
 
 
     // feature
