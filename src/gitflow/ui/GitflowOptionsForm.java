@@ -17,6 +17,7 @@ public class GitflowOptionsForm  implements ItemListener {
     private JTextField customTagCommitMessage;
 
     public JPanel getContentPane() {
+        useCustomTagCommitMessage.addItemListener(this);
         return contentPane;
     }
 
@@ -28,10 +29,10 @@ public class GitflowOptionsForm  implements ItemListener {
         //disable\enable the tag commit message according to the checkbox state
         if (source == useCustomTagCommitMessage) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                customTagCommitMessage.setEnabled(true);
+                customTagCommitMessage.setEditable(true);
             }
             else{
-                customTagCommitMessage.setEnabled(false);
+                customTagCommitMessage.setEditable(false);
             }
         }
 
