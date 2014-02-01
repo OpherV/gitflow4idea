@@ -18,7 +18,7 @@ import java.util.List;
 public interface Gitflow extends Git {
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     @Nullable GitLineHandlerListener... listeners);
+                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners);
 
 
     // feature
@@ -76,5 +76,9 @@ public interface Gitflow extends Git {
                                  @NotNull String hotfixName,
                                  @NotNull String tagMessage,
                                  @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult publishHotfix(@NotNull GitRepository repository,
+                                   @NotNull String hotfixName,
+                                   @Nullable GitLineHandlerListener... listeners);
 
 }

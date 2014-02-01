@@ -1,7 +1,6 @@
 package gitflow;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.SaveAndSyncHandlerImpl;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;
@@ -14,7 +13,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.ui.Messages;
 import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
@@ -25,6 +23,7 @@ import git4idea.repo.GitRepository;
 import gitflow.ui.GitflowBranchChooseDialog;
 import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import gitflow.ui.GitflowInitOptionsDialog;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -156,7 +155,12 @@ public class GitflowActions {
             //master only actions
             actionGroup.add(new StartHotfixAction());
             if (branchUtil.isCurrentBranchHotfix()){
-                actionGroup.add(new FinishHotixAction());
+                actionGroup.add(new FinishHotfixAction());
+
+                //can't publish hotfix if it's already published
+                if (branchUtil.isCurrentBranchPublished() == false) {
+                    actionGroup.add(new PublishHotfixAction());
+                }
             }
 
         }
@@ -176,26 +180,31 @@ public class GitflowActions {
         public void actionPerformed(AnActionEvent e) {
             repo = GitBranchUtil.getCurrentRepository(myProject);
             repos.add(repo);
-            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
-            final LineHandler localLineHandler = new LineHandler();
 
-            new Task.Backgroundable(myProject,"Initializing repo",false){
-                @Override
-                public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result = myGitflow.initRepo(repo, errorLineHandler, localLineHandler);
+            GitflowInitOptionsDialog optionsDialog = new GitflowInitOptionsDialog(myProject, branchUtil.getLocalBranchNames());
+            optionsDialog.show();
 
-                    if (result.success()){
-                        String publishedFeatureMessage = String.format("Initialized gitflow repo");
-                        GitUIUtil.notifySuccess(myProject, publishedFeatureMessage,"");
+            if(optionsDialog.isOK()) {
+                final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+                final LineHandler localLineHandler = new LineHandler();
+                final GitflowInitOptions initOptions = optionsDialog.getOptions();
+
+                new Task.Backgroundable(myProject,"Initializing repo",false){
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        GitCommandResult result = myGitflow.initRepo(repo, initOptions, errorLineHandler, localLineHandler);
+
+                        if (result.success()) {
+                            String publishedFeatureMessage = String.format("Initialized gitflow repo");
+                            GitUIUtil.notifySuccess(myProject, publishedFeatureMessage, "");
+                        } else {
+                            GitUIUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                        }
+
+                        repo.update();
                     }
-                    else{
-                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
-                    }
-
-                    repo.update();
-                }
-            }.queue();
-
+                }.queue();
+            }
 
         }
 
@@ -497,11 +506,31 @@ public class GitflowActions {
 
                 final String releaseName = GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
                 final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
-                String defaultTagMessage="Tagging version "+releaseName;
+                String defaultTagMessage=GitflowConfigurable.getCustomTagCommitMessage(myProject);
+                defaultTagMessage=defaultTagMessage.replace("%name%", releaseName);
 
-                final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
+                String tagMessageDraft;
+                final String tagMessage;
 
-                if (tagMessage!=null){
+                boolean cancelAction=false;
+
+                if (GitflowConfigurable.dontTagRelease(myProject)) {
+                    tagMessage="";
+                }
+                else{
+                    tagMessageDraft=Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
+                    if (tagMessageDraft==null){
+                        cancelAction=true;
+                        tagMessage="";
+                    }
+                    else{
+
+                        tagMessage=tagMessageDraft;
+                    }
+                }
+
+
+                if (!cancelAction){
 
                     new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
                         @Override
@@ -646,7 +675,7 @@ public class GitflowActions {
                         GitCommandResult result =  myGitflow.startHotfix(repo, hotfixName, errorLineHandler);
 
                         if (result.success()){
-                            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, developBranch);
+                            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, masterBranch);
                             GitUIUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage );
                         }
                         else{
@@ -663,9 +692,9 @@ public class GitflowActions {
         }
     }
 
-    private class FinishHotixAction extends DumbAwareAction{
+    private class FinishHotfixAction extends DumbAwareAction{
 
-        FinishHotixAction() {
+        FinishHotfixAction() {
             super("Finish Hotfix");
         }
 
@@ -708,6 +737,35 @@ public class GitflowActions {
 
         }
 
+    }
+
+    private class PublishHotfixAction extends DumbAwareAction {
+        PublishHotfixAction() {
+            super("Publish Hotfix");
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent anActionEvent) {
+            final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, currentBranchName);
+            final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
+
+            new Task.Backgroundable(myProject, "Publishing hotfix " + hotfixName, false) {
+                @Override
+                public void run(@NotNull ProgressIndicator indicator) {
+                    GitCommandResult result = myGitflow.publishHotfix(repo, hotfixName, errorLineHandler);
+
+                    if (result.success()) {
+                        String publishedHotfixMessage = String.format("A new remote branch '%s%s' was created", hotfixPrefix, hotfixName);
+                        GitUIUtil.notifySuccess(myProject, hotfixName, publishedHotfixMessage);
+                    } else {
+                        GitUIUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                    }
+
+                    repo.update();
+                }
+            }.queue();
+
+        }
     }
 
     public void runMergeTool(){

@@ -11,11 +11,19 @@ import javax.swing.*;
 
 /**
  * @author Andreas Vogler (Andreas.Vogler@geneon.de)
+ * @author Opher Vishnia (opherv@gmail.com)
  */
 
 public class GitflowConfigurable implements Configurable {
     public static final String GITFLOW_PUSH_ON_FINISH_RELEASE = "Gitflow.pushOnFinishRelease";
+    public static final String GITFLOW_PUSH_ON_FINISH_HOTFIX = "Gitflow.pushOnFinishHotfix";
+    public static final String GITFLOW_DONT_TAG_RELEASE = "Gitflow.dontTagRelease";
+    public static final String GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE = "Gitflow.useCustomTagCommitMessage";
+    public static final String GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE = "Gitflow.customTagCommitMessage";
+
+    public static final String DEFAULT_TAG_COMMIT_MESSAGE ="Tagging version %name%";
     Project project;
+
     GitflowOptionsForm gitflowOptionsForm;
 
 
@@ -23,6 +31,32 @@ public class GitflowConfigurable implements Configurable {
     {
         this.project = project;
     }
+
+    public static boolean pushOnReleaseFinish(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
+    }
+
+    public static boolean pushOnHotfixFinish(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_HOTFIX, false);
+    }
+
+    public static boolean dontTagRelease(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_DONT_TAG_RELEASE, false);
+    }
+
+    public static boolean useCustomTagCommitMessage(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false);
+    }
+
+    public static String getCustomTagCommitMessage(Project project) {
+        if (useCustomTagCommitMessage(project)){
+            return PropertiesComponent.getInstance(project).getValue(GitflowConfigurable.GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE);
+        }
+        else{
+            return GitflowConfigurable.DEFAULT_TAG_COMMIT_MESSAGE;
+        }
+    }
+
 
     @Override
     public String getDisplayName() {
@@ -44,17 +78,30 @@ public class GitflowConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        return PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false) != gitflowOptionsForm.isPushOnFinishRelease();
+        return PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false) != gitflowOptionsForm.isPushOnFinishRelease() ||
+               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false) != gitflowOptionsForm.isPushOnFinishHotfix() ||
+               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_RELEASE, false) != gitflowOptionsForm.isDontTagRelease() ||
+               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false) != gitflowOptionsForm.isUseCustomTagCommitMessage() ||
+               PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE, DEFAULT_TAG_COMMIT_MESSAGE).equals(gitflowOptionsForm.getCustomTagCommitMessage())==false
+                ;
     }
 
     @Override
     public void apply() throws ConfigurationException {
         PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_RELEASE, Boolean.toString(gitflowOptionsForm.isPushOnFinishRelease()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_HOTFIX, Boolean.toString(gitflowOptionsForm.isPushOnFinishHotfix()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_DONT_TAG_RELEASE, Boolean.toString(gitflowOptionsForm.isDontTagRelease()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, Boolean.toString(gitflowOptionsForm.isUseCustomTagCommitMessage()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE, gitflowOptionsForm.getCustomTagCommitMessage());
     }
 
     @Override
     public void reset() {
         gitflowOptionsForm.setPushOnFinishRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false));
+        gitflowOptionsForm.setPushOnFinishHotfix(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false));
+        gitflowOptionsForm.setDontTagRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_RELEASE, false));
+        gitflowOptionsForm.setUseCustomTagCommitMessage(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false));
+        gitflowOptionsForm.setCustomTagCommitMessage(PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE,DEFAULT_TAG_COMMIT_MESSAGE));
     }
 
     @Override

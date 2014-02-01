@@ -38,9 +38,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         try {
             command = (GitCommand) m.invoke(null,"flow");//now its ok
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return command;
@@ -62,16 +62,20 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         try {
             result = (GitCommandResult ) m.invoke(null, handler);//now its ok
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return result;
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     @Nullable GitLineHandlerListener... listeners) {
+                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
+        if(!initOptions.isUseDefaults()) {
+            configureBranches(initOptions, repository.getProject());
+        }
+
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
 
@@ -81,9 +85,27 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        GitCommandResult result =  run(h);
+
+        if(result.success() && !initOptions.isUseDefaults()) {
+            configurePrefixes(initOptions, repository.getProject());
+        }
+
+        return result;
     }
 
+    private void configureBranches(GitflowInitOptions initOptions, Project project) {
+        GitflowConfigUtil.setMasterBranch(project, initOptions.getProductionBranch());
+        GitflowConfigUtil.setDevelopBranch(project, initOptions.getDevelopmentBranch());
+    }
+
+    private void configurePrefixes(GitflowInitOptions initOptions, Project project) {
+        GitflowConfigUtil.setFeaturePrefix(project, initOptions.getFeaturePrefix());
+        GitflowConfigUtil.setReleasePrefix(project, initOptions.getReleasePrefix());
+        GitflowConfigUtil.setHotfixPrefix(project, initOptions.getHotfixPrefix());
+        GitflowConfigUtil.setSupportPrefix(project, initOptions.getSupportPrefix());
+        GitflowConfigUtil.setVersionPrefix(project, initOptions.getVersionPrefix());
+    }
 
     //feature
 
@@ -206,12 +228,18 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
-        if(pushOnReleaseFinish(repository.getProject())) {
+        if(GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
             h.addParameters("-p");
         }
-        h.addParameters("-m");
-        h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
-        h.addParameters(releaseName);
+
+        if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
+            h.addParameters("-n");
+        }
+        else{
+            h.addParameters("-m");
+            h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+            h.addParameters(releaseName);
+        }
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -219,9 +247,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
-    private boolean pushOnReleaseFinish(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
-    }
 
     public GitCommandResult publishRelease(@NotNull GitRepository repository,
                                            @NotNull String releaseName,
@@ -287,8 +312,29 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
+        if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
+            h.addParameters("-p");
+        }
         h.addParameters("-m");
         h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+        h.addParameters(hotfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult publishHotfix(@NotNull GitRepository repository,
+                                          @NotNull String hotfixName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+
+        h.setSilent(false);
+
+        h.addParameters("hotfix");
+        h.addParameters("publish");
         h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {
