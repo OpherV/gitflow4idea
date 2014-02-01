@@ -506,11 +506,31 @@ public class GitflowActions {
 
                 final String releaseName = GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
                 final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
-                String defaultTagMessage="Tagging version "+releaseName;
+                String defaultTagMessage=GitflowConfigurable.getCustomTagCommitMessage(myProject);
+                defaultTagMessage=defaultTagMessage.replace("%name%", releaseName);
 
-                final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
+                String tagMessageDraft;
+                final String tagMessage;
 
-                if (tagMessage!=null){
+                boolean cancelAction=false;
+
+                if (GitflowConfigurable.dontTagRelease(myProject)) {
+                    tagMessage="";
+                }
+                else{
+                    tagMessageDraft=Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
+                    if (tagMessageDraft==null){
+                        cancelAction=true;
+                        tagMessage="";
+                    }
+                    else{
+
+                        tagMessage=tagMessageDraft;
+                    }
+                }
+
+
+                if (!cancelAction){
 
                     new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
                         @Override

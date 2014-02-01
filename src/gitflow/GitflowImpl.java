@@ -228,12 +228,18 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
-        if(pushOnReleaseFinish(repository.getProject())) {
+        if(GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
             h.addParameters("-p");
         }
-        h.addParameters("-m");
-        h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
-        h.addParameters(releaseName);
+
+        if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
+            h.addParameters("-n");
+        }
+        else{
+            h.addParameters("-m");
+            h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+            h.addParameters(releaseName);
+        }
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -241,9 +247,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
-    private boolean pushOnReleaseFinish(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
-    }
 
     public GitCommandResult publishRelease(@NotNull GitRepository repository,
                                            @NotNull String releaseName,
@@ -309,7 +312,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
-        if (pushOnHotfixFinish(repository.getProject())) {
+        if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
             h.addParameters("-p");
         }
         h.addParameters("-m");
@@ -320,10 +323,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addLineListener(listener);
         }
         return run(h);
-    }
-
-    private boolean pushOnHotfixFinish(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_HOTFIX, false);
     }
 
     public GitCommandResult publishHotfix(@NotNull GitRepository repository,

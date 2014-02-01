@@ -17,6 +17,7 @@ public class GitflowOptionsForm  implements ItemListener {
     private JTextField customTagCommitMessage;
 
     public JPanel getContentPane() {
+        dontTagRelease.addItemListener(this);
         useCustomTagCommitMessage.addItemListener(this);
         return contentPane;
     }
@@ -30,11 +31,26 @@ public class GitflowOptionsForm  implements ItemListener {
         if (source == useCustomTagCommitMessage) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 customTagCommitMessage.setEditable(true);
+                customTagCommitMessage.setEnabled(true);
             }
             else{
                 customTagCommitMessage.setEditable(false);
             }
         }
+        else if (source == dontTagRelease) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                useCustomTagCommitMessage.setEnabled(false);
+                customTagCommitMessage.setEnabled(false);
+            }
+            else{
+                useCustomTagCommitMessage.setEnabled(true);
+                if( useCustomTagCommitMessage.isSelected()){
+                    customTagCommitMessage.setEnabled(true);
+                }
+            }
+        }
+
+
 
     }
 
