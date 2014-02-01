@@ -23,6 +23,7 @@ public class GitflowConfigUtil {
     public static final String PREFIX_FEATURE = "gitflow.prefix.feature";
     public static final String PREFIX_RELEASE = "gitflow.prefix.release";
     public static final String PREFIX_HOTFIX = "gitflow.prefix.hotfix";
+    public static final String PREFIX_SUPPORT = "gitflow.prefix.support";
     public static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
 
     public static String getMasterBranch(Project project){
@@ -115,12 +116,85 @@ public class GitflowConfigUtil {
         return branchName.substring(branchName.indexOf(hotfixPrefix) + hotfixPrefix.length(), branchName.length());
     }
 
-
-
     public static String getRemoteNameFromBranch(Project project, String branchName){
         return branchName.substring(0,branchName.indexOf("/"));
     }
 
+    public static void setMasterBranch(Project project, String branchName)
+    {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
 
+        try {
+            GitConfigUtil.setValue(project, root, BRANCH_MASTER, branchName);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
 
+    public static void setDevelopBranch(Project project, String branchName) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, BRANCH_DEVELOP, branchName);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
+
+    public static void setReleasePrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_RELEASE, prefix);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
+
+    public static void setFeaturePrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_FEATURE, prefix);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
+
+    public static void setHotfixPrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_HOTFIX, prefix);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
+
+    public static void setSupportPrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_SUPPORT, prefix);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
+
+    public static void setVersionPrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_VERSIONTAG, prefix);
+        } catch (VcsException e) {
+            GitUIUtil.notifyError(project, "Config error", null, false, e);
+        }
+    }
 }
