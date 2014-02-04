@@ -631,7 +631,7 @@ public class GitflowActions {
                             GitCommandResult result = myGitflow.trackRelease(repo, releaseName, errorLineHandler);
 
                             if (result.success()){
-                                String trackedReleaseMessage = String.format(" A new remote tracking branch '%s$s' was created", releasePrefix, releaseName);
+                                String trackedReleaseMessage = String.format(" A new remote tracking branch '%s%s' was created", releasePrefix, releaseName);
                                 GitUIUtil.notifySuccess(myProject, releaseName, trackedReleaseMessage);
                             }
                             else{
