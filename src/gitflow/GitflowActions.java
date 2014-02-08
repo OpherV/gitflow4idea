@@ -237,7 +237,7 @@ public class GitflowActions {
                     GitNewBranchNameValidator.newInstance(repos));
             final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
-            if (featureName!=null){
+            if (featureName!=null && !featureName.isEmpty()){
                     new Task.Backgroundable(myProject,"Starting feature "+featureName,false){
                         @Override
                         public void run(@NotNull ProgressIndicator indicator) {
@@ -257,6 +257,9 @@ public class GitflowActions {
                         }
                     }.queue();
 
+            }
+            else{
+                Messages.showWarningDialog(myProject, "You must provide a name for the feature", "Whoops");
             }
 
         }
@@ -468,7 +471,7 @@ public class GitflowActions {
                     GitNewBranchNameValidator.newInstance(repos));
             final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
-            if (releaseName!=null){
+            if (releaseName!=null && !releaseName.isEmpty()){
                 new Task.Backgroundable(myProject,"Starting release "+releaseName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
@@ -487,6 +490,9 @@ public class GitflowActions {
                     }
                 }.queue();
 
+            }
+            else{
+                Messages.showWarningDialog(myProject, "You must provide a name for the release", "Whoops");
             }
 
         }
@@ -668,7 +674,8 @@ public class GitflowActions {
                     GitNewBranchNameValidator.newInstance(repos));
             final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
 
-            if (hotfixName!=null){
+            //must insert hotfix name
+            if (hotfixName!=null && !hotfixName.isEmpty()){
                 new Task.Backgroundable(myProject,"Starting hotfix "+hotfixName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
@@ -687,6 +694,9 @@ public class GitflowActions {
                     }
                 }.queue();
 
+            }
+            else{
+                Messages.showWarningDialog(myProject, "You must provide a name for the hotfix", "Whoops");
             }
 
         }
@@ -709,7 +719,8 @@ public class GitflowActions {
                 //TODO HOTFIX NAME
                 final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, currentBranchName);
 
-                String defaultTagMessage="Tagging version "+hotfixName;
+                String defaultTagMessage=GitflowConfigurable.getCustomHotfixTagCommitMessage(myProject);
+                defaultTagMessage=defaultTagMessage.replace("%name%", hotfixName);
 
                 final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Hotfix", Messages.getQuestionIcon(), defaultTagMessage, null);
                 final gitFlowErrorsListener errorLineHandler = new gitFlowErrorsListener();
