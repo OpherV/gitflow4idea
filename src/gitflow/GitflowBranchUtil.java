@@ -3,15 +3,12 @@ package gitflow;
 import com.intellij.openapi.project.Project;
 import git4idea.GitLocalBranch;
 import git4idea.GitRemoteBranch;
-import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import git4idea.ui.branch.GitMultiRootBranchConfig;
 
-
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
