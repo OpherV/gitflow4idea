@@ -44,7 +44,11 @@ public class GitflowBranchUtil {
 
     public boolean hasGitflow(){
         boolean hasGitflow=false;
-        hasGitflow=(GitflowConfigUtil.getMasterBranch(myProject)!=null);
+        hasGitflow=GitflowConfigUtil.getMasterBranch(myProject)!=null
+                   && GitflowConfigUtil.getDevelopBranch(myProject)!=null
+                   && GitflowConfigUtil.getFeaturePrefix(myProject)!=null
+                   && GitflowConfigUtil.getReleasePrefix(myProject)!=null
+                   && GitflowConfigUtil.getHotfixPrefix(myProject)!=null;
 
         return hasGitflow;
     }
