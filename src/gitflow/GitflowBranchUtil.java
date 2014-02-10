@@ -3,15 +3,12 @@ package gitflow;
 import com.intellij.openapi.project.Project;
 import git4idea.GitLocalBranch;
 import git4idea.GitRemoteBranch;
-import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import git4idea.ui.branch.GitMultiRootBranchConfig;
 
-
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -30,7 +27,7 @@ public class GitflowBranchUtil {
     String prefixRelease;
     String prefixHotfix;
 
-    GitflowBranchUtil(Project project){
+    public GitflowBranchUtil(Project project){
         myProject=project;
         repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -44,7 +41,11 @@ public class GitflowBranchUtil {
 
     public boolean hasGitflow(){
         boolean hasGitflow=false;
-        hasGitflow=(GitflowConfigUtil.getMasterBranch(myProject)!=null);
+        hasGitflow=GitflowConfigUtil.getMasterBranch(myProject)!=null
+                   && GitflowConfigUtil.getDevelopBranch(myProject)!=null
+                   && GitflowConfigUtil.getFeaturePrefix(myProject)!=null
+                   && GitflowConfigUtil.getReleasePrefix(myProject)!=null
+                   && GitflowConfigUtil.getHotfixPrefix(myProject)!=null;
 
         return hasGitflow;
     }

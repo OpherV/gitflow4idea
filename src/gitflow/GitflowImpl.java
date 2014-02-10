@@ -1,11 +1,9 @@
 package gitflow;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import git4idea.commands.*;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -237,7 +235,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
         else{
             h.addParameters("-m");
-            h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+            h.addParameters(tagMessage);
             h.addParameters(releaseName);
         }
 
@@ -316,7 +314,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-p");
         }
         h.addParameters("-m");
-        h.addParameters(StringEscapeUtils.escapeJava(tagMessage));
+        h.addParameters(tagMessage);
         h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {

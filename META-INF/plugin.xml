@@ -2,7 +2,7 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
@@ -10,6 +10,24 @@
     <depends>Git4Idea</depends>
 
     <idea-version since-build="129" until-build="133.999999"/>
+
+    <actions>
+        <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction" text="Initialize Gitflow Repository"></action>
+
+        <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction" text="Start Feature"></action>
+        <action id="Gitflow.FinishFeature" class="gitflow.actions.FinishFeatureAction" text="Finish Feature"></action>
+        <action id="Gitflow.PublishFeature" class="gitflow.actions.PublishFeatureAction" text="Publish Feature"></action>
+        <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction" text="Track Feature"></action>
+
+        <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction" text="Start Release"></action>
+        <action id="Gitflow.FinishRelease" class="gitflow.actions.FinishReleaseAction" text="Finish Release"></action>
+        <action id="Gitflow.PublishRelease" class="gitflow.actions.PublishReleaseAction" text="Publish Release"></action>
+        <action id="Gitflow.TrackRelease" class="gitflow.actions.TrackReleaseAction" text="Track Release"></action>
+
+        <action id="Gitflow.StartHotfix" class="gitflow.actions.StartHotfixAction" text="Start Hotfix"></action>
+        <action id="Gitflow.FinishHotfix" class="gitflow.actions.FinishHotfixAction" text="Finish Hotfix"></action>
+        <action id="Gitflow.PublishHotfix" class="gitflow.actions.PublishHotfixAction" text="Publish Hotfix"></action>
+    </actions>
 
 
 

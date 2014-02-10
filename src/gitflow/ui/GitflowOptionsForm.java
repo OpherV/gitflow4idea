@@ -15,10 +15,13 @@ public class GitflowOptionsForm  implements ItemListener {
     private JCheckBox dontTagRelease;
     private JCheckBox useCustomTagCommitMessage;
     private JTextField customTagCommitMessage;
+    private JTextField customHotfixCommitMessage;
+    private JCheckBox useCustomHotfixCommitMessage;
 
     public JPanel getContentPane() {
         dontTagRelease.addItemListener(this);
         useCustomTagCommitMessage.addItemListener(this);
+        useCustomHotfixCommitMessage.addItemListener(this);
         return contentPane;
     }
 
@@ -27,9 +30,9 @@ public class GitflowOptionsForm  implements ItemListener {
 
         Object source = e.getItemSelectable();
 
-        //disable\enable the tag commit message according to the checkbox state
+        //disable\enable the finish release tag commit message according to the checkbox state
         if (source == useCustomTagCommitMessage) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+            if (e.getStateChange() == ItemEvent.SELECTED && dontTagRelease.isSelected()==false) {
                 customTagCommitMessage.setEditable(true);
                 customTagCommitMessage.setEnabled(true);
             }
@@ -46,10 +49,21 @@ public class GitflowOptionsForm  implements ItemListener {
                 useCustomTagCommitMessage.setEnabled(true);
                 if( useCustomTagCommitMessage.isSelected()){
                     customTagCommitMessage.setEnabled(true);
+                    customTagCommitMessage.setEditable(true);
                 }
             }
         }
 
+        //disable\enable the finish hotfix tag commit message according to the checkbox state
+        if (source == useCustomHotfixCommitMessage) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                customHotfixCommitMessage.setEditable(true);
+                customHotfixCommitMessage.setEnabled(true);
+            }
+            else{
+                customHotfixCommitMessage.setEditable(false);
+            }
+        }
 
 
     }
@@ -81,7 +95,7 @@ public class GitflowOptionsForm  implements ItemListener {
     }
 
 
-    /* custom release tag commit message */
+    /* custom finish release tag commit message */
 
     public boolean isUseCustomTagCommitMessage() {
         return useCustomTagCommitMessage.isSelected();
@@ -97,5 +111,23 @@ public class GitflowOptionsForm  implements ItemListener {
 
     public void setCustomTagCommitMessage(String message) {
         customTagCommitMessage.setText(message);
+    }
+
+    /* custom finish hotfix commit message */
+
+    public boolean isUseCustomHotfixComitMessage(){
+        return useCustomHotfixCommitMessage.isSelected();
+    }
+
+    public void setUseCustomHotfixCommitMessage(boolean selected){
+        useCustomHotfixCommitMessage.setSelected(selected);
+    }
+
+    public String getCustomHotfixCommitMessage(){
+        return customHotfixCommitMessage.getText();
+    }
+
+    public void setCustomHotfixCommitMessage(String message){
+        customHotfixCommitMessage.setText(message);
     }
 }
