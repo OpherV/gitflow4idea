@@ -30,7 +30,7 @@ public class GitflowBranchUtil {
     String prefixRelease;
     String prefixHotfix;
 
-    GitflowBranchUtil(Project project){
+    public GitflowBranchUtil(Project project){
         myProject=project;
         repo = GitBranchUtil.getCurrentRepository(project);
 
