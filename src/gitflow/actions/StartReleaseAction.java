@@ -5,12 +5,9 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.commands.GitCommandResult;
-import git4idea.repo.GitRepository;
-import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 public class StartReleaseAction extends GitflowAction {
 
@@ -32,12 +29,12 @@ public class StartReleaseAction extends GitflowAction {
                 public void run(@NotNull ProgressIndicator indicator) {
                     GitCommandResult result=  myGitflow.startRelease(repo, releaseName, errorLineHandler);
 
-                    if (result.success()){
+                    if (result.success()) {
                         String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", releasePrefix, releaseName, developBranch);
-                        GitUIUtil.notifySuccess(myProject, releaseName, startedReleaseMessage);
+                        NotifyUtil.notifySuccess(myProject, releaseName, startedReleaseMessage);
                     }
-                    else{
-                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                    else {
+                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();

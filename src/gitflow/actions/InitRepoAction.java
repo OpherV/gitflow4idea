@@ -3,20 +3,12 @@ package gitflow.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.Key;
-import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
-import git4idea.repo.GitRepository;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowInitOptions;
-import gitflow.actions.GitflowAction;
-import gitflow.actions.GitflowErrorsListener;
-import gitflow.actions.GitflowLineHandler;
 import gitflow.ui.GitflowInitOptionsDialog;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 public class InitRepoAction extends GitflowAction {
 
@@ -43,9 +35,9 @@ public class InitRepoAction extends GitflowAction {
 
                     if (result.success()) {
                         String publishedFeatureMessage = String.format("Initialized gitflow repo");
-                        GitUIUtil.notifySuccess(myProject, publishedFeatureMessage, "");
+                        NotifyUtil.notifySuccess(myProject, publishedFeatureMessage, "");
                     } else {
-                        GitUIUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();

@@ -1,32 +1,16 @@
 package gitflow.actions;
 
 import com.intellij.ide.DataManager;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
-import git4idea.commands.GitCommandResult;
-import git4idea.merge.GitMerger;
-import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import git4idea.util.GitUIUtil;
-import git4idea.validators.GitNewBranchNameValidator;
-import gitflow.*;
-import gitflow.ui.GitflowBranchChooseDialog;
+import gitflow.Gitflow;
+import gitflow.GitflowBranchUtil;
+import gitflow.GitflowConfigUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * All actions associated with Gitflow
