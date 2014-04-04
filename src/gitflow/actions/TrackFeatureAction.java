@@ -1,16 +1,13 @@
 package gitflow.actions;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import git4idea.GitVcs;
 import git4idea.commands.GitCommandResult;
 import git4idea.repo.GitRemote;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.GitflowBranchChooseDialog;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,13 +49,12 @@ public class TrackFeatureAction extends GitflowAction {
                     public void run(@NotNull ProgressIndicator indicator) {
                         GitCommandResult result = myGitflow.trackFeature(repo, featureName, remote, errorLineHandler);
 
-                        if (result.success()){
+                        if (result.success()) {
                             String trackedFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
-                            GitUIUtil.notifySuccess(myProject, featureName, trackedFeatureMessage);
-
+                            NotifyUtil.notifySuccess(myProject, featureName, trackedFeatureMessage);
                         }
-                        else{
-                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                        else {
+                            NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
                         repo.update();
@@ -67,8 +63,8 @@ public class TrackFeatureAction extends GitflowAction {
                 }.queue();
             }
         }
-        else{
-            new Notification(GitVcs.IMPORTANT_ERROR_NOTIFICATION.getDisplayId(), "Error", "No remote branches", NotificationType.ERROR).notify(myProject);
+        else {
+            NotifyUtil.notifyError(myProject, "Error", "No remote branches");
         }
 
     }

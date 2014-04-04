@@ -4,8 +4,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import git4idea.commands.GitCommandResult;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowConfigUtil;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class PublishFeatureAction extends GitflowAction {
@@ -24,12 +24,12 @@ public class PublishFeatureAction extends GitflowAction {
             public void run(@NotNull ProgressIndicator indicator) {
                 GitCommandResult result = myGitflow.publishFeature(repo,featureName,new GitflowErrorsListener(myProject));
 
-                if (result.success()){
+                if (result.success()) {
                     String publishedFeatureMessage = String.format("A new remote branch '%s%s' was created", featurePrefix, featureName);
-                    GitUIUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
+                    NotifyUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
                 }
-                else{
-                    GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                else {
+                    NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                 }
 
                 repo.update();

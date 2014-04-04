@@ -1,12 +1,12 @@
 package gitflow;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.project.Project;
 import git4idea.branch.GitBranchUtil;
 import git4idea.config.GitConfigUtil;
 import git4idea.repo.GitRepository;
-import git4idea.util.GitUIUtil;
+import gitflow.ui.NotifyUtil;
 
 /**
  *
@@ -35,7 +35,7 @@ public class GitflowConfigUtil {
             masterBranch = GitConfigUtil.getValue(project, root, BRANCH_MASTER);
         }
         catch (VcsException e) {
-            GitUIUtil.notifyError(project,"Config error",null,false,e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
 
         return masterBranch;
@@ -50,7 +50,7 @@ public class GitflowConfigUtil {
             developBranch = GitConfigUtil.getValue(project, root, BRANCH_DEVELOP);
         }
         catch (VcsException e) {
-            GitUIUtil.notifyError(project,"Config error",null,false,e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
 
         return developBranch;
@@ -66,7 +66,7 @@ public class GitflowConfigUtil {
             featurePrefix = GitConfigUtil.getValue(project,root,PREFIX_FEATURE);
         }
         catch (VcsException e) {
-            GitUIUtil.notifyError(project,"Config error",null,false,e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
         return featurePrefix;
     }
@@ -81,7 +81,7 @@ public class GitflowConfigUtil {
             releasePrefix = GitConfigUtil.getValue(project,root,PREFIX_RELEASE);
         }
         catch (VcsException e) {
-            GitUIUtil.notifyError(project,"Config error",null,false,e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
         return releasePrefix;
     }
@@ -96,7 +96,7 @@ public class GitflowConfigUtil {
             hotfixPrefix = GitConfigUtil.getValue(project,root,PREFIX_HOTFIX);
         }
         catch (VcsException e) {
-            GitUIUtil.notifyError(project,"Config error",null,false,e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
         return hotfixPrefix;
     }
@@ -128,7 +128,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, BRANCH_MASTER, branchName);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -139,7 +139,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, BRANCH_DEVELOP, branchName);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -150,7 +150,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, PREFIX_RELEASE, prefix);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -161,7 +161,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, PREFIX_FEATURE, prefix);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -172,7 +172,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, PREFIX_HOTFIX, prefix);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -183,7 +183,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, PREFIX_SUPPORT, prefix);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 
@@ -194,7 +194,7 @@ public class GitflowConfigUtil {
         try {
             GitConfigUtil.setValue(project, root, PREFIX_VERSIONTAG, prefix);
         } catch (VcsException e) {
-            GitUIUtil.notifyError(project, "Config error", null, false, e);
+            NotifyUtil.notifyError(project, "Config error", e);
         }
     }
 }

@@ -6,9 +6,9 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowConfigurable;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class FinishReleaseAction extends GitflowAction {
@@ -57,12 +57,12 @@ public class FinishReleaseAction extends GitflowAction {
                     public void run(@NotNull ProgressIndicator indicator) {
                         GitCommandResult result =  myGitflow.finishRelease(repo, releaseName, tagMessage, errorLineHandler);
 
-                        if (result.success()){
+                        if (result.success()) {
                             String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", featurePrefix, releaseName, developBranch, masterBranch);
-                            GitUIUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
+                            NotifyUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
                         }
-                        else{
-                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                        else {
+                            NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
 

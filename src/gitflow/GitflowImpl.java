@@ -236,8 +236,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         else{
             h.addParameters("-m");
             h.addParameters(tagMessage);
-            h.addParameters(releaseName);
         }
+
+        h.addParameters(releaseName);
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);

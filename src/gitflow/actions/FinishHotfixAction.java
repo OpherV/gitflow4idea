@@ -6,9 +6,9 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowConfigurable;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class FinishHotfixAction extends GitflowAction {
@@ -41,12 +41,12 @@ public class FinishHotfixAction extends GitflowAction {
                     public void run(@NotNull ProgressIndicator indicator) {
                         GitCommandResult result=  myGitflow.finishHotfix(repo, hotfixName, tagMessage, errorLineHandler);
 
-                        if (result.success()){
+                        if (result.success()) {
                             String finishedHotfixMessage = String.format("The hotfix branch '%s%s' was merged into '%s' and '%s'", hotfixPrefix, hotfixName, developBranch, masterBranch);
-                            GitUIUtil.notifySuccess(myProject, hotfixName, finishedHotfixMessage);
+                            NotifyUtil.notifySuccess(myProject, hotfixName, finishedHotfixMessage);
                         }
-                        else{
-                            GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                        else {
+                            NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
                         repo.update();

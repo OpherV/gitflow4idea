@@ -15,6 +15,7 @@
  */
 package gitflow.ui;
 
+import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -26,13 +27,12 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
-import com.intellij.openapi.actionSystem.ActionGroup;
 import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
-import gitflow.actions.GitflowActions;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
+import gitflow.actions.GitflowActions;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseEvent;
