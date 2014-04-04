@@ -26,6 +26,15 @@ The plugin is available via the IntelliJ plugin manager. Just search for "Git Fl
 
 (The plugin requires that you have [Vanilla Git Flow](https://github.com/nvie/gitflow) \ [AVH edition](https://github.com/petervanderdoes/gitflow) installed)
 
+**Mac/Linux users:**
+
+If you're running into issues like getting
+`Gitflow is not installed`
+or
+`git: 'flow' is not a git command. See 'git --help'.`
+
+Please be sure to check out [this thread](https://github.com/OpherV/gitflow4idea/issues/7)
+
 
 ## Caveats
 
