@@ -5,8 +5,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.commands.GitCommandResult;
-import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class StartHotfixAction extends GitflowAction {
@@ -30,12 +30,12 @@ public class StartHotfixAction extends GitflowAction {
                 public void run(@NotNull ProgressIndicator indicator) {
                     GitCommandResult result =  myGitflow.startHotfix(repo, hotfixName, errorLineHandler);
 
-                    if (result.success()){
+                    if (result.success()) {
                         String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'", hotfixPrefix, hotfixName, masterBranch);
-                        GitUIUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage);
+                        NotifyUtil.notifySuccess(myProject, hotfixName, startedHotfixMessage);
                     }
-                    else{
-                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                    else {
+                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();

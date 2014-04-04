@@ -8,8 +8,8 @@ import com.intellij.openapi.vcs.VcsException;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
 import git4idea.merge.GitMerger;
-import git4idea.util.GitUIUtil;
 import gitflow.GitflowConfigUtil;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class FinishFeatureAction extends GitflowAction {
@@ -49,17 +49,15 @@ public class FinishFeatureAction extends GitflowAction {
                     GitCommandResult result =  myGitflow.finishFeature(repo,featureName,errorLineHandler);
 
 
-                    if (result.success()){
+                    if (result.success()) {
                         String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
-                        GitUIUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
+                        NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                     }
                     else if(errorLineHandler.hasMergeError){
 
                     }
                     else {
-
-                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
-
+                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                 }
@@ -93,8 +91,8 @@ public class FinishFeatureAction extends GitflowAction {
                             try {
                                 gitMerger.mergeCommit(gitMerger.getMergingRoots());
                             } catch (VcsException e1) {
-                                GitUIUtil.notifyError(myProject,"Error","Error committing merge result");
-                                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                NotifyUtil.notifyError(myProject, "Error", "Error committing merge result");
+                                e1.printStackTrace();
                             }
 
                             FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);

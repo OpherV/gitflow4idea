@@ -5,8 +5,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.commands.GitCommandResult;
-import git4idea.util.GitUIUtil;
 import git4idea.validators.GitNewBranchNameValidator;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class StartFeatureAction extends GitflowAction {
@@ -31,12 +31,12 @@ public class StartFeatureAction extends GitflowAction {
                     GitCommandResult result =  myGitflow.startFeature(repo,featureName,new GitflowErrorsListener(myProject));
 
 
-                    if (result.success()){
+                    if (result.success()) {
                         String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, developBranch);
-                        GitUIUtil.notifySuccess(myProject, featureName, startedFeatureMessage);
+                        NotifyUtil.notifySuccess(myProject, featureName, startedFeatureMessage);
                     }
-                    else{
-                        GitUIUtil.notifyError(myProject,"Error","Please have a look at the Version Control console for more details");
+                    else {
+                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                     repo.update();
