@@ -19,6 +19,10 @@ public class NotifyUtil
         notify(NotificationType.INFORMATION, BALLOON_NOTIFICATION, project, title, message);
     }
 
+	public static void notifyInfo(Project project, String title, String message) {
+		notify(NotificationType.INFORMATION, TOOLWINDOW_NOTIFICATION, project, title, message);
+	}
+
     public static void notifyError(Project project, String title, String message) {
         notify(NotificationType.ERROR, TOOLWINDOW_NOTIFICATION, project, title, message);
     }
