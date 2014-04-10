@@ -13,9 +13,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class FinishReleaseAction extends GitflowAction {
 
+	String customReleaseName=null;
+	String customtagMessage=null;
+
     FinishReleaseAction() {
         super("Finish Release");
     }
+
+	FinishReleaseAction(String name, String tagMessage) {
+		super("Finish Release");
+		customReleaseName=name;
+		customtagMessage=tagMessage;
+	}
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -24,18 +33,28 @@ public class FinishReleaseAction extends GitflowAction {
         String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
         if (currentBranchName.isEmpty()==false){
 
-            final String releaseName = GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
+	        final AnActionEvent event=e;
+
+            final String tagMessage;
+            final String releaseName;
+
+	        // Check if a release name was specified, otherwise take name from current branch
+	        releaseName = customReleaseName!=null ? customReleaseName:GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
+
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
             String defaultTagMessage= GitflowConfigurable.getCustomTagCommitMessage(myProject);
             defaultTagMessage=defaultTagMessage.replace("%name%", releaseName);
 
             String tagMessageDraft;
-            final String tagMessage;
 
             boolean cancelAction=false;
 
             if (GitflowConfigurable.dontTagRelease(myProject)) {
                 tagMessage="";
+            }
+            else if (customtagMessage!=null){
+	            //probably repeating the release finish after a merge
+	            tagMessage=customtagMessage;
             }
             else{
                 tagMessageDraft= Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
@@ -61,6 +80,9 @@ public class FinishReleaseAction extends GitflowAction {
                             String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", featurePrefix, releaseName, developBranch, masterBranch);
                             NotifyUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
                         }
+                        else if(errorLineHandler.hasMergeError){
+	                        // (merge errors are handled in the onSuccess handler)
+                        }
                         else {
                             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
@@ -73,8 +95,13 @@ public class FinishReleaseAction extends GitflowAction {
                     public void onSuccess() {
                         super.onSuccess();
 
-                        virtualFileMananger.syncRefresh();
-                        repo.update();
+	                    //merge conflicts if necessary
+	                    if (errorLineHandler.hasMergeError){
+		                    if (handleMerge()) {
+			                    FinishReleaseAction completeFinisReleaseAction = new FinishReleaseAction(releaseName,tagMessage);
+			                    completeFinisReleaseAction.actionPerformed(event);
+		                    }
+	                    }
                     }
 
                 }.queue();
