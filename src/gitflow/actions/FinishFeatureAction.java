@@ -54,7 +54,7 @@ public class FinishFeatureAction extends GitflowAction {
                         NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                     }
                     else if(errorLineHandler.hasMergeError){
-
+                        // (merge errors are handled in the onSuccess handler)
                     }
                     else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
@@ -66,42 +66,15 @@ public class FinishFeatureAction extends GitflowAction {
                 public void onSuccess() {
                     super.onSuccess();
 
+	                //merge conflicts if necessary
+	                if (errorLineHandler.hasMergeError){
+		                if (handleMerge()){
+			                FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
+			                completeFinishFeatureAction.actionPerformed(event);
+		                }
 
-                    //ugly, but required for intellij to catch up with the external changes made by
-                    //the CLI before being able to run the merge tool
-                    virtualFileMananger.syncRefresh();
-                    try {
-                        Thread.sleep(500);
-                    }
-                    catch (InterruptedException ignored) {
-                    }
+	                }
 
-
-                    //TODO: refactor this logic to work in case of finishRelease as well
-                    if (errorLineHandler.hasMergeError){
-                        GitflowActions.runMergeTool();
-                        repo.update();
-
-                        //if merge was completed successfully, finish the action
-                        //note that if it wasn't intellij is left in the "merging state", and git4idea provides no UI way to resolve it
-                        int answer = Messages.showYesNoDialog(myProject, "Was the merge completed succesfully?", "Merge", Messages.getQuestionIcon());
-                        if (answer==0){
-                            GitMerger gitMerger=new GitMerger(myProject);
-
-                            try {
-                                gitMerger.mergeCommit(gitMerger.getMergingRoots());
-                            } catch (VcsException e1) {
-                                NotifyUtil.notifyError(myProject, "Error", "Error committing merge result");
-                                e1.printStackTrace();
-                            }
-
-                            FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
-                            completeFinishFeatureAction.actionPerformed(event);
-
-                        }
-
-
-                    }
                 }
             }.queue();
         }

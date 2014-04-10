@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Key;
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowInitOptions;
 import gitflow.ui.GitflowInitOptionsDialog;
 import gitflow.ui.NotifyUtil;
@@ -35,11 +36,13 @@ public class InitRepoAction extends GitflowAction {
 
                     if (result.success()) {
                         String publishedFeatureMessage = String.format("Initialized gitflow repo");
-                        NotifyUtil.notifySuccess(myProject, publishedFeatureMessage, "");
+                        NotifyUtil.notifySuccess(myProject, "", publishedFeatureMessage);
                     } else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
+                    //update the widget
+                    myProject.getMessageBus().syncPublisher(GitRepository.GIT_REPO_CHANGE).repositoryChanged(repo);
                     repo.update();
                 }
             }.queue();
