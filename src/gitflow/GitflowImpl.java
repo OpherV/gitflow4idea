@@ -314,8 +314,16 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
             h.addParameters("-p");
         }
-        h.addParameters("-m");
-        h.addParameters(tagMessage);
+
+
+        if (GitflowConfigurable.dontTagHotfix(repository.getProject())) {
+            h.addParameters("-n");
+        }
+        else{
+            h.addParameters("-m");
+            h.addParameters(tagMessage);
+        }
+
         h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {

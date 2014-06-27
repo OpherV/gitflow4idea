@@ -17,9 +17,11 @@ public class GitflowOptionsForm  implements ItemListener {
     private JTextField customTagCommitMessage;
     private JTextField customHotfixCommitMessage;
     private JCheckBox useCustomHotfixCommitMessage;
+    private JCheckBox dontTagHotfix;
 
     public JPanel getContentPane() {
         dontTagRelease.addItemListener(this);
+        dontTagHotfix.addItemListener(this);
         useCustomTagCommitMessage.addItemListener(this);
         useCustomHotfixCommitMessage.addItemListener(this);
         return contentPane;
@@ -64,6 +66,19 @@ public class GitflowOptionsForm  implements ItemListener {
                 customHotfixCommitMessage.setEditable(false);
             }
         }
+        else if (source == dontTagHotfix) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                useCustomHotfixCommitMessage.setEnabled(false);
+                customHotfixCommitMessage.setEnabled(false);
+            }
+            else{
+                useCustomHotfixCommitMessage.setEnabled(true);
+                if( useCustomHotfixCommitMessage.isSelected()){
+                    customHotfixCommitMessage.setEnabled(true);
+                    customHotfixCommitMessage.setEditable(true);
+                }
+            }
+        }
 
 
     }
@@ -86,13 +101,15 @@ public class GitflowOptionsForm  implements ItemListener {
         pushOnFinishHotfix.setSelected(selected);
     }
 
-    public boolean isDontTagRelease() {
-        return dontTagRelease.isSelected();
-    }
+    public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
+
+    public boolean isDontTagHotfix() { return dontTagHotfix.isSelected(); }
 
     public void setDontTagRelease(boolean selected) {
         dontTagRelease.setSelected(selected);
     }
+
+    public void setDontTagHotfix(boolean selected) { dontTagHotfix.setSelected(selected); }
 
 
     /* custom finish release tag commit message */
