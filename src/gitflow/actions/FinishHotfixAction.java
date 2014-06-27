@@ -29,10 +29,18 @@ public class FinishHotfixAction extends GitflowAction {
             //TODO HOTFIX NAME
             final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, currentBranchName);
 
+            final String tagMessage;
+
             String defaultTagMessage= GitflowConfigurable.getCustomHotfixTagCommitMessage(myProject);
             defaultTagMessage=defaultTagMessage.replace("%name%", hotfixName);
 
-            final String tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Hotfix", Messages.getQuestionIcon(), defaultTagMessage, null);
+            if (GitflowConfigurable.dontTagHotfix(myProject)) {
+                tagMessage="";
+            }
+            else {
+                tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Hotfix", Messages.getQuestionIcon(), defaultTagMessage, null);
+            }
+
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
             if (tagMessage!=null){
