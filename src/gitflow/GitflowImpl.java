@@ -133,6 +133,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("feature");
         h.addParameters("finish");
+
+        if (GitflowConfigurable.featureKeepRemote(repository.getProject())) {
+            h.addParameters("--keepremote");
+        }
+
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {
