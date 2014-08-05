@@ -126,7 +126,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
                                          @NotNull String featureName,
                                          @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
 
         setUrl(h, repository);
         h.setSilent(false);
@@ -145,7 +145,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     public GitCommandResult publishFeature(@NotNull GitRepository repository,
                                           @NotNull String featureName,
                                           @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
 
@@ -166,7 +166,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
                                            @NotNull String featureName,
                                            @NotNull GitRemote remote,
                                            @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
         h.addParameters("feature");
@@ -184,7 +184,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
                                         @NotNull String featureName,
                                         @NotNull GitRemote remote,
                                         @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
         h.addParameters("feature");
@@ -220,7 +220,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
                                           @NotNull String releaseName,
                                           @NotNull String tagMessage,
                                           @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
 
@@ -250,7 +250,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     public GitCommandResult publishRelease(@NotNull GitRepository repository,
                                            @NotNull String releaseName,
                                            @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
 
         h.setSilent(false);
@@ -268,7 +268,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     public GitCommandResult trackRelease(@NotNull GitRepository repository,
                                         @NotNull String releaseName,
                                         @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
 
@@ -305,7 +305,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
                                           @NotNull String hotfixName,
                                           @NotNull String tagMessage,
                                           @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
 
@@ -335,7 +335,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     public GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                           @NotNull String hotfixName,
                                           @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
 
         h.setSilent(false);
@@ -350,7 +350,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
-    private void setUrl (GitLineHandlerPasswordRequestAware h, GitRepository repository){
+    private void setUrl (GitLineHandler h, GitRepository repository){
         ArrayList<GitRemote> remotes = new ArrayList(repository.getRemotes());
 
         //make sure a remote repository is available
