@@ -9,15 +9,18 @@ import java.awt.event.ItemListener;
  * @author Opher Vishnia (opherv@gmail.com)
  */
 public class GitflowOptionsForm  implements ItemListener {
-    private JCheckBox pushOnFinishRelease;
     private JPanel contentPane;
-    private JCheckBox pushOnFinishHotfix;
+    private JCheckBox featureKeepRemote;
+
+    private JCheckBox pushOnFinishRelease;
     private JCheckBox dontTagRelease;
     private JCheckBox useCustomTagCommitMessage;
     private JTextField customTagCommitMessage;
-    private JTextField customHotfixCommitMessage;
-    private JCheckBox useCustomHotfixCommitMessage;
+
+    private JCheckBox pushOnFinishHotfix;
     private JCheckBox dontTagHotfix;
+    private JCheckBox useCustomHotfixCommitMessage;
+    private JTextField customHotfixCommitMessage;
 
     public JPanel getContentPane() {
         dontTagRelease.addItemListener(this);
@@ -83,6 +86,8 @@ public class GitflowOptionsForm  implements ItemListener {
 
     }
 
+    // getters/setters
+
     public boolean isPushOnFinishRelease()
     {
         return pushOnFinishRelease.isSelected();
@@ -93,23 +98,11 @@ public class GitflowOptionsForm  implements ItemListener {
         pushOnFinishRelease.setSelected(selected);
     }
 
-    public boolean isPushOnFinishHotfix() {
-        return pushOnFinishHotfix.isSelected();
-    }
-
-    public void setPushOnFinishHotfix(boolean selected) {
-        pushOnFinishHotfix.setSelected(selected);
-    }
-
     public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
 
-    public boolean isDontTagHotfix() { return dontTagHotfix.isSelected(); }
+    public boolean isFeatureKeepRemote() { return featureKeepRemote.isSelected(); }
 
-    public void setDontTagRelease(boolean selected) {
-        dontTagRelease.setSelected(selected);
-    }
-
-    public void setDontTagHotfix(boolean selected) { dontTagHotfix.setSelected(selected); }
+    public void setFeatureKeepRemote(boolean selected) { featureKeepRemote.setSelected(selected); }
 
 
     /* custom finish release tag commit message */
@@ -129,6 +122,23 @@ public class GitflowOptionsForm  implements ItemListener {
     public void setCustomTagCommitMessage(String message) {
         customTagCommitMessage.setText(message);
     }
+
+
+
+    public boolean isPushOnFinishHotfix() { return pushOnFinishHotfix.isSelected(); }
+
+    public void setPushOnFinishHotfix(boolean selected) { pushOnFinishHotfix.setSelected(selected); }
+
+
+    public boolean isDontTagHotfix() { return dontTagHotfix.isSelected(); }
+
+    public void setDontTagRelease(boolean selected) {
+        dontTagRelease.setSelected(selected);
+    }
+
+    public void setDontTagHotfix(boolean selected) { dontTagHotfix.setSelected(selected); }
+
+
 
     /* custom finish hotfix commit message */
 
