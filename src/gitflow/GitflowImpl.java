@@ -115,6 +115,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("feature");
         h.addParameters("start");
+        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {
@@ -136,6 +139,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         if (GitflowConfigurable.featureKeepRemote(repository.getProject())) {
             h.addParameters("--keepremote");
+        }
+
+        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
         }
 
         h.addParameters(featureName);
@@ -213,6 +220,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("start");
+
+        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
+
         h.addParameters(releaseName);
 
         for (GitLineHandlerListener listener : listeners) {
@@ -231,6 +243,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
+        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
         if(GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
             h.addParameters("-p");
         }
@@ -298,6 +313,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("start");
+        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
         h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {
@@ -316,6 +334,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
+        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
         if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
             h.addParameters("-p");
         }
