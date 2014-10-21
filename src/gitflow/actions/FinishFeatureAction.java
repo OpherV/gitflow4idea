@@ -60,6 +60,8 @@ public class FinishFeatureAction extends GitflowAction {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
+                    repo.update();
+
                 }
 
                 @Override
