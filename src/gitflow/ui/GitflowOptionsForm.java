@@ -10,13 +10,17 @@ import java.awt.event.ItemListener;
  */
 public class GitflowOptionsForm  implements ItemListener {
     private JPanel contentPane;
+    private JCheckBox releaseFetchOrigin;
     private JCheckBox featureKeepRemote;
 
+    private JCheckBox featureFetchOrigin;
     private JCheckBox pushOnFinishRelease;
     private JCheckBox dontTagRelease;
     private JCheckBox useCustomTagCommitMessage;
     private JTextField customTagCommitMessage;
 
+
+    private JCheckBox hotfixFetchOrigin;
     private JCheckBox pushOnFinishHotfix;
     private JCheckBox dontTagHotfix;
     private JCheckBox useCustomHotfixCommitMessage;
@@ -86,23 +90,24 @@ public class GitflowOptionsForm  implements ItemListener {
 
     }
 
-    // getters/setters
+    // feature getters/setters
 
-    public boolean isPushOnFinishRelease()
-    {
-        return pushOnFinishRelease.isSelected();
-    }
-
-    public void setPushOnFinishRelease(boolean selected)
-    {
-        pushOnFinishRelease.setSelected(selected);
-    }
-
-    public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
+    public boolean isFeatureFetchOrigin() { return featureFetchOrigin.isSelected(); }
+    public void setFeatureFetchOrigin(boolean selected) { featureFetchOrigin.setSelected(selected); }
 
     public boolean isFeatureKeepRemote() { return featureKeepRemote.isSelected(); }
-
     public void setFeatureKeepRemote(boolean selected) { featureKeepRemote.setSelected(selected); }
+
+
+    // release getters/setters
+
+    public boolean isReleaseFetchOrigin() { return releaseFetchOrigin.isSelected(); }
+    public void setReleaseFetchOrigin(boolean selected) { releaseFetchOrigin.setSelected(selected); }
+
+    public boolean isPushOnFinishRelease() { return pushOnFinishRelease.isSelected(); }
+    public void setPushOnFinishRelease(boolean selected) { pushOnFinishRelease.setSelected(selected); }
+
+    public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
 
 
     /* custom finish release tag commit message */
@@ -124,9 +129,13 @@ public class GitflowOptionsForm  implements ItemListener {
     }
 
 
+    // hotfix getters/setters
+
+    public boolean isHotfixFetchOrigin() { return hotfixFetchOrigin.isSelected(); }
+    public void setHotfixFetchOrigin(boolean selected) { hotfixFetchOrigin.setSelected(selected); }
+
 
     public boolean isPushOnFinishHotfix() { return pushOnFinishHotfix.isSelected(); }
-
     public void setPushOnFinishHotfix(boolean selected) { pushOnFinishHotfix.setSelected(selected); }
 
 
@@ -153,7 +162,6 @@ public class GitflowOptionsForm  implements ItemListener {
     public String getCustomHotfixCommitMessage(){
         return customHotfixCommitMessage.getText();
     }
-
     public void setCustomHotfixCommitMessage(String message){
         customHotfixCommitMessage.setText(message);
     }
