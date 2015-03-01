@@ -7,6 +7,7 @@ import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -70,40 +71,41 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
-        if(!initOptions.isUseDefaults()) {
-            configureBranches(initOptions, repository.getProject());
+
+        GitCommandResult result;
+
+        if(initOptions.isUseDefaults()) {
+            final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+            h.setSilent(false);
+            h.setStdoutSuppressed(false);
+            h.setStderrSuppressed(false);
+
+            h.addParameters("init");
+            h.addParameters("-d");
+
+            result =  run(h);
+        }
+        else{
+
+
+            final GitInitLineHandler h = new GitInitLineHandler(initOptions,repository.getProject(), repository.getRoot(), GitflowCommand());
+
+            h.setSilent(false);
+            h.setStdoutSuppressed(false);
+            h.setStderrSuppressed(false);
+
+            h.addParameters("init");
+
+            for (GitLineHandlerListener listener : listeners) {
+                h.addLineListener(listener);
+            }
+            result =  run(h);
         }
 
-        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
-        h.setSilent(false);
-
-        h.addParameters("init");
-        h.addParameters("-d");
-
-        for (GitLineHandlerListener listener : listeners) {
-            h.addLineListener(listener);
-        }
-        GitCommandResult result =  run(h);
-
-        if(result.success() && !initOptions.isUseDefaults()) {
-            configurePrefixes(initOptions, repository.getProject());
-        }
 
         return result;
     }
 
-    private void configureBranches(GitflowInitOptions initOptions, Project project) {
-        GitflowConfigUtil.setMasterBranch(project, initOptions.getProductionBranch());
-        GitflowConfigUtil.setDevelopBranch(project, initOptions.getDevelopmentBranch());
-    }
-
-    private void configurePrefixes(GitflowInitOptions initOptions, Project project) {
-        GitflowConfigUtil.setFeaturePrefix(project, initOptions.getFeaturePrefix());
-        GitflowConfigUtil.setReleasePrefix(project, initOptions.getReleasePrefix());
-        GitflowConfigUtil.setHotfixPrefix(project, initOptions.getHotfixPrefix());
-        GitflowConfigUtil.setSupportPrefix(project, initOptions.getSupportPrefix());
-        GitflowConfigUtil.setVersionPrefix(project, initOptions.getVersionPrefix());
-    }
 
     //feature
 

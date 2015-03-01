@@ -74,17 +74,17 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
 
     @Override
     public void selectionChanged(FileEditorManagerEvent event) {
-        update();
+	    //update();
     }
 
     @Override
     public void fileOpened(FileEditorManager source, VirtualFile file) {
-        update();
+        //update();
     }
 
     @Override
     public void fileClosed(FileEditorManager source, VirtualFile file) {
-        update();
+        //update();
     }
 
     @Override
