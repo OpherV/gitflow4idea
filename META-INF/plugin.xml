@@ -2,14 +2,14 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
 
-    <idea-version since-build="129" until-build="140.999999"/>
+    <idea-version since-build="129" until-build="141.999999"/>
 
     <actions>
         <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction" text="Initialize Gitflow Repository"></action>
