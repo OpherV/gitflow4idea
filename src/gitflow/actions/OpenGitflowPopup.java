@@ -15,11 +15,9 @@ public class OpenGitflowPopup extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        WindowManager windowManager = WindowManager.getInstance();
-
         GitflowWidget widget = GitflowWidget.findWidgetInstance(myProject);
-
-        widget.getPopupStep().showInCenterOf(windowManager.getFrame(myProject));
+        if (widget != null)
+            widget.showPopupInCenterOf(WindowManager.getInstance().getFrame(myProject));
     }
 
 }

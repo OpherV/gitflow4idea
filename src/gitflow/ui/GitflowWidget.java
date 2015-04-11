@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.JFrame;
+
 import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
@@ -44,6 +46,7 @@ import gitflow.actions.GitflowActions;
 
 /**
  * Status bar widget which displays actions for git flow
+ *
  * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
  */
 public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
@@ -79,7 +82,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
 
     @Override
     public void selectionChanged(FileEditorManagerEvent event) {
-	    //update();
+        //update();
     }
 
     @Override
@@ -163,7 +166,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
 
                 boolean hasGitflow = actions.hasGitflow();
 
-                myText = hasGitflow ? "Gitflow": "No Gitflow";
+                myText = hasGitflow ? "Gitflow" : "No Gitflow";
                 myTooltip = getDisplayableBranchTooltip(repo);
                 myStatusBar.updateWidget(ID());
             }
@@ -208,4 +211,9 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         return null;
     }
 
+    public void showPopupInCenterOf(JFrame frame) {
+        ListPopup popupStep = getPopupStep();
+        if (popupStep != null)
+            popupStep.showInCenterOf(frame);
+    }
 }
