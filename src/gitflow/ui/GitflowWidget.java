@@ -203,16 +203,18 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
      * This method looks up the widget instance for a specific project
      *
      * @param project The project for which the widget instance should be looked up
-     * @return The widget instance for the provided project
+     * @return The widget instance for the provided project or null if no instance is available
      */
     @Nullable
-    public static GitflowWidget findWidgetInstance(Project project) {
-        StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+    public static GitflowWidget findWidgetInstance(@Nullable Project project) {
+        if (project != null) {
+            StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
 
-        if (statusBar != null) {
-            StatusBarWidget possibleWidget = statusBar.getWidget(getWidgetID());
-            if (possibleWidget instanceof GitflowWidget)
-                return (GitflowWidget) possibleWidget;
+            if (statusBar != null) {
+                StatusBarWidget possibleWidget = statusBar.getWidget(getWidgetID());
+                if (possibleWidget instanceof GitflowWidget)
+                    return (GitflowWidget) possibleWidget;
+            }
         }
 
         return null;
