@@ -82,22 +82,22 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
 
     @Override
     public void selectionChanged(FileEditorManagerEvent event) {
-        //update();
+        //updateAsync();
     }
 
     @Override
     public void fileOpened(FileEditorManager source, VirtualFile file) {
-        //update();
+        //updateAsync();
     }
 
     @Override
     public void fileClosed(FileEditorManager source, VirtualFile file) {
-        //update();
+        //updateAsync();
     }
 
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
-        update();
+        updateAsync();
     }
 
     @Override
@@ -139,38 +139,42 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
     public Consumer<MouseEvent> getClickConsumer() {
         return new Consumer<MouseEvent>() {
             public void consume(MouseEvent mouseEvent) {
-                update();
+                updateAsync();
             }
         };
     }
 
-    private void update() {
+    private void updateAsync() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                Project project = getProject();
-                if (project == null) {
-                    emptyTextAndTooltip();
-                    return;
-                }
-
-                GitRepository repo = GitBranchUtil.getCurrentRepository(project);
-                if (repo == null) { // the file is not under version control => display nothing
-                    emptyTextAndTooltip();
-                    return;
-                }
-
-                int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
-
-                actions = new GitflowActions(project);
-
-                boolean hasGitflow = actions.hasGitflow();
-
-                myText = hasGitflow ? "Gitflow" : "No Gitflow";
-                myTooltip = getDisplayableBranchTooltip(repo);
-                myStatusBar.updateWidget(ID());
+                update();
             }
         });
+    }
+
+    private void update() {
+        Project project = getProject();
+        if (project == null) {
+            emptyTextAndTooltip();
+            return;
+        }
+
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        if (repo == null) { // the file is not under version control => display nothing
+            emptyTextAndTooltip();
+            return;
+        }
+
+        int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
+
+        actions = new GitflowActions(project);
+
+        boolean hasGitflow = actions.hasGitflow();
+
+        myText = hasGitflow ? "Gitflow" : "No Gitflow";
+        myTooltip = getDisplayableBranchTooltip(repo);
+        myStatusBar.updateWidget(ID());
     }
 
     private void emptyTextAndTooltip() {
