@@ -27,15 +27,17 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.event.MouseEvent;
+
 import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
 import gitflow.actions.GitflowActions;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.event.MouseEvent;
 
 /**
  * Status bar widget which displays actions for git flow
@@ -64,7 +66,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
     @NotNull
     @Override
     public String ID() {
-        return GitflowWidget.class.getName();
+        return getWidgetID();
     }
 
     @Override
@@ -178,4 +180,10 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         }
         return text;
     }
+
+    @NotNull
+    public static String getWidgetID() {
+        return GitflowWidget.class.getName();
+    }
+
 }
