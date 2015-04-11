@@ -23,12 +23,15 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 
@@ -41,7 +44,7 @@ import gitflow.actions.GitflowActions;
 
 /**
  * Status bar widget which displays actions for git flow
- * @author Kirill Likhodedov, Opher Vishnia
+ * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
  */
 public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
@@ -182,8 +185,27 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
     }
 
     @NotNull
-    public static String getWidgetID() {
+    private static String getWidgetID() {
         return GitflowWidget.class.getName();
+    }
+
+    /**
+     * This method looks up the widget instance for a specific project
+     *
+     * @param project The project for which the widget instance should be looked up
+     * @return The widget instance for the provided project
+     */
+    @Nullable
+    public static GitflowWidget findWidgetInstance(Project project) {
+        StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+
+        if (statusBar != null) {
+            StatusBarWidget possibleWidget = statusBar.getWidget(getWidgetID());
+            if (possibleWidget instanceof GitflowWidget)
+                return (GitflowWidget) possibleWidget;
+        }
+
+        return null;
     }
 
 }
