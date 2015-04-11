@@ -218,7 +218,13 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         return null;
     }
 
-    public void showPopupInCenterOf(final JFrame frame) {
+    /**
+     * Shows the action popup of this widget in the center of the provided frame. If there are no
+     * actions available for this widget, the popup will not be shown.
+     *
+     * @param frame The frame that will be used for display
+     */
+    public void showPopupInCenterOf(@NotNull JFrame frame) {
         update();
         ListPopup popupStep = getPopupStep();
         if (popupStep != null)
