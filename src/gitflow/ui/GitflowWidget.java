@@ -111,6 +111,9 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
             return null;
         }
 
+        if (actions == null)
+            return null;
+
         ActionGroup popupGroup = actions.getActions();
         ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
                 null, null);
@@ -215,7 +218,8 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         return null;
     }
 
-    public void showPopupInCenterOf(JFrame frame) {
+    public void showPopupInCenterOf(final JFrame frame) {
+        update();
         ListPopup popupStep = getPopupStep();
         if (popupStep != null)
             popupStep.showInCenterOf(frame);
