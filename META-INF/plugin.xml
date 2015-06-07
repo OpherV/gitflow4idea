@@ -2,7 +2,7 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
@@ -12,6 +12,9 @@
     <idea-version since-build="129" until-build="141.999999"/>
 
     <actions>
+        <action id="Gitflow.OpenGitflowPopup" class="gitflow.actions.OpenGitflowPopup"
+                text="Gitflow Operations Popup..."></action>
+
         <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction" text="Initialize Gitflow Repository"></action>
 
         <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction" text="Start Feature"></action>

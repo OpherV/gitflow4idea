@@ -23,23 +23,31 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+
 import git4idea.GitUtil;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
 import gitflow.actions.GitflowActions;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.event.MouseEvent;
 
 /**
  * Status bar widget which displays actions for git flow
- * @author Kirill Likhodedov, Opher Vishnia
+ *
+ * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
  */
 public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
@@ -54,6 +62,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
         myMaxString = "Git: Rebasing master";
+        updateAsync();
     }
 
     @Override
@@ -64,7 +73,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
     @NotNull
     @Override
     public String ID() {
-        return GitflowWidget.class.getName();
+        return getWidgetID();
     }
 
     @Override
@@ -74,22 +83,22 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
 
     @Override
     public void selectionChanged(FileEditorManagerEvent event) {
-	    //update();
+        //updateAsync();
     }
 
     @Override
     public void fileOpened(FileEditorManager source, VirtualFile file) {
-        //update();
+        //updateAsync();
     }
 
     @Override
     public void fileClosed(FileEditorManager source, VirtualFile file) {
-        //update();
+        //updateAsync();
     }
 
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
-        update();
+        updateAsync();
     }
 
     @Override
@@ -102,6 +111,9 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         if (repo == null) {
             return null;
         }
+
+        if (actions == null)
+            return null;
 
         ActionGroup popupGroup = actions.getActions();
         ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
@@ -131,38 +143,42 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
     public Consumer<MouseEvent> getClickConsumer() {
         return new Consumer<MouseEvent>() {
             public void consume(MouseEvent mouseEvent) {
-                update();
+                updateAsync();
             }
         };
     }
 
-    private void update() {
+    private void updateAsync() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                Project project = getProject();
-                if (project == null) {
-                    emptyTextAndTooltip();
-                    return;
-                }
-
-                GitRepository repo = GitBranchUtil.getCurrentRepository(project);
-                if (repo == null) { // the file is not under version control => display nothing
-                    emptyTextAndTooltip();
-                    return;
-                }
-
-                int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
-
-                actions = new GitflowActions(project);
-
-                boolean hasGitflow = actions.hasGitflow();
-
-                myText = hasGitflow ? "Gitflow": "No Gitflow";
-                myTooltip = getDisplayableBranchTooltip(repo);
-                myStatusBar.updateWidget(ID());
+                update();
             }
         });
+    }
+
+    private void update() {
+        Project project = getProject();
+        if (project == null) {
+            emptyTextAndTooltip();
+            return;
+        }
+
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        if (repo == null) { // the file is not under version control => display nothing
+            emptyTextAndTooltip();
+            return;
+        }
+
+        int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
+
+        actions = new GitflowActions(project);
+
+        boolean hasGitflow = actions.hasGitflow();
+
+        myText = hasGitflow ? "Gitflow" : "No Gitflow";
+        myTooltip = getDisplayableBranchTooltip(repo);
+        myStatusBar.updateWidget(ID());
     }
 
     private void emptyTextAndTooltip() {
@@ -177,5 +193,44 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
             return text + "\n" + "Root: " + repo.getRoot().getName();
         }
         return text;
+    }
+
+    @NotNull
+    private static String getWidgetID() {
+        return GitflowWidget.class.getName();
+    }
+
+    /**
+     * This method looks up the widget instance for a specific project
+     *
+     * @param project The project for which the widget instance should be looked up
+     * @return The widget instance for the provided project or null if no instance is available
+     */
+    @Nullable
+    public static GitflowWidget findWidgetInstance(@Nullable Project project) {
+        if (project != null) {
+            StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+
+            if (statusBar != null) {
+                StatusBarWidget possibleWidget = statusBar.getWidget(getWidgetID());
+                if (possibleWidget instanceof GitflowWidget)
+                    return (GitflowWidget) possibleWidget;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Shows the action popup of this widget in the center of the provided frame. If there are no
+     * actions available for this widget, the popup will not be shown.
+     *
+     * @param frame The frame that will be used for display
+     */
+    public void showPopupInCenterOf(@NotNull JFrame frame) {
+        update();
+        ListPopup popupStep = getPopupStep();
+        if (popupStep != null)
+            popupStep.showInCenterOf(frame);
     }
 }
