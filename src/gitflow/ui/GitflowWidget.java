@@ -62,6 +62,7 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
         myMaxString = "Git: Rebasing master";
+        updateAsync();
     }
 
     @Override
