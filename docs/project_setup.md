@@ -12,12 +12,13 @@ If it's not, install it now.
 ## 3. Import the project into IDEA 
 
 Select "Import Project" and navigate to the cloned repository when prompted. 
-	* Chose "From existing sources" when prompted for a model
-	* At the SDK step (if you dont have a plugin SDK yet): Click `+` to add an SDK and select "IntelliJ Platform Plugin SDK"
-		- Navigate to your IDEA installation and select the installation directory.
-		- Afterwards select a JDK when prompted
-	* At the SDK step select your Plugin SDK (if you followed the previous step select the newly created SDK)
-    * The remaining options can be left at default
+
+* Chose "From existing sources" when prompted for a model
+* At the SDK step (if you dont have a plugin SDK yet): Click `+` to add an SDK and select "IntelliJ Platform Plugin SDK"
+    - Navigate to your IDEA installation and select the installation directory.
+    - Afterwards select a JDK when prompted
+* At the SDK step select your Plugin SDK (if you followed the previous step select the newly created SDK)
+* The remaining options can be left at default
     
 ## 4. Change the project type
 
