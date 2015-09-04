@@ -4,4 +4,4 @@
 *.zip
 *.jar
 out
-gitflow.iml
+*.iml
