@@ -1,20 +1,25 @@
 package gitflow;
 
 import com.intellij.openapi.project.Project;
-import git4idea.commands.*;
-import git4idea.repo.GitRemote;
-import git4idea.repo.GitRepository;
+import com.intellij.openapi.vfs.VirtualFile;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+
+import git4idea.commands.GitCommand;
+import git4idea.commands.GitCommandResult;
+import git4idea.commands.GitImpl;
+import git4idea.commands.GitLineHandler;
+import git4idea.commands.GitLineHandlerListener;
+import git4idea.repo.GitRemote;
+import git4idea.repo.GitRepository;
 
 /**
- *
- *
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
 
@@ -22,10 +27,10 @@ import java.util.ArrayList;
 public class GitflowImpl extends GitImpl implements Gitflow {
 
     //we must use reflection to add this command, since the git4idea implementation doesn't expose it
-    private GitCommand GitflowCommand(){
-        Method m= null;
+    private GitCommand GitflowCommand() {
+        Method m = null;
         try {
-            m = GitCommand.class.getDeclaredMethod("write",String.class);
+            m = GitCommand.class.getDeclaredMethod("write", String.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -35,7 +40,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         GitCommand command = null;
 
         try {
-            command = (GitCommand) m.invoke(null,"flow");//now its ok
+            command = (GitCommand) m.invoke(null, "flow");//now its ok
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -46,10 +51,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     //we must use reflection to add this command, since the git4idea implementation doesn't expose it
-    private static GitCommandResult run(@org.jetbrains.annotations.NotNull git4idea.commands.GitLineHandler handler){
-         Method m = null;
+    private static GitCommandResult run(@org.jetbrains.annotations.NotNull git4idea.commands.GitLineHandler handler) {
+        Method m = null;
         try {
-            m = GitImpl.class.getDeclaredMethod("run",GitLineHandler.class);
+            m = GitImpl.class.getDeclaredMethod("run", GitLineHandler.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -59,7 +64,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         GitCommandResult result = null;
 
         try {
-            result = (GitCommandResult ) m.invoke(null, handler);//now its ok
+            result = (GitCommandResult) m.invoke(null, handler);//now its ok
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -74,7 +79,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         GitCommandResult result;
 
-        if(initOptions.isUseDefaults()) {
+        if (initOptions.isUseDefaults()) {
             final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
             h.setSilent(false);
             h.setStdoutSuppressed(false);
@@ -83,12 +88,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("init");
             h.addParameters("-d");
 
-            result =  run(h);
-        }
-        else{
+            result = run(h);
+        } else {
 
 
-            final GitInitLineHandler h = new GitInitLineHandler(initOptions,repository.getProject(), repository.getRoot(), GitflowCommand());
+            final GitInitLineHandler h = new GitInitLineHandler(initOptions, repository.getProject(), repository.getRoot(), GitflowCommand());
 
             h.setSilent(false);
             h.setStdoutSuppressed(false);
@@ -99,7 +103,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             for (GitLineHandlerListener listener : listeners) {
                 h.addLineListener(listener);
             }
-            result =  run(h);
+            result = run(h);
         }
 
 
@@ -129,8 +133,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
-                                         @NotNull String featureName,
-                                         @Nullable GitLineHandlerListener... listeners) {
+                                          @NotNull String featureName,
+                                          @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
 
         setUrl(h, repository);
@@ -157,8 +161,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
 
     public GitCommandResult publishFeature(@NotNull GitRepository repository,
-                                          @NotNull String featureName,
-                                          @Nullable GitLineHandlerListener... listeners) {
+                                           @NotNull String featureName,
+                                           @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
@@ -177,9 +181,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     // feature pull seems to be kind of useless. see
     // http://stackoverflow.com/questions/18412750/why-doesnt-git-flow-feature-pull-track
     public GitCommandResult pullFeature(@NotNull GitRepository repository,
-                                           @NotNull String featureName,
-                                           @NotNull GitRemote remote,
-                                           @Nullable GitLineHandlerListener... listeners) {
+                                        @NotNull String featureName,
+                                        @NotNull GitRemote remote,
+                                        @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
@@ -195,9 +199,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     public GitCommandResult trackFeature(@NotNull GitRepository repository,
-                                        @NotNull String featureName,
-                                        @NotNull GitRemote remote,
-                                        @Nullable GitLineHandlerListener... listeners) {
+                                         @NotNull String featureName,
+                                         @NotNull GitRemote remote,
+                                         @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
@@ -248,14 +252,13 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
             h.addParameters("-F");
         }
-        if(GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
+        if (GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
             h.addParameters("-p");
         }
 
         if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
             h.addParameters("-n");
-        }
-        else{
+        } else {
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
@@ -288,8 +291,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     public GitCommandResult trackRelease(@NotNull GitRepository repository,
-                                        @NotNull String releaseName,
-                                        @Nullable GitLineHandlerListener... listeners) {
+                                         @NotNull String releaseName,
+                                         @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
@@ -308,8 +311,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     //hotfix
 
     public GitCommandResult startHotfix(@NotNull GitRepository repository,
-                                         @NotNull String hotfixName,
-                                         @Nullable GitLineHandlerListener... listeners) {
+                                        @NotNull String hotfixName,
+                                        @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
 
@@ -327,9 +330,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     public GitCommandResult finishHotfix(@NotNull GitRepository repository,
-                                          @NotNull String hotfixName,
-                                          @NotNull String tagMessage,
-                                          @Nullable GitLineHandlerListener... listeners) {
+                                         @NotNull String hotfixName,
+                                         @NotNull String tagMessage,
+                                         @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
@@ -346,8 +349,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         if (GitflowConfigurable.dontTagHotfix(repository.getProject())) {
             h.addParameters("-n");
-        }
-        else{
+        } else {
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
@@ -378,13 +380,28 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
-    private void setUrl (GitLineHandler h, GitRepository repository){
-        ArrayList<GitRemote> remotes = new ArrayList(repository.getRemotes());
+    @Override
+    public List<String> getBranchList(GitRepository repository) {
+        final Project project = repository.getProject();
+        final VirtualFile root = repository.getRoot();
+
+        GitCommandResult commandResult = run(new GitLineHandler(project, root, GitCommand.BRANCH));
+        List<String> result = new ArrayList<>(commandResult.getOutput().size());
+        for (String line : commandResult.getOutput()) {
+            result.add(line.replace("*", "").trim());
+        }
+        
+        return result;
+    }
+
+    private void setUrl(GitLineHandler h, GitRepository repository) {
+        ArrayList<GitRemote> remotes = new ArrayList<>(repository.getRemotes());
 
         //make sure a remote repository is available
-        if (!remotes.isEmpty()){
+        if (!remotes.isEmpty()) {
             h.setUrl(remotes.iterator().next().getFirstUrl());
         }
     }
+
 
 }

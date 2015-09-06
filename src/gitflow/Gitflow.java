@@ -1,16 +1,17 @@
 package gitflow;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
- *
- *
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
 public interface Gitflow extends Git {
@@ -26,22 +27,22 @@ public interface Gitflow extends Git {
                                   @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult finishFeature(@NotNull GitRepository repository,
-                                  @NotNull String featureName,
-                                  @Nullable GitLineHandlerListener... listeners);
-
-    GitCommandResult publishFeature(@NotNull GitRepository repository,
                                    @NotNull String featureName,
                                    @Nullable GitLineHandlerListener... listeners);
 
-    GitCommandResult pullFeature(@NotNull GitRepository repository,
+    GitCommandResult publishFeature(@NotNull GitRepository repository,
                                     @NotNull String featureName,
-                                    @NotNull GitRemote remote,
                                     @Nullable GitLineHandlerListener... listeners);
 
-    GitCommandResult trackFeature(@NotNull GitRepository repository,
+    GitCommandResult pullFeature(@NotNull GitRepository repository,
                                  @NotNull String featureName,
                                  @NotNull GitRemote remote,
                                  @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult trackFeature(@NotNull GitRepository repository,
+                                  @NotNull String featureName,
+                                  @NotNull GitRemote remote,
+                                  @Nullable GitLineHandlerListener... listeners);
 
     //release
 
@@ -61,8 +62,8 @@ public interface Gitflow extends Git {
                                     @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult trackRelease(@NotNull GitRepository repository,
-                                 @NotNull String releaseName,
-                                 @Nullable GitLineHandlerListener... listeners);
+                                  @NotNull String releaseName,
+                                  @Nullable GitLineHandlerListener... listeners);
 
     //hotfix
 
@@ -71,12 +72,16 @@ public interface Gitflow extends Git {
                                  @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult finishHotfix(@NotNull GitRepository repository,
-                                 @NotNull String hotfixName,
-                                 @NotNull String tagMessage,
-                                 @Nullable GitLineHandlerListener... listeners);
+                                  @NotNull String hotfixName,
+                                  @NotNull String tagMessage,
+                                  @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                    @NotNull String hotfixName,
                                    @Nullable GitLineHandlerListener... listeners);
 
+    /**
+     * @return A list of all branches within the given repository
+     */
+    List<String> getBranchList(GitRepository repository);
 }
