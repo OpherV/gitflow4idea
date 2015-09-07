@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
@@ -13,8 +12,8 @@ import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
 
 /**
- * Base class for a "start" dialog. Prompts the user to enter a name for a new branch and select a
- * base branch. See {@link GitflowStartFeatureDialog} for an example implementation.
+ * Base class for a "start" dialog. Such a dialog prompts the user to enter a name for a new branch
+ * and select a base branch. See {@link GitflowStartFeatureDialog} for an example implementation.
  */
 public abstract class AbstractBranchStartDialog extends DialogWrapper {
 
@@ -59,7 +58,8 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
      * based on)
      */
     public String getBaseBranchName() {
-        return (String) branchFromCombo.getModel().getSelectedItem();
+        ComboEntry selectedBranch = (ComboEntry) branchFromCombo.getModel().getSelectedItem();
+        return selectedBranch.getBranchName();
     }
 
     /**
@@ -93,15 +93,43 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
         return contentPane;
     }
 
-    private ComboBoxModel<String> createBranchComboModel() {
-        List<String> branchList = gitflow.getBranchList(repository);
-
+    private ComboBoxModel<ComboEntry> createBranchComboModel() {
+        final List<String> branchList = gitflow.getBranchList(repository);
         final String defaultBranch = getDefaultBranch();
         branchList.remove(defaultBranch);
-        Collections.sort(branchList);
-        branchList.add(0, defaultBranch);
 
-        String[] branchListArray = branchList.toArray(new String[branchList.size()]);
-        return new DefaultComboBoxModel<>(branchListArray);
+        ComboEntry[] entries = new ComboEntry[branchList.size() + 1];
+        entries[0] = new ComboEntry(defaultBranch, defaultBranch + " (default)");
+        for (int i = 1; i <= branchList.size(); i++) {
+            String branchName = branchList.get(i - 1);
+            entries[i] = new ComboEntry(branchName, branchName);
+        }
+
+        return new DefaultComboBoxModel<>(entries);
+    }
+
+    /**
+     * An entry for the branch selection dropdown/combo.
+     */
+    private static class ComboEntry {
+        private String branchName, label;
+
+        public ComboEntry(String branchName, String label) {
+            this.branchName = branchName;
+            this.label = label;
+        }
+
+        public String getBranchName() {
+            return branchName;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }
