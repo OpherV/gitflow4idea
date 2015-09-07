@@ -24,6 +24,7 @@ public interface Gitflow extends Git {
 
     GitCommandResult startFeature(@NotNull GitRepository repository,
                                   @NotNull String featureName,
+                                  @Nullable String baseBranch,
                                   @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult finishFeature(@NotNull GitRepository repository,
@@ -69,6 +70,7 @@ public interface Gitflow extends Git {
 
     GitCommandResult startHotfix(@NotNull GitRepository repository,
                                  @NotNull String hotfixName,
+                                 @Nullable String baseBranch,
                                  @Nullable GitLineHandlerListener... listeners);
 
     GitCommandResult finishHotfix(@NotNull GitRepository repository,

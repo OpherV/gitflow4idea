@@ -115,6 +115,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     public GitCommandResult startFeature(@NotNull GitRepository repository,
                                          @NotNull String featureName,
+                                         @Nullable String baseBranch,
                                          @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
@@ -125,6 +126,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-F");
         }
         h.addParameters(featureName);
+
+        if (baseBranch != null) {
+            h.addParameters(baseBranch);
+        }
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -312,6 +317,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     public GitCommandResult startHotfix(@NotNull GitRepository repository,
                                         @NotNull String hotfixName,
+                                        @Nullable String baseBranch,
                                         @Nullable GitLineHandlerListener... listeners) {
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
@@ -322,6 +328,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-F");
         }
         h.addParameters(hotfixName);
+
+        if (baseBranch != null) {
+            h.addParameters(baseBranch);
+        }
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -390,7 +400,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (String line : commandResult.getOutput()) {
             result.add(line.replace("*", "").trim());
         }
-        
+
         return result;
     }
 
