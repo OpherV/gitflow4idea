@@ -123,10 +123,6 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
             return branchName;
         }
 
-        public String getLabel() {
-            return label;
-        }
-
         @Override
         public String toString() {
             return label;
