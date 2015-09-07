@@ -19,7 +19,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
 
     private JPanel contentPane;
     private JTextField branchNameTextField;
-    private JComboBox branchFromCombo;
+    private JComboBox<ComboEntry> branchFromCombo;
     private JLabel branchNameLabel;
 
     private GitRepository repository;
