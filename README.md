@@ -59,4 +59,3 @@ This plugin is under the [Apache 2.0 license](http://www.apache.org/licenses/LIC
 Copyright 2013-2014, Opher Vishnia.
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/OpherV/gitflow4idea/trend.png)](https://bitdeli.com/free "Bitdeli Badge") 
