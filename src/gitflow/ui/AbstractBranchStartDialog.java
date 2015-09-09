@@ -23,17 +23,13 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     private JComboBox<ComboEntry> branchFromCombo;
     private JLabel branchNameLabel;
 
-    private GitRepository repository;
-    private Gitflow gitflow;
     private Project project;
-    private GitflowBranchUtil util;
+    private GitflowBranchUtil gitflowBranchUtil;
 
-    public AbstractBranchStartDialog(Gitflow gitflow, GitRepository repository, Project project) {
+    public AbstractBranchStartDialog(Project project) {
         super(project, false);
-        this.gitflow = gitflow;
-        this.repository = repository;
         this.project = project;
-        this.util = new GitflowBranchUtil(project);
+        this.gitflowBranchUtil = new GitflowBranchUtil(project);
 
         init();
         final String label = getLabel();
@@ -97,7 +93,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     }
 
     private ComboBoxModel<ComboEntry> createBranchComboModel() {
-        final List<String> branchList = util.getLocalBranchNames();
+        final List<String> branchList = gitflowBranchUtil.getLocalBranchNames();
         final String defaultBranch = getDefaultBranch();
         branchList.remove(defaultBranch);
 
