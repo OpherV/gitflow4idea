@@ -22,7 +22,7 @@ public class StartHotfixAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitflowStartHotfixDialog dialog = new GitflowStartHotfixDialog(myGitflow, repo, myProject);
+        GitflowStartHotfixDialog dialog = new GitflowStartHotfixDialog(myProject);
         dialog.show();
 
         if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;

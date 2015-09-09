@@ -21,7 +21,7 @@ public class StartFeatureAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitflowStartFeatureDialog dialog = new GitflowStartFeatureDialog(myGitflow, repo, myProject);
+        GitflowStartFeatureDialog dialog = new GitflowStartFeatureDialog(myProject);
         dialog.show();
 
         if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;
