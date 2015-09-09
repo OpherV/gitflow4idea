@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
+import gitflow.GitflowBranchUtil;
 
 /**
  * Base class for a "start" dialog. Such a dialog prompts the user to enter a name for a new branch
@@ -25,12 +26,14 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     private GitRepository repository;
     private Gitflow gitflow;
     private Project project;
+    private GitflowBranchUtil util;
 
     public AbstractBranchStartDialog(Gitflow gitflow, GitRepository repository, Project project) {
         super(project, false);
         this.gitflow = gitflow;
         this.repository = repository;
         this.project = project;
+        this.util = new GitflowBranchUtil(project);
 
         init();
         final String label = getLabel();
@@ -94,7 +97,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     }
 
     private ComboBoxModel<ComboEntry> createBranchComboModel() {
-        final List<String> branchList = gitflow.getBranchList(repository);
+        final List<String> branchList = util.getLocalBranchNames();
         final String defaultBranch = getDefaultBranch();
         branchList.remove(defaultBranch);
 

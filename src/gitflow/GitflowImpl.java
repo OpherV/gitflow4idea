@@ -390,20 +390,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return run(h);
     }
 
-    @Override
-    public List<String> getBranchList(GitRepository repository) {
-        final Project project = repository.getProject();
-        final VirtualFile root = repository.getRoot();
-
-        GitCommandResult commandResult = run(new GitLineHandler(project, root, GitCommand.BRANCH));
-        List<String> result = new ArrayList<>(commandResult.getOutput().size());
-        for (String line : commandResult.getOutput()) {
-            result.add(line.replace("*", "").trim());
-        }
-
-        return result;
-    }
-
     private void setUrl(GitLineHandler h, GitRepository repository) {
         ArrayList<GitRemote> remotes = new ArrayList<>(repository.getRemotes());
 

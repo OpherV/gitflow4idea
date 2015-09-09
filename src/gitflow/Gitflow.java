@@ -3,8 +3,6 @@ package gitflow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
@@ -81,9 +79,4 @@ public interface Gitflow extends Git {
     GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                    @NotNull String hotfixName,
                                    @Nullable GitLineHandlerListener... listeners);
-
-    /**
-     * @return A list of all branches within the given repository
-     */
-    List<String> getBranchList(GitRepository repository);
 }
