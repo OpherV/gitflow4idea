@@ -67,4 +67,10 @@ Click run. A new IDEA instance should start with the plugin running.
 
 And that's it. You can now make changes to the source and run them.
 
+## Notes & hints
+
+### Language level
+
+This project is written to target Java 6, so make sure to set the project language level appropriately
+ to avoid accidentally using newer features. You can do so in the module settings under "modules -> gitflow4idea -> sources -> Language level".
 
