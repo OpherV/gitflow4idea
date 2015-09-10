@@ -391,7 +391,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
     private void setUrl(GitLineHandler h, GitRepository repository) {
-        ArrayList<GitRemote> remotes = new ArrayList<>(repository.getRemotes());
+        ArrayList<GitRemote> remotes = new ArrayList<GitRemote>(repository.getRemotes());
 
         //make sure a remote repository is available
         if (!remotes.isEmpty()) {
