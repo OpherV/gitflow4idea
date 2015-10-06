@@ -4,4 +4,4 @@
 *.zip
 *.jar
 out
-*.iml
+/*.iml

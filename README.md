@@ -29,7 +29,7 @@ The plugin is available via the IntelliJ plugin manager. Just search for "Git Fl
 **Mac/Linux users:**
 
 If you're running into issues like getting
-`Gitflow is not installed`
+`GitFlowAVH is not installed`
 or
 `git: 'flow' is not a git command. See 'git --help'.`
 
