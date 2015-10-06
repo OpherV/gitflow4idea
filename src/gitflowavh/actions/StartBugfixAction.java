@@ -8,48 +8,47 @@ import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import git4idea.commands.GitCommandResult;
-import gitflowavh.ui.GitFlowAVHStartHotfixDialog;
+import gitflowavh.ui.GitFlowAVHStartBugfixDialog;
 import gitflowavh.ui.NotifyUtil;
 
+public class StartBugfixAction extends GitFlowAVHAction {
 
-public class StartHotfixAction extends GitFlowAVHAction {
-
-    public StartHotfixAction() {
-        super("Start Hotfix");
+    public StartBugfixAction() {
+        super("Start Bugfix");
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitFlowAVHStartHotfixDialog dialog = new GitFlowAVHStartHotfixDialog(myProject);
+        GitFlowAVHStartBugfixDialog dialog = new GitFlowAVHStartBugfixDialog(myProject);
         dialog.show();
 
         if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;
 
-        final String hotfixName = dialog.getNewBranchName();
+        final String bugfixName = dialog.getNewBranchName();
         final String baseBranchName = dialog.getBaseBranchName();
 
-        new Task.Backgroundable(myProject, "Starting hotfix " + hotfixName, false) {
+        new Task.Backgroundable(myProject, "Starting bugfix " + bugfixName, false) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                createHotfixBranch(baseBranchName, hotfixName);
+                createBugfixBranch(baseBranchName, bugfixName);
             }
         }.queue();
     }
 
-    private void createHotfixBranch(String baseBranchName, String hotfixBranchName) {
+    private void createBugfixBranch(String baseBranchName, String bugfixName) {
         GitFlowAVHErrorsListener errorListener = new GitFlowAVHErrorsListener(myProject);
-        GitCommandResult result = myGitflow.startHotfix(repo, hotfixBranchName, baseBranchName, errorListener);
+        GitCommandResult result = myGitflow.startBugfix(repo, bugfixName, baseBranchName, errorListener);
 
         if (result.success()) {
-            String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'",
-                    hotfixPrefix, hotfixBranchName, baseBranchName);
-            NotifyUtil.notifySuccess(myProject, hotfixBranchName, startedHotfixMessage);
+            String startedBugfixMessage = String.format("A new branch '%s%s' was created, based on '%s'", bugfixPrefix, bugfixName, baseBranchName);
+            NotifyUtil.notifySuccess(myProject, bugfixName, startedBugfixMessage);
         } else {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
         }
 
         repo.update();
+        virtualFileMananger.asyncRefresh(null); //update editors
     }
 }

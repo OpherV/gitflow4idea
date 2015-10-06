@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class TrackFeatureAction extends GitFlowAVHAction {
 
-    TrackFeatureAction() {
+    public TrackFeatureAction() {
         super("Track Feature");
     }
 

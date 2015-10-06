@@ -8,6 +8,7 @@ public class GitFlowAVHInitOptions {
     private String featurePrefix;
     private String releasePrefix;
     private String hotfixPrefix;
+    private String bugfixPrefix;
     private String supportPrefix;
     private String versionPrefix;
 
@@ -93,6 +94,20 @@ public class GitFlowAVHInitOptions {
      */
     public void setHotfixPrefix(String hotfixPrefix) {
         this.hotfixPrefix = hotfixPrefix;
+    }
+
+    /**
+     * @return String
+     */
+    public String getBugfixPrefix() {
+        return bugfixPrefix;
+    }
+
+    /**
+     * @param bugfixPrefix String
+     */
+    public void setBugfixPrefix(String bugfixPrefix) {
+        this.bugfixPrefix = bugfixPrefix;
     }
 
     /**

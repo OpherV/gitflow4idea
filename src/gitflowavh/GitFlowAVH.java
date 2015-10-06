@@ -78,4 +78,18 @@ public interface GitFlowAVH extends Git {
                                    @NotNull String hotfixName,
                                    @Nullable GitLineHandlerListener... listeners);
 
+    // Bugfix
+
+    GitCommandResult startBugfix(@NotNull GitRepository repository,
+                                 @NotNull String bugfixName,
+                                 @Nullable String baseBranch,
+                                 @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult finishBugfix(@NotNull GitRepository repository,
+                                  @NotNull String bugfixName,
+                                  @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult publishBugfix(@NotNull GitRepository repository,
+                                   @NotNull String bugfixName,
+                                   @Nullable GitLineHandlerListener... listeners);
 }

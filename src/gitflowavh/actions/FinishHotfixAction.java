@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FinishHotfixAction extends GitFlowAVHAction {
 
-    FinishHotfixAction() {
+    public FinishHotfixAction() {
         super("Finish Hotfix");
     }
 

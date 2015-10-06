@@ -16,11 +16,11 @@ public class FinishReleaseAction extends GitFlowAVHAction {
     String customReleaseName = null;
     String customtagMessage = null;
 
-    FinishReleaseAction() {
+    public FinishReleaseAction() {
         super("Finish Release");
     }
 
-    FinishReleaseAction(String name, String tagMessage) {
+    public FinishReleaseAction(String name, String tagMessage) {
         super("Finish Release");
         customReleaseName = name;
         customtagMessage = tagMessage;

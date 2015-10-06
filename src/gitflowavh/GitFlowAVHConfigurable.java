@@ -23,6 +23,10 @@ public class GitFlowAVHConfigurable implements Configurable {
 
     public static final String GITFLOW_HOTFIX_FETCH_ORIGIN = "GitFlowAVH.hotfixFetchOrigin";
     public static final String GITFLOW_DONT_TAG_HOTFIX = "GitFlowAVH.dontTagHotfix";
+
+    public static final String GITFLOW_BUGFIX_FETCH_ORIGIN = "GitFlowAVH.bugfixFetchOrigin";
+    public static final String GITFLOW_BUGFIX_KEEP_REMOTE = "GitFlowAVH.bugfixKeepRemote";
+
     public static final String GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.useCustomHotfixTagCommitMessage";
     public static final String GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.customHotfixTagCommitMessage";
 
@@ -153,6 +157,24 @@ public class GitFlowAVHConfigurable implements Configurable {
         }
     }
 
+    /* Bugfix */
+
+    /**
+     * @param project Project
+     * @return boolean
+     */
+    public static boolean bugfixFetchOrigin(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_BUGFIX_FETCH_ORIGIN, false);
+    }
+
+    /**
+     * @param project Project
+     * @return boolean
+     */
+    public static boolean bugfixKeepRemote(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_BUGFIX_KEEP_REMOTE, false);
+    }
+
     /**
      * @return String
      */
@@ -196,6 +218,10 @@ public class GitFlowAVHConfigurable implements Configurable {
 
                 PropertiesComponent.getInstance(project).getBoolean(GITFLOW_HOTFIX_FETCH_ORIGIN, false) != gitflowOptionsForm.isHotfixFetchOrigin() ||
                 PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false) != gitflowOptionsForm.isPushOnFinishHotfix() ||
+
+                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_BUGFIX_FETCH_ORIGIN, false) != gitflowOptionsForm.isBugfixFetchOrigin() ||
+                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_BUGFIX_KEEP_REMOTE, false) != gitflowOptionsForm.isBugfixKeepRemote() ||
+
                 PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_HOTFIX, false) != gitflowOptionsForm.isDontTagHotfix() ||
                 PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false) != gitflowOptionsForm.isUseCustomHotfixComitMessage() ||
                 !PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE).equals(gitflowOptionsForm.getCustomHotfixCommitMessage())
@@ -218,6 +244,10 @@ public class GitFlowAVHConfigurable implements Configurable {
 
         PropertiesComponent.getInstance(project).setValue(GITFLOW_HOTFIX_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isHotfixFetchOrigin()));
         PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_HOTFIX, Boolean.toString(gitflowOptionsForm.isPushOnFinishHotfix()));
+
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_BUGFIX_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isBugfixFetchOrigin()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_BUGFIX_KEEP_REMOTE, Boolean.toString(gitflowOptionsForm.isBugfixKeepRemote()));
+
         PropertiesComponent.getInstance(project).setValue(GITFLOW_DONT_TAG_HOTFIX, Boolean.toString(gitflowOptionsForm.isDontTagHotfix()));
         PropertiesComponent.getInstance(project).setValue(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, Boolean.toString(gitflowOptionsForm.isUseCustomHotfixComitMessage()));
         PropertiesComponent.getInstance(project).setValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, gitflowOptionsForm.getCustomHotfixCommitMessage());
@@ -236,6 +266,10 @@ public class GitFlowAVHConfigurable implements Configurable {
 
         gitflowOptionsForm.setHotfixFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_HOTFIX_FETCH_ORIGIN, false));
         gitflowOptionsForm.setPushOnFinishHotfix(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false));
+
+        gitflowOptionsForm.setBugfixFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_BUGFIX_FETCH_ORIGIN, false));
+        gitflowOptionsForm.setBugfixKeepRemote(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_BUGFIX_KEEP_REMOTE, false));
+
         gitflowOptionsForm.setDontTagHotfix(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_HOTFIX, false));
         gitflowOptionsForm.setUseCustomHotfixCommitMessage(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false));
         gitflowOptionsForm.setCustomHotfixCommitMessage(PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE));

@@ -9,7 +9,7 @@ import gitflowavh.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class PublishHotfixAction extends GitFlowAVHAction {
-    PublishHotfixAction() {
+    public PublishHotfixAction() {
         super("Publish Hotfix");
     }
 

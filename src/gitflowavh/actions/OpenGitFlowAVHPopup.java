@@ -8,7 +8,7 @@ import gitflowavh.ui.GitFlowAVHWidget;
 
 public class OpenGitFlowAVHPopup extends GitFlowAVHAction {
 
-    OpenGitFlowAVHPopup() {
+    public OpenGitFlowAVHPopup() {
         super("GitFlowAVH Operations Popup...");
     }
 

@@ -9,17 +9,17 @@ import gitflowavh.GitFlowAVHConfigUtil;
 import gitflowavh.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class FinishFeatureAction extends GitFlowAVHAction {
+public class FinishBugfixAction extends GitFlowAVHAction {
 
-    String customFeatureName = null;
+    String customBugfixName = null;
 
-    public FinishFeatureAction() {
-        super("Finish Feature");
+    public FinishBugfixAction() {
+        super("Finish Bugfix");
     }
 
-    FinishFeatureAction(String name) {
-        super("Finish Feature");
-        customFeatureName = name;
+    public FinishBugfixAction(String name) {
+        super("Finish Bugfix");
+        customBugfixName = name;
     }
 
     /**
@@ -33,24 +33,24 @@ public class FinishFeatureAction extends GitFlowAVHAction {
         if (!currentBranchName.isEmpty()) {
 
             final AnActionEvent event = e;
-            final String featureName;
-            // Check if a feature name was specified, otherwise take name from current branch
-            if (customFeatureName != null) {
-                featureName = customFeatureName;
+            final String bugfixName;
+            // Check if a bugfix name was specified, otherwise take name from current branch
+            if (customBugfixName != null) {
+                bugfixName = customBugfixName;
             } else {
-                featureName = GitFlowAVHConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                bugfixName = GitFlowAVHConfigUtil.getBugfixNameFromBranch(myProject, currentBranchName);
             }
             final GitFlowAVHErrorsListener errorLineHandler = new GitFlowAVHErrorsListener(myProject);
 
-            new Task.Backgroundable(myProject, "Finishing feature " + featureName, false) {
+            new Task.Backgroundable(myProject, "Finishing bugfix " + bugfixName, false) {
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result = myGitflow.finishFeature(repo, featureName, errorLineHandler);
+                    GitCommandResult result = myGitflow.finishBugfix(repo, bugfixName, errorLineHandler);
 
 
                     if (result.success()) {
-                        String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
-                        NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
+                        String finishedBugfixMessage = String.format("The bugfix branch '%s%s' was merged into '%s'", bugfixPrefix, bugfixName, developBranch);
+                        NotifyUtil.notifySuccess(myProject, bugfixName, finishedBugfixMessage);
                     } else {
                         // (merge errors are handled in the onSuccess handler)
                         if (!errorLineHandler.hasMergeError) {
@@ -69,8 +69,8 @@ public class FinishFeatureAction extends GitFlowAVHAction {
                     //merge conflicts if necessary
                     if (errorLineHandler.hasMergeError) {
                         if (handleMerge()) {
-                            FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
-                            completeFinishFeatureAction.actionPerformed(event);
+                            FinishBugfixAction completeFinishBugfixAction = new FinishBugfixAction(bugfixName);
+                            completeFinishBugfixAction.actionPerformed(event);
                         }
 
                     }

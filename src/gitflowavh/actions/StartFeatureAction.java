@@ -13,7 +13,7 @@ import gitflowavh.ui.NotifyUtil;
 
 public class StartFeatureAction extends GitFlowAVHAction {
 
-    StartFeatureAction() {
+    public StartFeatureAction() {
         super("Start Feature");
     }
 

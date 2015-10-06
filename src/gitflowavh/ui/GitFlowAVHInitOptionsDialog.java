@@ -26,6 +26,7 @@ public class GitFlowAVHInitOptionsDialog extends DialogWrapper {
     private JTextField featurePrefixTextField;
     private JTextField releasePrefixTextField;
     private JTextField hotfixPrefixTextField;
+    private JTextField bugfixPrefixTextField;
     private JTextField supportPrefixTextField;
     private JTextField versionPrefixTextField;
 
@@ -52,6 +53,7 @@ public class GitFlowAVHInitOptionsDialog extends DialogWrapper {
         featurePrefixTextField.setEnabled(enable);
         releasePrefixTextField.setEnabled(enable);
         hotfixPrefixTextField.setEnabled(enable);
+        bugfixPrefixTextField.setEnabled(enable);
         supportPrefixTextField.setEnabled(enable);
         versionPrefixTextField.setEnabled(enable);
     }
@@ -71,6 +73,7 @@ public class GitFlowAVHInitOptionsDialog extends DialogWrapper {
         options.setFeaturePrefix(featurePrefixTextField.getText());
         options.setReleasePrefix(releasePrefixTextField.getText());
         options.setHotfixPrefix(hotfixPrefixTextField.getText());
+        options.setBugfixPrefix(bugfixPrefixTextField.getText());
         options.setSupportPrefix(supportPrefixTextField.getText());
         options.setVersionPrefix(versionPrefixTextField.getText());
 
@@ -94,6 +97,9 @@ public class GitFlowAVHInitOptionsDialog extends DialogWrapper {
             }
             if (StringUtil.isEmptyOrSpaces(hotfixPrefixTextField.getText())) {
                 return new ValidationInfo(message, hotfixPrefixTextField);
+            }
+            if (StringUtil.isEmptyOrSpaces(bugfixPrefixTextField.getText())) {
+                return new ValidationInfo(message, bugfixPrefixTextField);
             }
             if (StringUtil.isEmptyOrSpaces(supportPrefixTextField.getText())) {
                 return new ValidationInfo(message, supportPrefixTextField);

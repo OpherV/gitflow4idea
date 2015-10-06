@@ -9,7 +9,7 @@ import gitflowavh.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class PublishFeatureAction extends GitFlowAVHAction {
-    PublishFeatureAction(){
+    public PublishFeatureAction(){
         super("Publish Feature");
     }
 

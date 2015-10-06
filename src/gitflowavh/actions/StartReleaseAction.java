@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class StartReleaseAction extends GitFlowAVHAction {
 
-    StartReleaseAction() {
+    public StartReleaseAction() {
         super("Start Release");
     }
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class TrackReleaseAction extends GitFlowAVHAction {
 
-    TrackReleaseAction(){
+    public TrackReleaseAction(){
         super("Track Release");
     }
 

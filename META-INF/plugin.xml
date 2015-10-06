@@ -2,7 +2,7 @@
     <name>Git Flow AVH Integration</name>
     <id>GitFlowAVH</id>
     <description>Git Flow AVH Integration</description>
-    <version>0.4.4</version>
+    <version>0.5</version>
     <category>VCS Integration</category>
     <vendor>Petri Haikonen</vendor>
 
@@ -17,21 +17,22 @@
         <action id="GitFlowAVH.InitRepo" class="gitflowavh.actions.InitRepoAction" text="Initialize GitFlowAVH Repository"/>
 
         <action id="GitFlowAVH.StartFeature" class="gitflowavh.actions.StartFeatureAction" text="GitFlowAVH: Start Feature..."/>
-        <action id="GitFlowAVH.FinishFeature" class="gitflowavh.actions.FinishFeatureAction"
-                text="GitFlowAVH: Finish Feature..."/>
-        <action id="GitFlowAVH.PublishFeature" class="gitflowavh.actions.PublishFeatureAction"
-                text="GitFlowAVH: Publish Feature"/>
+        <action id="GitFlowAVH.FinishFeature" class="gitflowavh.actions.FinishFeatureAction" text="GitFlowAVH: Finish Feature..."/>
+        <action id="GitFlowAVH.PublishFeature" class="gitflowavh.actions.PublishFeatureAction" text="GitFlowAVH: Publish Feature"/>
         <action id="GitFlowAVH.TrackFeature" class="gitflowavh.actions.TrackFeatureAction" text="GitFlowAVH: Track Feature..."/>
 
         <action id="GitFlowAVH.StartRelease" class="gitflowavh.actions.StartReleaseAction" text="GitFlowAVH: Start Release..."/>
         <action id="GitFlowAVH.FinishRelease" class="gitflowavh.actions.FinishReleaseAction" text="GitFlowAVH: Finish Release"/>
-        <action id="GitFlowAVH.PublishRelease" class="gitflowavh.actions.PublishReleaseAction"
-                text="GitFlowAVH: Publish Release"/>
+        <action id="GitFlowAVH.PublishRelease" class="gitflowavh.actions.PublishReleaseAction" text="GitFlowAVH: Publish Release"/>
         <action id="GitFlowAVH.TrackRelease" class="gitflowavh.actions.TrackReleaseAction" text="GitFlowAVH: Track Release..."/>
 
         <action id="GitFlowAVH.StartHotfix" class="gitflowavh.actions.StartHotfixAction" text="GitFlowAVH: Start Hotfix..."/>
         <action id="GitFlowAVH.FinishHotfix" class="gitflowavh.actions.FinishHotfixAction" text="GitFlowAVH: Finish Hotfix"/>
         <action id="GitFlowAVH.PublishHotfix" class="gitflowavh.actions.PublishHotfixAction" text="GitFlowAVH: Publish Hotfix"/>
+
+        <action id="GitFlowAVH.StartHotfix" class="gitflowavh.actions.StartBugfixAction" text="GitFlowAVH: Start Bugfix..."/>
+        <action id="GitFlowAVH.FinishBugfix" class="gitflowavh.actions.FinishBugfixAction" text="GitFlowAVH: Finish Bugfix"/>
+        <action id="GitFlowAVH.PublishBugfix" class="gitflowavh.actions.PublishBugfixAction" text="GitFlowAVH: Publish Bugfix"/>
     </actions>
 
     <project-components>

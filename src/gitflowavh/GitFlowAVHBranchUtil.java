@@ -22,6 +22,7 @@ public class GitFlowAVHBranchUtil {
     String prefixFeature;
     String prefixRelease;
     String prefixHotfix;
+    String prefixBugfix;
 
     /**
      * @param project Project
@@ -37,6 +38,7 @@ public class GitFlowAVHBranchUtil {
         prefixFeature = GitFlowAVHConfigUtil.getFeaturePrefix(project);
         prefixRelease = GitFlowAVHConfigUtil.getReleasePrefix(project);
         prefixHotfix = GitFlowAVHConfigUtil.getHotfixPrefix(project);
+        prefixBugfix = GitFlowAVHConfigUtil.getBugfixPrefix(project);
     }
 
     /**
@@ -48,7 +50,8 @@ public class GitFlowAVHBranchUtil {
                 && GitFlowAVHConfigUtil.getDevelopBranch(myProject) != null
                 && GitFlowAVHConfigUtil.getFeaturePrefix(myProject) != null
                 && GitFlowAVHConfigUtil.getReleasePrefix(myProject) != null
-                && GitFlowAVHConfigUtil.getHotfixPrefix(myProject) != null;
+                && GitFlowAVHConfigUtil.getHotfixPrefix(myProject) != null
+                && GitFlowAVHConfigUtil.getBugfixPrefix(myProject) != null;
 
         return hasGitflow;
     }
@@ -87,6 +90,15 @@ public class GitFlowAVHBranchUtil {
      */
     public boolean isCurrentBranchHotfix() {
         return currentBranchName.startsWith(prefixHotfix);
+    }
+
+    /**
+     * Checks whether the current branch is a bugfix branch.
+     *
+     * @return boolean
+     */
+    public boolean isCurrentBranchBugfix() {
+        return currentBranchName.startsWith(prefixBugfix);
     }
 
     /**

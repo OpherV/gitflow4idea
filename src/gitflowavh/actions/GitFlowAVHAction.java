@@ -32,10 +32,11 @@ public abstract class GitFlowAVHAction extends DumbAwareAction {
     String featurePrefix;
     String releasePrefix;
     String hotfixPrefix;
+    String bugfixPrefix;
     String masterBranch;
     String developBranch;
 
-    GitFlowAVHAction(String actionName) {
+    public GitFlowAVHAction(String actionName) {
         super(actionName);
     }
 
@@ -54,6 +55,7 @@ public abstract class GitFlowAVHAction extends DumbAwareAction {
         featurePrefix = GitFlowAVHConfigUtil.getFeaturePrefix(myProject);
         releasePrefix = GitFlowAVHConfigUtil.getReleasePrefix(myProject);
         hotfixPrefix = GitFlowAVHConfigUtil.getHotfixPrefix(myProject);
+        bugfixPrefix = GitFlowAVHConfigUtil.getBugfixPrefix(myProject);
         masterBranch = GitFlowAVHConfigUtil.getMasterBranch(myProject);
         developBranch = GitFlowAVHConfigUtil.getDevelopBranch(myProject);
     }

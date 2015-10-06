@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class InitRepoAction extends GitFlowAVHAction {
 
-    InitRepoAction() {
+    public InitRepoAction() {
         super("Init Repo");
     }
 

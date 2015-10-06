@@ -491,6 +491,96 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
+    // Bugfix
+
+    /**
+     * @param repository GitRepository
+     * @param bugfixName String
+     * @param baseBranch String
+     * @param listeners GitLineHandlerListener
+     * @return GitCommandResult
+     */
+    public GitCommandResult startBugfix(@NotNull GitRepository repository,
+                                        @NotNull String bugfixName,
+                                        @Nullable String baseBranch,
+                                        @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("start");
+        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
+        h.addParameters(bugfixName);
+
+        if (baseBranch != null) {
+            h.addParameters(baseBranch);
+        }
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    /**
+     * @param repository GitRepository
+     * @param bugfixName String
+     * @param listeners GitLineHandlerListener
+     * @return GitCommandResult
+     */
+    public GitCommandResult finishBugfix(@NotNull GitRepository repository,
+                                         @NotNull String bugfixName,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("finish");
+
+        if (GitFlowAVHConfigurable.bugfixKeepRemote(repository.getProject())) {
+            h.addParameters("--keepremote");
+        }
+        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
+        h.addParameters(bugfixName);
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    /**
+     * @param repository GitRepository
+     * @param bugfixName String
+     * @param listeners GitLineHandlerListener
+     * @return GitCommandResult
+     */
+    public GitCommandResult publishBugfix(@NotNull GitRepository repository,
+                                          @NotNull String bugfixName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("publish");
+        h.addParameters(bugfixName);
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
     /**
      * @param h GitLineHandler
      * @param repository GitRepository

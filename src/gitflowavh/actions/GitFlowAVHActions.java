@@ -30,6 +30,7 @@ public class GitFlowAVHActions {
     String featurePrefix;
     String releasePrefix;
     String hotfixPrefix;
+    String bugfixPrefix;
     String masterBranch;
     String developBranch;
 
@@ -54,6 +55,7 @@ public class GitFlowAVHActions {
         featurePrefix = GitFlowAVHConfigUtil.getFeaturePrefix(myProject);
         releasePrefix = GitFlowAVHConfigUtil.getReleasePrefix(myProject);
         hotfixPrefix = GitFlowAVHConfigUtil.getHotfixPrefix(myProject);
+        bugfixPrefix = GitFlowAVHConfigUtil.getBugfixPrefix(myProject);
         masterBranch = GitFlowAVHConfigUtil.getMasterBranch(myProject);
         developBranch = GitFlowAVHConfigUtil.getDevelopBranch(myProject);
 
@@ -139,6 +141,18 @@ public class GitFlowAVHActions {
                 }
             }
 
+            // BUGFIX ACTIONS
+            actionGroup.addSeparator("Bugfix");
+
+            actionGroup.add(new StartBugfixAction());
+            if (branchUtil.isCurrentBranchBugfix()) {
+                actionGroup.add(new FinishBugfixAction());
+
+                // Can't publish bugfix if it's already published
+                if (!branchUtil.isCurrentBranchPublished()) {
+                    actionGroup.add(new PublishBugfixAction());
+                }
+            }
         }
 
         return actionGroup;

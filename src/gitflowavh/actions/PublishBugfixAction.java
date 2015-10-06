@@ -8,33 +8,34 @@ import gitflowavh.GitFlowAVHConfigUtil;
 import gitflowavh.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishReleaseAction extends GitFlowAVHAction {
+public class PublishBugfixAction extends GitFlowAVHAction {
 
-    public PublishReleaseAction(){
-        super("Publish Release");
+    public PublishBugfixAction(){
+        super("Publish Bugfix");
     }
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         super.actionPerformed(anActionEvent);
 
-        final String releaseName= GitFlowAVHConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
-        final GitFlowAVHErrorsListener errorLineHandler = new GitFlowAVHErrorsListener(myProject);
+        final String bugfixName= GitFlowAVHConfigUtil.getBugfixNameFromBranch(myProject, currentBranchName);
 
-        new Task.Backgroundable(myProject,"Publishing release "+releaseName,false){
+        new Task.Backgroundable(myProject,"Publishing bugfix "+bugfixName,false){
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                GitCommandResult result = myGitflow.publishRelease(repo, releaseName, errorLineHandler);
+                GitCommandResult result = myGitflow.publishBugfix(repo,bugfixName,new GitFlowAVHErrorsListener(myProject));
 
                 if (result.success()) {
-                    String publishedReleaseMessage = String.format("A new remote branch '%s%s' was created", releasePrefix, releaseName);
-                    NotifyUtil.notifySuccess(myProject, releaseName, publishedReleaseMessage);
+                    String publishedBugfixMessage = String.format("A new remote branch '%s%s' was created", bugfixPrefix, bugfixName);
+                    NotifyUtil.notifySuccess(myProject, bugfixName, publishedBugfixMessage);
                 }
                 else {
                     NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                 }
 
                 repo.update();
+
+
             }
         }.queue();
 

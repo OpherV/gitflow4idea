@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
     Project myProject;
-    GitFlowAVHWidget myGitflowWidget;
+    GitFlowAVHWidget myGitFlowAVHWidget;
     MessageBus messageBus;
 
     /**
@@ -58,16 +58,16 @@ public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
         //git repo present
         if (vcsRoots.length > 0 && vcsRoots[0].getVcs() instanceof GitVcs) {
 
-            myGitflowWidget = new GitFlowAVHWidget(myProject);
+            myGitFlowAVHWidget = new GitFlowAVHWidget(myProject);
             StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
             if (statusBar != null) {
-                statusBar.addWidget(myGitflowWidget, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
+                statusBar.addWidget(myGitFlowAVHWidget, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
             }
         } else {
-            if (myGitflowWidget != null) {
-                DvcsUtil.removeStatusBarWidget(myProject, myGitflowWidget);
+            if (myGitFlowAVHWidget != null) {
+                DvcsUtil.removeStatusBarWidget(myProject, myGitFlowAVHWidget);
             }
-            myGitflowWidget = null;
+            myGitFlowAVHWidget = null;
         }
     }
 }
