@@ -127,6 +127,18 @@ public class GitFlowAVHActions {
                 actionGroup.add(new TrackReleaseAction());
             }
 
+            // BUGFIX ACTIONS
+            actionGroup.addSeparator("Bugfix");
+
+            actionGroup.add(new StartBugfixAction());
+            if (branchUtil.isCurrentBranchBugfix()) {
+                actionGroup.add(new FinishBugfixAction());
+
+                // Can't publish bugfix if it's already published
+                if (!branchUtil.isCurrentBranchPublished()) {
+                    actionGroup.add(new PublishBugfixAction());
+                }
+            }
 
             //HOTFIX ACTIONS
             actionGroup.addSeparator("Hotfix");
@@ -139,19 +151,6 @@ public class GitFlowAVHActions {
                 //can't publish hotfix if it's already published
                 if (!branchUtil.isCurrentBranchPublished()) {
                     actionGroup.add(new PublishHotfixAction());
-                }
-            }
-
-            // BUGFIX ACTIONS
-            actionGroup.addSeparator("Bugfix");
-
-            actionGroup.add(new StartBugfixAction());
-            if (branchUtil.isCurrentBranchBugfix()) {
-                actionGroup.add(new FinishBugfixAction());
-
-                // Can't publish bugfix if it's already published
-                if (!branchUtil.isCurrentBranchPublished()) {
-                    actionGroup.add(new PublishBugfixAction());
                 }
             }
         }
