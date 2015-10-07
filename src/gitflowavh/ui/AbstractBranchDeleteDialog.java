@@ -7,6 +7,7 @@ import gitflowavh.GitFlowAVHBranchUtil;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.List;
 
 
 public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
@@ -16,7 +17,7 @@ public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
     private JLabel mergeInfoText;
     private JLabel selectBranchLabel;
 
-    private Project project;
+    protected Project project;
     protected GitFlowAVHBranchUtil gitFlowAVHBranchUtil;
 
 
@@ -31,7 +32,8 @@ public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
         setModal(true);
 
         branchComboBox.setModel(createBranchComboModel());
-        branchComboBox.addItemListener(new ItemChangeListener());
+        branchComboBox.addItemListener(new ItemChangeListener(this));
+        updateMergedInfoText(hasSelectedBranchBeenMerged());
     }
 
     /**
@@ -42,8 +44,28 @@ public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
         return selectedBranch.getBranchName();
     }
 
+    /**
+     * @return The name of the branch that will be deleted, without prefix
+     */
+    public String getBranchName(boolean withoutPrefix) {
+        ComboEntry selectedBranch = (ComboEntry) branchComboBox.getModel().getSelectedItem();
+        return selectedBranch.getBranchName().substring(getPrefix().length());
+    }
+
     public boolean isForceDeleteChecked() {
         return forceDeleteCheckBox.isSelected();
+    }
+
+    public boolean hasSelectedBranchBeenMerged() {
+        return gitFlowAVHBranchUtil.isBranchMerged(getBranchName(), getCheckMergedToBranchName());
+    }
+
+    public void updateMergedInfoText(boolean hasBeenMerged) {
+        if (hasBeenMerged) {
+            mergeInfoText.setText(String.format("Branch has been fully merged to %s.", getCheckMergedToBranchName()));
+        } else {
+            mergeInfoText.setText(String.format("Branch has not been merged to %s! You need to select force delete to delete this branch.", getCheckMergedToBranchName()));
+        }
     }
 
     @Override
@@ -61,14 +83,33 @@ public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
      */
     protected abstract String getLabel();
 
-    protected abstract ComboBoxModel createBranchComboModel();
+    protected abstract String getPrefix();
 
-    protected abstract boolean isSelectedBranchMerged();
+    /**
+     * @return hasBranchBeenMerged checks agains branch name given by this method
+     */
+    protected abstract String getCheckMergedToBranchName();
+
+    private ComboBoxModel createBranchComboModel() {
+        List<String> branchList = gitFlowAVHBranchUtil.filterBranchListByPrefix(gitFlowAVHBranchUtil.getLocalBranchNames(), getPrefix());
+
+        ComboEntry[] entries = new ComboEntry[branchList.size() + 1];
+        for (int i = 0; i < branchList.size(); i++) {
+            String branchName = branchList.get(i);
+            String branchNameLabel = branchName;
+            if (gitFlowAVHBranchUtil.getCurrentBranchName().equals(branchName)) {
+                branchNameLabel += " (current)";
+            }
+            entries[i] = new ComboEntry(branchName, branchNameLabel);
+
+        }
+        return new DefaultComboBoxModel(entries);
+    }
 
     /**
      * An entry for the branch selection dropdown/combo.
      */
-    private static class ComboEntry {
+    protected static class ComboEntry {
         private String branchName, label;
 
         public ComboEntry(String branchName, String label) {
@@ -90,12 +131,17 @@ public abstract class AbstractBranchDeleteDialog extends DialogWrapper {
      * Branch selection change listener. This allows us to show merge status of the branch immediately.
      */
     private class ItemChangeListener implements ItemListener {
+        private AbstractBranchDeleteDialog deleteDialogClass;
+
+
+        public ItemChangeListener(AbstractBranchDeleteDialog deleteDialog) {
+            deleteDialogClass = deleteDialog;
+        }
+
         @Override
         public void itemStateChanged(ItemEvent event) {
             if (event.getStateChange() == ItemEvent.SELECTED) {
-                Object item = event.getItem();
-                // Do something with object
-
+                deleteDialogClass.updateMergedInfoText(deleteDialogClass.hasSelectedBranchBeenMerged());
             }
         }
     }

@@ -4,11 +4,18 @@ import com.intellij.openapi.project.Project;
 import git4idea.GitLocalBranch;
 import git4idea.GitRemoteBranch;
 import git4idea.branch.GitBranchUtil;
+import git4idea.commands.GitCommand;
+import git4idea.commands.GitCommandResult;
+import git4idea.commands.GitImpl;
+import git4idea.commands.GitLineHandler;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 public class GitFlowAVHBranchUtil {
@@ -22,6 +29,62 @@ public class GitFlowAVHBranchUtil {
     String prefixHotfix;
     String prefixBugfix;
 
+    /**
+     * We must use reflection to add this command, since the git4idea implementation doesn't expose it.
+     *
+     * @return GitCommand
+     */
+    private GitCommand getGitCommand() {
+        Method m = null;
+        try {
+            m = GitCommand.class.getDeclaredMethod("write", String.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        //m.invoke(d);//exception java.lang.IllegalAccessException
+        assert m != null;
+        m.setAccessible(true); // Abracadabra
+
+        GitCommand command = null;
+
+        try {
+            command = (GitCommand) m.invoke(null, "flow"); // Now it's ok
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return command;
+    }
+
+    /**
+     * We must use reflection to add this command, since the git4idea implementation doesn't expose it.
+     */
+    private static GitCommandResult run(@org.jetbrains.annotations.NotNull GitLineHandler handler) {
+        Method m = null;
+        try {
+            m = GitImpl.class.getDeclaredMethod("run", GitLineHandler.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        assert m != null;
+        m.setAccessible(true); // Abracadabra
+
+        GitCommandResult result = null;
+
+        try {
+            result = (GitCommandResult) m.invoke(null, handler); // Now it's ok
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     public GitFlowAVHBranchUtil(Project project) {
         myProject = project;
@@ -49,15 +112,68 @@ public class GitFlowAVHBranchUtil {
         return hasGitflow;
     }
 
-    /*public boolean isCurrentBranchMaster(){
-        return currentBranchName.startsWith(branchnameMaster);
-    }*/
+    public String getCurrentBranchName() {
+        return currentBranchName;
+    }
+
+    public boolean isBranchMerged(String branchName, String isMergedTo) {
+        final GitLineHandler h = new GitLineHandler(repo.getProject(), repo.getRoot(), getGitCommand());
+        GitCommandResult result;
+
+        h.setSilent(false);
+        h.setStdoutSuppressed(false);
+        h.setStderrSuppressed(false);
+        h.addParameters("branch");
+        h.addParameters("--no-color");
+        h.addParameters("--merged");
+        h.addParameters(isMergedTo);
+
+        result = run(h);
+        List<String> mergedList = result.getOutput();
+
+        boolean isMerged = false;
+        for (String aMergedList : mergedList) {
+            String mergedBranchName = aMergedList.substring(2);
+            if (mergedBranchName.equals(branchName)) {
+                isMerged = true;
+            }
+        }
+        return isMerged;
+    }
+
+    /**
+     * Checks if current branch is the master branch
+     */
+    public boolean isCurrentBranchMaster() {
+        return currentBranchName.equals(branchnameMaster);
+    }
 
     /**
      * Checks whether the current branch is a feature branch.
      */
     public boolean isCurrentBranchFeature() {
         return currentBranchName.startsWith(prefixFeature);
+    }
+
+    /**
+     * Checks if given branch is a feature branch
+     */
+    public boolean isBranchFeature(String branchName) {
+        return branchName.startsWith(prefixFeature);
+    }
+
+    /**
+     * Checks whether the current branch is a bugfix branch.
+     */
+    public boolean isCurrentBranchBugfix() {
+        return currentBranchName.startsWith(prefixBugfix);
+    }
+
+    /**
+     * Checks if given branch is a bugfix branch.
+     */
+    public boolean isBranchBugfix(String branchName) {
+        return branchName.startsWith(prefixBugfix);
     }
 
     /**
@@ -68,6 +184,13 @@ public class GitFlowAVHBranchUtil {
     }
 
     /**
+     * Checks if given branch is a release branch.
+     */
+    public boolean isBranchRelease(String branchName) {
+        return branchName.startsWith(prefixRelease);
+    }
+
+    /**
      * Checks whether the current branch is a hotfix branch.
      */
     public boolean isCurrentBranchHotfix() {
@@ -75,10 +198,10 @@ public class GitFlowAVHBranchUtil {
     }
 
     /**
-     * Checks whether the current branch is a bugfix branch.
+     * Checks if given branch is a hotfix branch.
      */
-    public boolean isCurrentBranchBugfix() {
-        return currentBranchName.startsWith(prefixBugfix);
+    public boolean isBranchHotfix(String branchName) {
+        return branchName.startsWith(prefixHotfix);
     }
 
     /**

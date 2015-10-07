@@ -22,9 +22,6 @@ public class FinishBugfixAction extends GitFlowAVHAction {
         customBugfixName = name;
     }
 
-    /**
-     * @param e AnActionEvent
-     */
     @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);

@@ -297,6 +297,28 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
+    public GitCommandResult deleteBugfix(@NotNull GitRepository repository,
+                                         @NotNull String branchName,
+                                         boolean forceDelete,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("delete");
+        if (forceDelete) {
+            h.addParameters("--force");
+        }
+        h.addParameters(branchName);
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
 
     // Release
 

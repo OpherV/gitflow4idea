@@ -33,6 +33,7 @@
         <action id="GitFlowAVH.StartHotfix" class="gitflowavh.actions.StartBugfixAction" text="GitFlowAVH: Start Bugfix..."/>
         <action id="GitFlowAVH.FinishBugfix" class="gitflowavh.actions.FinishBugfixAction" text="GitFlowAVH: Finish Bugfix"/>
         <action id="GitFlowAVH.PublishBugfix" class="gitflowavh.actions.PublishBugfixAction" text="GitFlowAVH: Publish Bugfix"/>
+        <action id="GitFlowAVH.DeleteBugfix" class="gitflowavh.actions.DeleteBugfixAction" text="GitFlowAVH: Delete Bugfix"/>
     </actions>
 
     <project-components>
