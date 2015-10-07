@@ -9,7 +9,6 @@ import git4idea.repo.GitRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 
 public class GitFlowAVHBranchUtil {
@@ -184,7 +183,7 @@ public class GitFlowAVHBranchUtil {
         ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
 
         for (GitRemoteBranch branch : remoteBranches) {
-            if (Objects.equals(branch.getName(), branchName)) {
+            if (branch.getName().equals(branchName)) {
                 remote = branch.getRemote();
                 break;
             }
