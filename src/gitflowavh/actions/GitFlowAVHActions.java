@@ -2,6 +2,7 @@ package gitflowavh.actions;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -160,7 +161,9 @@ public class GitFlowAVHActions {
 
     public static void runMergeTool() {
         git4idea.actions.GitResolveConflictsAction resolveAction = new git4idea.actions.GitResolveConflictsAction();
-        AnActionEvent e = new AnActionEvent(null, DataManager.getInstance().getDataContext(), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
+        AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
+        DataContext dataContext = asyncResult.getResult();
+        AnActionEvent e = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
         resolveAction.actionPerformed(e);
     }
 }
