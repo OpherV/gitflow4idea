@@ -13,7 +13,6 @@ import gitflowavh.ui.NotifyUtil;
  * TODO Maybe have this as a singleton instead of static
  */
 public class GitFlowAVHConfigUtil {
-
     public static final String BRANCH_MASTER = "gitflow.branch.master";
     public static final String BRANCH_DEVELOP = "gitflow.branch.develop";
     public static final String PREFIX_FEATURE = "gitflow.prefix.feature";
@@ -23,10 +22,7 @@ public class GitFlowAVHConfigUtil {
     public static final String PREFIX_SUPPORT = "gitflow.prefix.support";
     public static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
 
-    /**
-     * @param project Project
-     * @return String
-     */
+
     public static String getMasterBranch(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -43,10 +39,6 @@ public class GitFlowAVHConfigUtil {
         return masterBranch;
     }
 
-    /**
-     * @param project Project
-     * @return String
-     */
     public static String getDevelopBranch(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -63,10 +55,6 @@ public class GitFlowAVHConfigUtil {
         return developBranch;
     }
 
-    /**
-     * @param project Project
-     * @return String
-     */
     public static String getFeaturePrefix(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -83,10 +71,6 @@ public class GitFlowAVHConfigUtil {
         return featurePrefix;
     }
 
-    /**
-     * @param project Project
-     * @return String
-     */
     public static String getReleasePrefix(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -103,10 +87,6 @@ public class GitFlowAVHConfigUtil {
         return releasePrefix;
     }
 
-    /**
-     * @param project Project
-     * @return String
-     */
     public static String getHotfixPrefix(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -123,10 +103,6 @@ public class GitFlowAVHConfigUtil {
         return hotfixPrefix;
     }
 
-    /**
-     * @param project Project
-     * @return String
-     */
     public static String getBugfixPrefix(Project project) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -143,59 +119,30 @@ public class GitFlowAVHConfigUtil {
         return hotfixPrefix;
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     * @return String
-     */
     public static String getFeatureNameFromBranch(Project project, String branchName) {
         String featurePrefix = GitFlowAVHConfigUtil.getFeaturePrefix(project);
         return branchName.substring(branchName.indexOf(featurePrefix) + featurePrefix.length(), branchName.length());
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     * @return String
-     */
     public static String getReleaseNameFromBranch(Project project, String branchName) {
         String releasePrefix = GitFlowAVHConfigUtil.getReleasePrefix(project);
         return branchName.substring(branchName.indexOf(releasePrefix) + releasePrefix.length(), branchName.length());
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     * @return String
-     */
     public static String getHotfixNameFromBranch(Project project, String branchName) {
         String hotfixPrefix = GitFlowAVHConfigUtil.getHotfixPrefix(project);
         return branchName.substring(branchName.indexOf(hotfixPrefix) + hotfixPrefix.length(), branchName.length());
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     * @return String
-     */
     public static String getBugfixNameFromBranch(Project project, String branchName) {
         String bugfixPrefix = GitFlowAVHConfigUtil.getBugfixPrefix(project);
         return branchName.substring(branchName.indexOf(bugfixPrefix) + bugfixPrefix.length(), branchName.length());
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     * @return String
-     */
     public static String getRemoteNameFromBranch(Project project, String branchName) {
         return branchName.substring(0, branchName.indexOf("/"));
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     */
     public static void setMasterBranch(Project project, String branchName) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -209,10 +156,6 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project    Project
-     * @param branchName String
-     */
     public static void setDevelopBranch(Project project, String branchName) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -226,10 +169,6 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
     public static void setReleasePrefix(Project project, String prefix) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -243,10 +182,6 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
     public static void setFeaturePrefix(Project project, String prefix) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -260,27 +195,6 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
-    public static void setHotfixPrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
-
-        assert repo != null;
-        VirtualFile root = repo.getRoot();
-
-        try {
-            GitConfigUtil.setValue(project, root, PREFIX_HOTFIX, prefix);
-        } catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-    }
-
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
     public static void setBugfixPrefix(Project project, String prefix) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -294,10 +208,19 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
+    public static void setHotfixPrefix(Project project, String prefix) {
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+
+        assert repo != null;
+        VirtualFile root = repo.getRoot();
+
+        try {
+            GitConfigUtil.setValue(project, root, PREFIX_HOTFIX, prefix);
+        } catch (VcsException e) {
+            NotifyUtil.notifyError(project, "Config error", e);
+        }
+    }
+
     public static void setSupportPrefix(Project project, String prefix) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 
@@ -311,10 +234,6 @@ public class GitFlowAVHConfigUtil {
         }
     }
 
-    /**
-     * @param project Project
-     * @param prefix  String
-     */
     public static void setVersionPrefix(Project project, String prefix) {
         GitRepository repo = GitBranchUtil.getCurrentRepository(project);
 

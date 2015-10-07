@@ -7,12 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 
-/**
- *  Dialog for choosing branches
- *
- * @author Opher Vishnia / opherv.com / opherv@gmail.com
- */
 
+/**
+ * Dialog for choosing branches
+ */
 public class GitFlowAVHBranchChooseDialog extends DialogWrapper {
     private JPanel contentPane;
     private JList branchList;
@@ -29,13 +27,19 @@ public class GitFlowAVHBranchChooseDialog extends DialogWrapper {
         init();
     }
 
+    /**
+     * @return JComponent
+     */
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
         return contentPane;
     }
 
-    public String getSelectedBranchName(){
+    /**
+     * @return String
+     */
+    public String getSelectedBranchName() {
         return branchList.getSelectedValue().toString();
     }
 }

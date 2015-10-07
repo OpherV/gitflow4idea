@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-/**
- * @author Andreas Vogler (Andreas.Vogler@geneon.de)
- * @author Opher Vishnia (opherv@gmail.com)
- */
+
 public class GitFlowAVHOptionsForm implements ItemListener {
     private JPanel contentPane;
     private JCheckBox releaseFetchOrigin;

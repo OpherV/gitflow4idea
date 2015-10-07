@@ -12,7 +12,6 @@ import java.util.Collection;
 
 
 public class GitFlowAVHBranchUtil {
-
     Project myProject;
     GitRepository repo;
 
@@ -23,9 +22,7 @@ public class GitFlowAVHBranchUtil {
     String prefixHotfix;
     String prefixBugfix;
 
-    /**
-     * @param project Project
-     */
+
     public GitFlowAVHBranchUtil(Project project) {
         myProject = project;
         repo = GitBranchUtil.getCurrentRepository(project);
@@ -40,9 +37,6 @@ public class GitFlowAVHBranchUtil {
         prefixBugfix = GitFlowAVHConfigUtil.getBugfixPrefix(project);
     }
 
-    /**
-     * @return boolean
-     */
     public boolean hasGitflow() {
         boolean hasGitflow;
         hasGitflow = GitFlowAVHConfigUtil.getMasterBranch(myProject) != null
@@ -55,19 +49,12 @@ public class GitFlowAVHBranchUtil {
         return hasGitflow;
     }
 
-    /**
-     * Checks whether the current branch is master branch.
-     *
-     * @return boolean
-     */
     /*public boolean isCurrentBranchMaster(){
         return currentBranchName.startsWith(branchnameMaster);
     }*/
 
     /**
      * Checks whether the current branch is a feature branch.
-     *
-     * @return boolean
      */
     public boolean isCurrentBranchFeature() {
         return currentBranchName.startsWith(prefixFeature);
@@ -75,8 +62,6 @@ public class GitFlowAVHBranchUtil {
 
     /**
      * Checks whether the current branch is a release branch.
-     *
-     * @return boolean
      */
     public boolean isCurrentBranchRelease() {
         return currentBranchName.startsWith(prefixRelease);
@@ -84,8 +69,6 @@ public class GitFlowAVHBranchUtil {
 
     /**
      * Checks whether the current branch is a hotfix branch.
-     *
-     * @return boolean
      */
     public boolean isCurrentBranchHotfix() {
         return currentBranchName.startsWith(prefixHotfix);
@@ -93,8 +76,6 @@ public class GitFlowAVHBranchUtil {
 
     /**
      * Checks whether the current branch is a bugfix branch.
-     *
-     * @return boolean
      */
     public boolean isCurrentBranchBugfix() {
         return currentBranchName.startsWith(prefixBugfix);
@@ -102,17 +83,13 @@ public class GitFlowAVHBranchUtil {
 
     /**
      * Checks whether the current branch also exists on the remote.
-     *
-     * @return boolean
      */
     public boolean isCurrentBranchPublished() {
         return !getRemoteBranchesWithPrefix(currentBranchName).isEmpty();
     }
 
     /**
-     * Ff no prefix specified, returns all remote branches
-     * @param prefix String
-     * @return ArrayList<string>
+     * If no prefix specified, returns all remote branches
      */
     public ArrayList<String> getRemoteBranchesWithPrefix(String prefix) {
         ArrayList<String> remoteBranches = getRemoteBranchNames();
@@ -127,12 +104,6 @@ public class GitFlowAVHBranchUtil {
         return selectedBranches;
     }
 
-
-    /**
-     * @param inputBranches Collection<String>
-     * @param prefix String
-     * @return ArrayList<String>
-     */
     public ArrayList<String> filterBranchListByPrefix(Collection<String> inputBranches, String prefix) {
         ArrayList<String> outputBranches = new ArrayList<String>();
 
@@ -145,9 +116,6 @@ public class GitFlowAVHBranchUtil {
         return outputBranches;
     }
 
-    /**
-     * @return ArrayList<String>
-     */
     public ArrayList<String> getRemoteBranchNames() {
         ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
@@ -159,9 +127,6 @@ public class GitFlowAVHBranchUtil {
         return branchNameList;
     }
 
-    /**
-     * @return ArrayList<String>
-     */
     public ArrayList<String> getLocalBranchNames() {
         ArrayList<GitLocalBranch> localBranches = new ArrayList<GitLocalBranch>(repo.getBranches().getLocalBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
@@ -173,10 +138,6 @@ public class GitFlowAVHBranchUtil {
         return branchNameList;
     }
 
-    /**
-     * @param branchName String
-     * @return GitRemote
-     */
     public GitRemote getRemoteByBranch(String branchName) {
         GitRemote remote = null;
 
@@ -192,10 +153,6 @@ public class GitFlowAVHBranchUtil {
         return remote;
     }
 
-    /**
-     * @param prefix String
-     * @return boolean
-     */
     public boolean areAllBranchesTracked(String prefix) {
         ArrayList<String> localBranches = filterBranchListByPrefix(getLocalBranchNames(), prefix);
 

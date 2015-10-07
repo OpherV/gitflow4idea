@@ -19,9 +19,7 @@ public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
     GitFlowAVHWidget myGitFlowAVHWidget;
     MessageBus messageBus;
 
-    /**
-     * @param project Project
-     */
+
     public GitFlowAVHComponent(Project project) {
         myProject = project;
     }
@@ -35,9 +33,6 @@ public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
         // TODO: insert component disposal logic here
     }
 
-    /**
-     * @return String
-     */
     @NotNull
     public String getComponentName() {
         return "GitFlowAVHComponent";
@@ -55,7 +50,7 @@ public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
     public void directoryMappingChanged() {
         VcsRoot[] vcsRoots = ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots();
 
-        //git repo present
+        // Git repo present
         if (vcsRoots.length > 0 && vcsRoots[0].getVcs() instanceof GitVcs) {
 
             myGitFlowAVHWidget = new GitFlowAVHWidget(myProject);

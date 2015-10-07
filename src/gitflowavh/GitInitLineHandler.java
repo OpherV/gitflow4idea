@@ -20,21 +20,12 @@ public class GitInitLineHandler extends GitLineHandler {
     private BufferedWriter writer;
     GitFlowAVHInitOptions _initOptions;
 
-    /**
-     * @param initOptions GitFlowAVHInitOptions
-     * @param project Project
-     * @param vcsRoot VirtualFile
-     * @param command GitCommand
-     */
+
     public GitInitLineHandler(GitFlowAVHInitOptions initOptions, @NotNull Project project, @NotNull VirtualFile vcsRoot, @NotNull GitCommand command) {
         super(project, vcsRoot, command);
         _initOptions = initOptions;
     }
 
-    /**
-     * @return Process
-     * @throws ExecutionException
-     */
     @Nullable
     @Override
     protected Process startProcess() throws ExecutionException {
@@ -45,17 +36,10 @@ public class GitInitLineHandler extends GitLineHandler {
         return p;
     }
 
-    /**
-     * @param exitCode int
-     */
     protected void processTerminated(final int exitCode) {
         super.processTerminated(exitCode);
     }
 
-    /**
-     * @param s String
-     * @param key Key
-     */
     @Override
     protected void onTextAvailable(String s, Key key) {
         super.onTextAvailable(s, key);
@@ -126,5 +110,4 @@ public class GitInitLineHandler extends GitLineHandler {
             e.printStackTrace();
         }
     }
-
 }

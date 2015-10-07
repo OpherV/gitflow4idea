@@ -11,9 +11,9 @@ import git4idea.repo.GitRepository;
 
 
 public interface GitFlowAVH extends Git {
-
-    public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     GitFlowAVHInitOptions initOptions, @Nullable GitLineHandlerListener... listeners);
+    GitCommandResult initRepo(@NotNull GitRepository repository,
+                              GitFlowAVHInitOptions initOptions,
+                              @Nullable GitLineHandlerListener... listeners);
 
 
     // Feature
@@ -41,18 +41,17 @@ public interface GitFlowAVH extends Git {
                                   @NotNull GitRemote remote,
                                   @Nullable GitLineHandlerListener... listeners);
 
+
     // Release
 
     GitCommandResult startRelease(@NotNull GitRepository repository,
                                   @NotNull String releaseName,
                                   @Nullable GitLineHandlerListener... listeners);
 
-
     GitCommandResult finishRelease(@NotNull GitRepository repository,
                                    @NotNull String releaseName,
                                    @NotNull String tagMessage,
                                    @Nullable GitLineHandlerListener... listeners);
-
 
     GitCommandResult publishRelease(@NotNull GitRepository repository,
                                     @NotNull String releaseName,
@@ -61,6 +60,7 @@ public interface GitFlowAVH extends Git {
     GitCommandResult trackRelease(@NotNull GitRepository repository,
                                   @NotNull String releaseName,
                                   @Nullable GitLineHandlerListener... listeners);
+
 
     // Hotfix
 
@@ -77,6 +77,7 @@ public interface GitFlowAVH extends Git {
     GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                    @NotNull String hotfixName,
                                    @Nullable GitLineHandlerListener... listeners);
+
 
     // Bugfix
 

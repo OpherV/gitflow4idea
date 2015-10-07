@@ -17,7 +17,6 @@ import git4idea.repo.GitRepository;
 
 
 public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
-
     /**
      * We must use reflection to add this command, since the git4idea implementation doesn't expose it.
      *
@@ -50,9 +49,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
 
     /**
      * We must use reflection to add this command, since the git4idea implementation doesn't expose it.
-     *
-     * @param handler GitLineHandler
-     * @return GitCommandResult
      */
     private static GitCommandResult run(@org.jetbrains.annotations.NotNull GitLineHandler handler) {
         Method m = null;
@@ -78,12 +74,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return result;
     }
 
-    /**
-     * @param repository GitRepository
-     * @param initOptions GitFlowAVHInitOptions
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      GitFlowAVHInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
 
@@ -123,14 +113,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
 
     // Feature
 
-    /**
-     *
-     * @param repository GitRepository
-     * @param featureName String
-     * @param baseBranch String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult startFeature(@NotNull GitRepository repository,
                                          @NotNull String featureName,
                                          @Nullable String baseBranch,
@@ -156,13 +138,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     *
-     * @param repository GitRepository
-     * @param featureName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
                                           @NotNull String featureName,
                                           @Nullable GitLineHandlerListener... listeners) {
@@ -191,12 +166,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param featureName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult publishFeature(@NotNull GitRepository repository,
                                            @NotNull String featureName,
                                            @Nullable GitLineHandlerListener... listeners) {
@@ -218,12 +187,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
     /**
      * Feature pull seems to be kind of useless. See:
      * http://stackoverflow.com/questions/18412750/why-doesnt-git-flow-feature-pull-track
-     *
-     * @param repository GitRepository
-     * @param featureName String
-     * @param remote GitRemote
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
      */
     public GitCommandResult pullFeature(@NotNull GitRepository repository,
                                         @NotNull String featureName,
@@ -244,14 +207,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     *
-     * @param repository GitRepository
-     * @param featureName String
-     * @param remote GitRemote
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult trackFeature(@NotNull GitRepository repository,
                                          @NotNull String featureName,
                                          @NotNull GitRemote remote,
@@ -271,14 +226,80 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
     }
 
 
+    // Bugfix
+
+    public GitCommandResult startBugfix(@NotNull GitRepository repository,
+                                        @NotNull String bugfixName,
+                                        @Nullable String baseBranch,
+                                        @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("start");
+        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
+        h.addParameters(bugfixName);
+
+        if (baseBranch != null) {
+            h.addParameters(baseBranch);
+        }
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult finishBugfix(@NotNull GitRepository repository,
+                                         @NotNull String bugfixName,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("finish");
+
+        if (GitFlowAVHConfigurable.bugfixKeepRemote(repository.getProject())) {
+            h.addParameters("--keepremote");
+        }
+        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
+            h.addParameters("-F");
+        }
+        h.addParameters(bugfixName);
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+    public GitCommandResult publishBugfix(@NotNull GitRepository repository,
+                                          @NotNull String bugfixName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("publish");
+        h.addParameters(bugfixName);
+
+        assert listeners != null;
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return run(h);
+    }
+
+
     // Release
 
-    /**
-     * @param repository GitRepository
-     * @param releaseName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult startRelease(@NotNull GitRepository repository,
                                          @NotNull String releaseName,
                                          @Nullable GitLineHandlerListener... listeners) {
@@ -301,13 +322,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param releaseName String
-     * @param tagMessage String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult finishRelease(@NotNull GitRepository repository,
                                           @NotNull String releaseName,
                                           @NotNull String tagMessage,
@@ -341,12 +355,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param releaseName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult publishRelease(@NotNull GitRepository repository,
                                            @NotNull String releaseName,
                                            @Nullable GitLineHandlerListener... listeners) {
@@ -366,12 +374,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param releaseName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult trackRelease(@NotNull GitRepository repository,
                                          @NotNull String releaseName,
                                          @Nullable GitLineHandlerListener... listeners) {
@@ -393,13 +395,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
 
     // Hotfix
 
-    /**
-     * @param repository GitRepository
-     * @param hotfixName String
-     * @param baseBranch String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult startHotfix(@NotNull GitRepository repository,
                                         @NotNull String hotfixName,
                                         @Nullable String baseBranch,
@@ -425,13 +420,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param hotfixName String
-     * @param tagMessage String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult finishHotfix(@NotNull GitRepository repository,
                                          @NotNull String hotfixName,
                                          @NotNull String tagMessage,
@@ -466,12 +454,6 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    /**
-     * @param repository GitRepository
-     * @param hotfixName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
     public GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                           @NotNull String hotfixName,
                                           @Nullable GitLineHandlerListener... listeners) {
@@ -491,100 +473,7 @@ public class GitFlowAVHImpl extends GitImpl implements GitFlowAVH {
         return run(h);
     }
 
-    // Bugfix
 
-    /**
-     * @param repository GitRepository
-     * @param bugfixName String
-     * @param baseBranch String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
-    public GitCommandResult startBugfix(@NotNull GitRepository repository,
-                                        @NotNull String bugfixName,
-                                        @Nullable String baseBranch,
-                                        @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
-        h.setSilent(false);
-
-        h.addParameters("bugfix");
-        h.addParameters("start");
-        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-        h.addParameters(bugfixName);
-
-        if (baseBranch != null) {
-            h.addParameters(baseBranch);
-        }
-
-        assert listeners != null;
-        for (GitLineHandlerListener listener : listeners) {
-            h.addLineListener(listener);
-        }
-        return run(h);
-    }
-
-    /**
-     * @param repository GitRepository
-     * @param bugfixName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
-    public GitCommandResult finishBugfix(@NotNull GitRepository repository,
-                                         @NotNull String bugfixName,
-                                         @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
-        setUrl(h, repository);
-        h.setSilent(false);
-
-        h.addParameters("bugfix");
-        h.addParameters("finish");
-
-        if (GitFlowAVHConfigurable.bugfixKeepRemote(repository.getProject())) {
-            h.addParameters("--keepremote");
-        }
-        if (GitFlowAVHConfigurable.bugfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-        h.addParameters(bugfixName);
-
-        assert listeners != null;
-        for (GitLineHandlerListener listener : listeners) {
-            h.addLineListener(listener);
-        }
-        return run(h);
-    }
-
-    /**
-     * @param repository GitRepository
-     * @param bugfixName String
-     * @param listeners GitLineHandlerListener
-     * @return GitCommandResult
-     */
-    public GitCommandResult publishBugfix(@NotNull GitRepository repository,
-                                          @NotNull String bugfixName,
-                                          @Nullable GitLineHandlerListener... listeners) {
-        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
-        setUrl(h, repository);
-
-        h.setSilent(false);
-
-        h.addParameters("bugfix");
-        h.addParameters("publish");
-        h.addParameters(bugfixName);
-
-        assert listeners != null;
-        for (GitLineHandlerListener listener : listeners) {
-            h.addLineListener(listener);
-        }
-        return run(h);
-    }
-
-    /**
-     * @param h GitLineHandler
-     * @param repository GitRepository
-     */
     private void setUrl(GitLineHandler h, GitRepository repository) {
         ArrayList<GitRemote> remotes = new ArrayList<GitRemote>(repository.getRemotes());
 

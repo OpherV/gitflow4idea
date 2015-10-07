@@ -44,11 +44,7 @@ import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
 import gitflowavh.actions.GitFlowAVHActions;
 
-/**
- * Status bar widget which displays actions for git flow
- *
- * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
- */
+
 public class GitFlowAVHWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
         GitRepositoryChangeListener {

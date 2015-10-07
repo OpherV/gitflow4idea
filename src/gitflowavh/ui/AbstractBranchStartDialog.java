@@ -15,7 +15,6 @@ import gitflowavh.GitFlowAVHBranchUtil;
  * and select a base branch. See {@link GitFlowAVHStartFeatureDialog} for an example implementation.
  */
 public abstract class AbstractBranchStartDialog extends DialogWrapper {
-
     private JPanel contentPane;
     private JTextField branchNameTextField;
     private JComboBox branchFromCombo;
