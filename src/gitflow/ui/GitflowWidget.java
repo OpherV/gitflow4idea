@@ -26,7 +26,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 
@@ -49,19 +48,17 @@ import gitflow.actions.GitflowActions;
  *
  * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
  */
-public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
+public class GitflowWidget extends GitBranchWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
         GitRepositoryChangeListener {
     private volatile String myText = "";
     private volatile String myTooltip = "";
-    private final String myMaxString;
 
     private GitflowActions actions;
 
-    public GitflowWidget(Project project) {
+    public GitflowWidget(@NotNull Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
-        myMaxString = "Git: Rebasing master";
         updateAsync();
     }
 
@@ -127,12 +124,6 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
         return myText;
     }
 
-    @NotNull
-    @Override
-    public String getMaxValue() {
-        return myMaxString;
-    }
-
     @Override
     public String getTooltipText() {
         return myTooltip;
@@ -169,8 +160,6 @@ public class GitflowWidget extends EditorBasedWidget implements StatusBarWidget.
             emptyTextAndTooltip();
             return;
         }
-
-        int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
 
         actions = new GitflowActions(project);
 
