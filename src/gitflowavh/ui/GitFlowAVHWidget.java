@@ -43,9 +43,7 @@ import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
 import gitflowavh.actions.GitFlowAVHActions;
 
-public class GitFlowAVHWidget extends GitBranchWidget implements StatusBarWidget.MultipleTextValuesPresentation,
-        StatusBarWidget.Multiframe,
-        GitRepositoryChangeListener {
+public class GitFlowAVHWidget extends GitBranchWidget implements GitRepositoryChangeListener {
     private volatile String myText = "";
     private volatile String myTooltip = "";
 
