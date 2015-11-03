@@ -26,7 +26,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 
@@ -44,20 +43,17 @@ import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
 import gitflowavh.actions.GitFlowAVHActions;
 
-
-public class GitFlowAVHWidget extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation,
+public class GitFlowAVHWidget extends GitBranchWidget implements StatusBarWidget.MultipleTextValuesPresentation,
         StatusBarWidget.Multiframe,
         GitRepositoryChangeListener {
     private volatile String myText = "";
     private volatile String myTooltip = "";
-    private final String myMaxString;
 
     private GitFlowAVHActions actions;
 
-    public GitFlowAVHWidget(Project project) {
+    public GitFlowAVHWidget(@NotNull Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
-        myMaxString = "Git: Rebasing master";
         updateAsync();
     }
 
@@ -124,12 +120,6 @@ public class GitFlowAVHWidget extends EditorBasedWidget implements StatusBarWidg
         return myText;
     }
 
-    @NotNull
-    @Override
-    public String getMaxValue() {
-        return myMaxString;
-    }
-
     @Override
     public String getTooltipText() {
         return myTooltip;
@@ -168,8 +158,6 @@ public class GitFlowAVHWidget extends EditorBasedWidget implements StatusBarWidg
             emptyTextAndTooltip();
             return;
         }
-
-        // int maxLength = myMaxString.length() - 1; // -1, because there are arrows indicating that it is a popup
 
         actions = new GitFlowAVHActions(project);
 

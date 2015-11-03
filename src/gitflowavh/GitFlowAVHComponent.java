@@ -9,7 +9,6 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
 import git4idea.GitVcs;
-import git4idea.ui.branch.GitBranchWidget;
 import gitflowavh.ui.GitFlowAVHWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,8 +59,7 @@ public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
             }
         } else {
             if (myGitFlowAVHWidget != null) {
-                GitBranchWidget myBranchWidget = new GitBranchWidget(myProject);
-                myBranchWidget.deactivate();
+                myGitFlowAVHWidget.deactivate();
             }
             myGitFlowAVHWidget = null;
         }
