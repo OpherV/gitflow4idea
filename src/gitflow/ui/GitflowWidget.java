@@ -48,9 +48,7 @@ import gitflow.actions.GitflowActions;
  *
  * @author Kirill Likhodedov, Opher Vishnia, Alexander von Bremen-Kühne
  */
-public class GitflowWidget extends GitBranchWidget implements StatusBarWidget.MultipleTextValuesPresentation,
-        StatusBarWidget.Multiframe,
-        GitRepositoryChangeListener {
+public class GitflowWidget extends GitBranchWidget implements GitRepositoryChangeListener {
     private volatile String myText = "";
     private volatile String myTooltip = "";
 
