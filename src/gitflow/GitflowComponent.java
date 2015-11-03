@@ -61,7 +61,7 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
         }
         else{
             if (myGitflowWidget!=null){
-                myGitflowWidget.deactivate();                
+                myGitflowWidget.deactivate();
             }
             myGitflowWidget = null;
         }
