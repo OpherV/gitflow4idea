@@ -1,6 +1,5 @@
 package gitflow;
 
-import com.intellij.dvcs.DvcsUtil;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
@@ -10,6 +9,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
 import git4idea.GitVcs;
+import git4idea.ui.branch.GitBranchWidget;
 import gitflow.ui.GitflowWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +62,8 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
         }
         else{
             if (myGitflowWidget!=null){
-                DvcsUtil.removeStatusBarWidget(myProject, myGitflowWidget);
+                GitBranchWidget myBranchWidget = new GitBranchWidget(myProject);
+                myBranchWidget.deactivate();                
             }
             myGitflowWidget = null;
         }
