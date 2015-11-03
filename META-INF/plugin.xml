@@ -9,7 +9,7 @@
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
 
-    <idea-version since-build="129" until-build="141.999999"/>
+    <idea-version since-build="143" until-build="143.999999"/>
 
     <actions>
         <action id="GitFlowAVH.OpenGitflowPopup" class="gitflowavh.actions.OpenGitFlowAVHPopup" text="GitFlowAVH Operations Popup..."/>
@@ -30,10 +30,10 @@
         <action id="GitFlowAVH.FinishHotfix" class="gitflowavh.actions.FinishHotfixAction" text="GitFlowAVH: Finish Hotfix"/>
         <action id="GitFlowAVH.PublishHotfix" class="gitflowavh.actions.PublishHotfixAction" text="GitFlowAVH: Publish Hotfix"/>
 
-        <action id="GitFlowAVH.StartHotfix" class="gitflowavh.actions.StartBugfixAction" text="GitFlowAVH: Start Bugfix..."/>
+        <action id="GitFlowAVH.StartBugfixAction" class="gitflowavh.actions.StartBugfixAction" text="GitFlowAVH: Start Bugfix..."/>
         <action id="GitFlowAVH.FinishBugfix" class="gitflowavh.actions.FinishBugfixAction" text="GitFlowAVH: Finish Bugfix"/>
         <action id="GitFlowAVH.PublishBugfix" class="gitflowavh.actions.PublishBugfixAction" text="GitFlowAVH: Publish Bugfix"/>
-        <action id="GitFlowAVH.DeleteBugfix" class="gitflowavh.actions.DeleteBugfixAction" text="GitFlowAVH: Delete Bugfix"/>
+        <!-- <action id="GitFlowAVH.DeleteBugfix" class="gitflowavh.actions.DeleteBugfixAction" text="GitFlowAVH: Delete Bugfix"/> -->
     </actions>
 
     <project-components>
