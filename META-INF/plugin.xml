@@ -2,14 +2,14 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.4.4</version>
+    <version>0.4.5</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
 
-    <idea-version since-build="129" until-build="141.999999"/>
+    <idea-version since-build="143" until-build="143.999999"/>
 
     <actions>
         <action id="Gitflow.OpenGitflowPopup" class="gitflow.actions.OpenGitflowPopup"
