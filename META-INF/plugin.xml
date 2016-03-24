@@ -4,7 +4,7 @@
     <description>Git Flow AVH integration, based on gitflow4idea (https://github.com/OpherV/gitflow4idea/) by Opher Vishnia. Requires git-flow AVH 1.9.0 or later (https://github.com/petervanderdoes/gitflow-avh).</description>
     <version>0.5.2</version>
     <category>VCS Integration</category>
-    <vendor>Petri Haikonen</vendor>
+    <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
