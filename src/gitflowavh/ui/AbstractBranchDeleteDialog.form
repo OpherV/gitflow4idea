@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gitflowavh.ui.AbstractBranchDeleteDialog">
+  <grid id="27dc6" binding="contentPane" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
+    <constraints>
+      <xy x="20" y="20" width="448" height="130"/>
+    </constraints>
+    <properties>
+      <preferredSize width="420" height="90"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="ad3e1" class="javax.swing.JLabel" binding="selectBranchLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Select branch..."/>
+        </properties>
+      </component>
+      <component id="8fa1c" class="javax.swing.JComboBox" binding="branchComboBox">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="d4955" class="javax.swing.JCheckBox" binding="forceDeleteCheckBox" default-binding="true">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Force delete"/>
+        </properties>
+      </component>
+      <component id="8a07f" class="javax.swing.JLabel" binding="mergeInfoText">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Not merged / merged"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

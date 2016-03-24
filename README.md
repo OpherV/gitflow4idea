@@ -1,4 +1,4 @@
-# Git Flow Integration for Intellij
+# Git Flow AVH Integration for Intellij
 
 
 An intelliJ plugin providing a UI layer for git-flow, which in itself is a collection of Git extensions to provide high-level repository operations for Vincent [Driessen's branching model](http://nvie.com/git-model).
@@ -29,7 +29,7 @@ The plugin is available via the IntelliJ plugin manager. Just search for "Git Fl
 **Mac/Linux users:**
 
 If you're running into issues like getting
-`Gitflow is not installed`
+`GitFlowAVH is not installed`
 or
 `git: 'flow' is not a git command. See 'git --help'.`
 

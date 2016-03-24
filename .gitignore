@@ -1,7 +1,12 @@
-*.class
+/.idea/compiler.xml
+/.idea/copyright
+/.idea/inspectionProfiles
+/.idea/modules.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
 /.project
-.idea
+/out
+/*.iml
+*.class
 *.zip
 *.jar
-out
-*.iml
