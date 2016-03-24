@@ -13,7 +13,7 @@ public class GitFlowAVHInitOptions {
     private String versionPrefix;
 
 
-    public boolean isUseDefaults() {
+    boolean isUseDefaults() {
         return useDefaults;
     }
 
@@ -21,7 +21,7 @@ public class GitFlowAVHInitOptions {
         this.useDefaults = useDefaults;
     }
 
-    public String getProductionBranch() {
+    String getProductionBranch() {
         return productionBranch;
     }
 
@@ -29,7 +29,7 @@ public class GitFlowAVHInitOptions {
         this.productionBranch = productionBranch;
     }
 
-    public String getDevelopmentBranch() {
+    String getDevelopmentBranch() {
         return developmentBranch;
     }
 
@@ -37,7 +37,7 @@ public class GitFlowAVHInitOptions {
         this.developmentBranch = developmentBranch;
     }
 
-    public String getFeaturePrefix() {
+    String getFeaturePrefix() {
         return featurePrefix;
     }
 
@@ -45,7 +45,7 @@ public class GitFlowAVHInitOptions {
         this.featurePrefix = featurePrefix;
     }
 
-    public String getBugfixPrefix() {
+    String getBugfixPrefix() {
         return bugfixPrefix;
     }
 
@@ -53,7 +53,7 @@ public class GitFlowAVHInitOptions {
         this.bugfixPrefix = bugfixPrefix;
     }
 
-    public String getReleasePrefix() {
+    String getReleasePrefix() {
         return releasePrefix;
     }
 
@@ -61,7 +61,7 @@ public class GitFlowAVHInitOptions {
         this.releasePrefix = releasePrefix;
     }
 
-    public String getHotfixPrefix() {
+    String getHotfixPrefix() {
         return hotfixPrefix;
     }
 
@@ -69,7 +69,7 @@ public class GitFlowAVHInitOptions {
         this.hotfixPrefix = hotfixPrefix;
     }
 
-    public String getSupportPrefix() {
+    String getSupportPrefix() {
         return supportPrefix;
     }
 
@@ -77,7 +77,7 @@ public class GitFlowAVHInitOptions {
         this.supportPrefix = supportPrefix;
     }
 
-    public String getVersionPrefix() {
+    String getVersionPrefix() {
         return versionPrefix;
     }
 

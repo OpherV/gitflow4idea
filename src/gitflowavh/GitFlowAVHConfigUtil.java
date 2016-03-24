@@ -13,14 +13,14 @@ import gitflowavh.ui.NotifyUtil;
  * TODO Maybe have this as a singleton instead of static
  */
 public class GitFlowAVHConfigUtil {
-    public static final String BRANCH_MASTER = "gitflow.branch.master";
-    public static final String BRANCH_DEVELOP = "gitflow.branch.develop";
-    public static final String PREFIX_FEATURE = "gitflow.prefix.feature";
-    public static final String PREFIX_RELEASE = "gitflow.prefix.release";
-    public static final String PREFIX_HOTFIX = "gitflow.prefix.hotfix";
-    public static final String PREFIX_BUGFIX = "gitflow.prefix.bugfix";
-    public static final String PREFIX_SUPPORT = "gitflow.prefix.support";
-    public static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
+    private static final String BRANCH_MASTER = "gitflow.branch.master";
+    private static final String BRANCH_DEVELOP = "gitflow.branch.develop";
+    private static final String PREFIX_FEATURE = "gitflow.prefix.feature";
+    private static final String PREFIX_RELEASE = "gitflow.prefix.release";
+    private static final String PREFIX_HOTFIX = "gitflow.prefix.hotfix";
+    private static final String PREFIX_BUGFIX = "gitflow.prefix.bugfix";
+    private static final String PREFIX_SUPPORT = "gitflow.prefix.support";
+    private static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
 
 
     public static String getMasterBranch(Project project) {

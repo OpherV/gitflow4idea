@@ -19,15 +19,15 @@ import java.util.List;
 
 
 public class GitFlowAVHBranchUtil {
-    Project myProject;
-    GitRepository repo;
+    private Project myProject;
+    private GitRepository repo;
 
-    String currentBranchName;
-    String branchnameMaster;
-    String prefixFeature;
-    String prefixRelease;
-    String prefixHotfix;
-    String prefixBugfix;
+    private String currentBranchName;
+    private String branchnameMaster;
+    private String prefixFeature;
+    private String prefixRelease;
+    private String prefixHotfix;
+    private String prefixBugfix;
 
     /**
      * We must use reflection to add this command, since the git4idea implementation doesn't expose it.

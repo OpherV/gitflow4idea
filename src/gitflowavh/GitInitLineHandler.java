@@ -16,12 +16,12 @@ import git4idea.commands.GitCommand;
 import git4idea.commands.GitLineHandler;
 
 
-public class GitInitLineHandler extends GitLineHandler {
+class GitInitLineHandler extends GitLineHandler {
     private BufferedWriter writer;
-    GitFlowAVHInitOptions _initOptions;
+    private GitFlowAVHInitOptions _initOptions;
 
 
-    public GitInitLineHandler(GitFlowAVHInitOptions initOptions, @NotNull Project project, @NotNull VirtualFile vcsRoot, @NotNull GitCommand command) {
+    GitInitLineHandler(GitFlowAVHInitOptions initOptions, @NotNull Project project, @NotNull VirtualFile vcsRoot, @NotNull GitCommand command) {
         super(project, vcsRoot, command);
         _initOptions = initOptions;
     }

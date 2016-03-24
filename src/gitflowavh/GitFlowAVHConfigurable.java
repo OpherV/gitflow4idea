@@ -11,29 +11,29 @@ import javax.swing.*;
 
 
 public class GitFlowAVHConfigurable implements Configurable {
-    public static final String GITFLOW_FEATURE_FETCH_ORIGIN = "GitFlowAVH.featureFetchOrigin";
-    public static final String GITFLOW_FEATURE_KEEP_REMOTE = "GitFlowAVH.featureKeepRemote";
+    private static final String GITFLOW_FEATURE_FETCH_ORIGIN = "GitFlowAVH.featureFetchOrigin";
+    private static final String GITFLOW_FEATURE_KEEP_REMOTE = "GitFlowAVH.featureKeepRemote";
 
-    public static final String GITFLOW_BUGFIX_FETCH_ORIGIN = "GitFlowAVH.bugfixFetchOrigin";
-    public static final String GITFLOW_BUGFIX_KEEP_REMOTE = "GitFlowAVH.bugfixKeepRemote";
+    private static final String GITFLOW_BUGFIX_FETCH_ORIGIN = "GitFlowAVH.bugfixFetchOrigin";
+    private static final String GITFLOW_BUGFIX_KEEP_REMOTE = "GitFlowAVH.bugfixKeepRemote";
 
-    public static final String GITFLOW_RELEASE_FETCH_ORIGIN = "GitFlowAVH.releaseFetchOrigin";
-    public static final String GITFLOW_DONT_TAG_RELEASE = "GitFlowAVH.dontTagRelease";
-    public static final String GITFLOW_PUSH_ON_FINISH_RELEASE = "GitFlowAVH.pushOnFinishRelease";
-    public static final String GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE = "GitFlowAVH.useCustomTagCommitMessage";
-    public static final String GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE = "GitFlowAVH.customTagCommitMessage";
+    private static final String GITFLOW_RELEASE_FETCH_ORIGIN = "GitFlowAVH.releaseFetchOrigin";
+    private static final String GITFLOW_DONT_TAG_RELEASE = "GitFlowAVH.dontTagRelease";
+    private static final String GITFLOW_PUSH_ON_FINISH_RELEASE = "GitFlowAVH.pushOnFinishRelease";
+    private static final String GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE = "GitFlowAVH.useCustomTagCommitMessage";
+    private static final String GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE = "GitFlowAVH.customTagCommitMessage";
 
-    public static final String GITFLOW_HOTFIX_FETCH_ORIGIN = "GitFlowAVH.hotfixFetchOrigin";
-    public static final String GITFLOW_DONT_TAG_HOTFIX = "GitFlowAVH.dontTagHotfix";
-    public static final String GITFLOW_PUSH_ON_FINISH_HOTFIX = "GitFlowAVH.pushOnFinishHotfix";
-    public static final String GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.useCustomHotfixTagCommitMessage";
-    public static final String GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.customHotfixTagCommitMessage";
+    private static final String GITFLOW_HOTFIX_FETCH_ORIGIN = "GitFlowAVH.hotfixFetchOrigin";
+    private static final String GITFLOW_DONT_TAG_HOTFIX = "GitFlowAVH.dontTagHotfix";
+    private static final String GITFLOW_PUSH_ON_FINISH_HOTFIX = "GitFlowAVH.pushOnFinishHotfix";
+    private static final String GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.useCustomHotfixTagCommitMessage";
+    private static final String GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "GitFlowAVH.customHotfixTagCommitMessage";
 
-    public static final String DEFAULT_TAG_COMMIT_MESSAGE = "Tagging version %name%";
-    public static final String DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE = "Tagging version %name%";
+    private static final String DEFAULT_TAG_COMMIT_MESSAGE = "Tagging version %name%";
+    private static final String DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE = "Tagging version %name%";
 
-    Project project;
-    GitFlowAVHOptionsForm gitflowOptionsForm;
+    private Project project;
+    private GitFlowAVHOptionsForm gitflowOptionsForm;
 
 
     public GitFlowAVHConfigurable(Project project) {
@@ -42,31 +42,31 @@ public class GitFlowAVHConfigurable implements Configurable {
 
     // Feature
 
-    public static boolean featureFetchOrigin(Project project) {
+    static boolean featureFetchOrigin(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_FEATURE_FETCH_ORIGIN, false);
     }
 
-    public static boolean featureKeepRemote(Project project) {
+    static boolean featureKeepRemote(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_FEATURE_KEEP_REMOTE, false);
     }
 
     // Bugfix
 
-    public static boolean bugfixFetchOrigin(Project project) {
+    static boolean bugfixFetchOrigin(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_BUGFIX_FETCH_ORIGIN, false);
     }
 
-    public static boolean bugfixKeepRemote(Project project) {
+    static boolean bugfixKeepRemote(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_BUGFIX_KEEP_REMOTE, false);
     }
 
     // Release
 
-    public static boolean releaseFetchOrigin(Project project) {
+    static boolean releaseFetchOrigin(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_RELEASE_FETCH_ORIGIN, false);
     }
 
-    public static boolean pushOnReleaseFinish(Project project) {
+    static boolean pushOnReleaseFinish(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
     }
 
@@ -76,7 +76,7 @@ public class GitFlowAVHConfigurable implements Configurable {
 
     // Finish release custom commit message
 
-    public static boolean useCustomTagCommitMessage(Project project) {
+    private static boolean useCustomTagCommitMessage(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false);
     }
 
@@ -90,11 +90,11 @@ public class GitFlowAVHConfigurable implements Configurable {
 
     // Hotfix
 
-    public static boolean hotfixFetchOrigin(Project project) {
+    static boolean hotfixFetchOrigin(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_HOTFIX_FETCH_ORIGIN, false);
     }
 
-    public static boolean pushOnHotfixFinish(Project project) {
+    static boolean pushOnHotfixFinish(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_PUSH_ON_FINISH_HOTFIX, false);
     }
 
@@ -104,7 +104,7 @@ public class GitFlowAVHConfigurable implements Configurable {
 
     // Finish hotfix custom commit message
 
-    public static boolean useCustomHotfixTagCommitMessage(Project project) {
+    private static boolean useCustomHotfixTagCommitMessage(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitFlowAVHConfigurable.GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false);
     }
 

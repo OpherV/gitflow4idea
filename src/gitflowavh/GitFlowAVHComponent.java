@@ -14,17 +14,15 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class GitFlowAVHComponent implements ProjectComponent, VcsListener {
-    Project myProject;
-    GitFlowAVHWidget myGitFlowAVHWidget;
-    MessageBus messageBus;
-
+    private Project myProject;
+    private GitFlowAVHWidget myGitFlowAVHWidget;
 
     public GitFlowAVHComponent(Project project) {
         myProject = project;
     }
 
     public void initComponent() {
-        messageBus = myProject.getMessageBus();
+        MessageBus messageBus = myProject.getMessageBus();
         messageBus.connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
     }
 
