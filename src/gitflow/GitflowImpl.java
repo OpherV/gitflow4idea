@@ -152,6 +152,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("--keepremote");
         }
 
+        if (GitflowConfigurable.featureKeepLocal(repository.getProject())) {
+            h.addParameters("--keeplocal");
+        }
+
         if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
             h.addParameters("-F");
         }

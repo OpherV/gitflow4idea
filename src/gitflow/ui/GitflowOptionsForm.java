@@ -25,6 +25,7 @@ public class GitflowOptionsForm  implements ItemListener {
     private JCheckBox dontTagHotfix;
     private JCheckBox useCustomHotfixCommitMessage;
     private JTextField customHotfixCommitMessage;
+    private JCheckBox featureKeepLocal;
 
     public JPanel getContentPane() {
         dontTagRelease.addItemListener(this);
@@ -97,6 +98,9 @@ public class GitflowOptionsForm  implements ItemListener {
 
     public boolean isFeatureKeepRemote() { return featureKeepRemote.isSelected(); }
     public void setFeatureKeepRemote(boolean selected) { featureKeepRemote.setSelected(selected); }
+
+    public boolean isFeatureKeepLocal() { return featureKeepLocal.isSelected(); }
+    public void setFeatureKeepLocal(boolean selected) { featureKeepLocal.setSelected(selected); }
 
 
     // release getters/setters

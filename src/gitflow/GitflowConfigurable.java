@@ -17,6 +17,7 @@ import javax.swing.*;
 public class GitflowConfigurable implements Configurable {
     public static final String GITFLOW_FEATURE_FETCH_ORIGIN = "Gitflow.featureFetchOrigin";
     public static final String GITFLOW_FEATURE_KEEP_REMOTE = "Gitflow.featureKeepRemote";
+    public static final String GITFLOW_FEATURE_KEEP_LOCAL = "Gitflow.featureKeepLocal";
 
     public static final String GITFLOW_RELEASE_FETCH_ORIGIN = "Gitflow.releaseFetchOrigin";
     public static final String GITFLOW_PUSH_ON_FINISH_RELEASE = "Gitflow.pushOnFinishRelease";
@@ -51,6 +52,10 @@ public class GitflowConfigurable implements Configurable {
 
     public static boolean featureKeepRemote(Project project) {
         return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_KEEP_REMOTE, false);
+    }
+
+    public static boolean featureKeepLocal(Project project) {
+        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_KEEP_LOCAL, false);
     }
 
     /* release */
@@ -135,7 +140,8 @@ public class GitflowConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         return PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_FETCH_ORIGIN, false) != gitflowOptionsForm.isFeatureFetchOrigin() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_REMOTE, false) != gitflowOptionsForm.isFeatureKeepRemote() ||
+                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_REMOTE, false) != gitflowOptionsForm.isFeatureKeepRemote() ||
+                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_LOCAL, false) != gitflowOptionsForm.isFeatureKeepLocal() ||
 
                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_FETCH_ORIGIN, false) != gitflowOptionsForm.isReleaseFetchOrigin() ||
                PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false) != gitflowOptionsForm.isPushOnFinishRelease() ||
@@ -155,6 +161,7 @@ public class GitflowConfigurable implements Configurable {
     public void apply() throws ConfigurationException {
         PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isFeatureFetchOrigin()));
         PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_KEEP_REMOTE, Boolean.toString(gitflowOptionsForm.isFeatureKeepRemote()));
+        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_KEEP_LOCAL, Boolean.toString(gitflowOptionsForm.isFeatureKeepLocal()));
 
         PropertiesComponent.getInstance(project).setValue(GITFLOW_RELEASE_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isReleaseFetchOrigin()));
         PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_RELEASE, Boolean.toString(gitflowOptionsForm.isPushOnFinishRelease()));
@@ -173,6 +180,7 @@ public class GitflowConfigurable implements Configurable {
     public void reset() {
         gitflowOptionsForm.setFeatureFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_FETCH_ORIGIN, false));
         gitflowOptionsForm.setFeatureKeepRemote(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_REMOTE, false));
+        gitflowOptionsForm.setFeatureKeepLocal(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_LOCAL, false));
 
         gitflowOptionsForm.setReleaseFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_FETCH_ORIGIN, false));
         gitflowOptionsForm.setPushOnFinishRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false));
