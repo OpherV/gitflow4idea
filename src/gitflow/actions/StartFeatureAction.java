@@ -14,7 +14,7 @@ import gitflow.ui.NotifyUtil;
 
 public class StartFeatureAction extends GitflowAction {
 
-    StartFeatureAction() {
+    public StartFeatureAction() {
         super("Start Feature");
     }
 
@@ -38,7 +38,7 @@ public class StartFeatureAction extends GitflowAction {
         }.queue();
     }
 
-    private void createFeatureBranch(String baseBranchName, String featureName) {
+    public void createFeatureBranch(String baseBranchName, String featureName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
         GitCommandResult result = myGitflow.startFeature(repo, featureName, baseBranchName, errorListener);
 

@@ -6,10 +6,13 @@ import git4idea.GitRemoteBranch;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
+import gitflow.ui.AbstractBranchStartDialog;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -179,5 +182,40 @@ public class GitflowBranchUtil {
         }
 
         return true;
+    }
+
+    public ComboBoxModel createBranchComboModel(String defaultBranch) {
+        final List<String> branchList = this.getLocalBranchNames();
+        branchList.remove(defaultBranch);
+
+        ComboEntry[] entries = new ComboEntry[branchList.size() + 1];
+        entries[0] = new ComboEntry(defaultBranch, defaultBranch + " (default)");
+        for (int i = 1; i <= branchList.size(); i++) {
+            String branchName = branchList.get(i - 1);
+            entries[i] = new ComboEntry(branchName, branchName);
+        }
+
+        return new DefaultComboBoxModel(entries);
+    }
+
+    /**
+     * An entry for the branch selection dropdown/combo.
+     */
+    public static class ComboEntry {
+        private String branchName, label;
+
+        public ComboEntry(String branchName, String label) {
+            this.branchName = branchName;
+            this.label = label;
+        }
+
+        public String getBranchName() {
+            return branchName;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }
