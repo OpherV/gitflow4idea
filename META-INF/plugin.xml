@@ -2,11 +2,12 @@
     <name>Git Flow Integration</name>
     <id>Gitflow</id>
     <description>Git Flow Integration</description>
-    <version>0.4.8</version>
+    <version>0.4.9</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
+    <depends>com.intellij.tasks</depends>
     <depends>Git4Idea</depends>
 
     <idea-version since-build="162.0" until-build="162.*"/>
@@ -39,8 +40,9 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="gitflow.Gitflow"
-                            serviceImplementation="gitflow.GitflowImpl"/>
+        <applicationService serviceInterface="gitflow.Gitflow" serviceImplementation="gitflow.GitflowImpl"/>
+        <applicationService serviceInterface="gitflow.GitflowState" serviceImplementation="gitflow.GitflowState"></applicationService>
         <projectConfigurable instance="gitflow.GitflowConfigurable" />
+        <tasks.dialogPanelProvider implementation="gitflow.ui.GitflowTaskDialogPanelProvider" />
     </extensions>
 </idea-plugin>

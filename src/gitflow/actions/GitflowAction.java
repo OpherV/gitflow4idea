@@ -41,21 +41,31 @@ public class GitflowAction extends DumbAwareAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        virtualFileMananger = VirtualFileManager.getInstance();
-        myProject=e.getProject();
-        branchUtil=new GitflowBranchUtil(myProject);
-        repo = GitBranchUtil.getCurrentRepository(myProject);
-        repos.add(repo);
+        setup(e.getProject());
+    }
 
-        if (repo!=null){
-            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
-        }
+    public void setup(Project project){
+        myProject = project;
+        virtualFileMananger = VirtualFileManager.getInstance();
 
         featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject);
         releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject);
         hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject);
         masterBranch= GitflowConfigUtil.getMasterBranch(myProject);
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject);
+
+        branchUtil=new GitflowBranchUtil(project);
+
+        repo = GitBranchUtil.getCurrentRepository(myProject);
+        repos.add(repo);
+
+        if (repo!=null){
+            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
+        }
+    }
+
+    public void runAction(Project project, final String baseBranchName, final String branchName){
+        setup(project);
     }
 
     //returns true if merge successful, false otherwise
