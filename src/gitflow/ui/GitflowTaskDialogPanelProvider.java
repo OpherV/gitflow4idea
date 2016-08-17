@@ -5,6 +5,7 @@ import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.ui.TaskDialogPanel;
 import com.intellij.tasks.ui.TaskDialogPanelProvider;
+import gitflow.GitflowBranchUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,13 @@ public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider{
     @Nullable
     @Override
     public TaskDialogPanel getOpenTaskPanel(@NotNull Project project, @NotNull Task task) {
-        return TaskManager.getManager(project).isVcsEnabled() ? new GitflowOpenTaskPanel(project, task) : null;
+        GitflowBranchUtil branchUtil = new GitflowBranchUtil(project);
+        if (branchUtil.hasGitflow()) {
+            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowOpenTaskPanel(project, task) : null;
+        }
+        else{
+            return null;
+        }
     }
 
     @Nullable

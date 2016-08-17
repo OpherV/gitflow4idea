@@ -1,11 +1,14 @@
 package gitflow.actions;
 
+import com.intellij.dvcs.repo.Repository;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 
+import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 
 import git4idea.commands.GitCommandResult;
@@ -30,6 +33,12 @@ public class StartFeatureAction extends GitflowAction {
         final String featureName = dialog.getNewBranchName();
         final String baseBranchName = dialog.getBaseBranchName();
 
+        this.runAction(e.getProject(), baseBranchName, featureName);
+    }
+
+    public void runAction(Project project, final String baseBranchName, final String featureName){
+        super.runAction(project, baseBranchName, featureName);
+
         new Task.Backgroundable(myProject, "Starting feature " + featureName, false) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
@@ -38,7 +47,7 @@ public class StartFeatureAction extends GitflowAction {
         }.queue();
     }
 
-    public void createFeatureBranch(String baseBranchName, String featureName) {
+    private void createFeatureBranch(String baseBranchName, String featureName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
         GitCommandResult result = myGitflow.startFeature(repo, featureName, baseBranchName, errorListener);
 
