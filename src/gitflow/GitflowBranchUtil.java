@@ -58,7 +58,7 @@ public class GitflowBranchUtil {
     }
 
     public boolean isCurrentBranchFeature(){
-        return currentBranchName.startsWith(prefixFeature);
+        return isBranchFeature(currentBranchName);
     }
 
 
@@ -67,7 +67,7 @@ public class GitflowBranchUtil {
     }
 
     public boolean isCurrentBranchHotfix(){
-        return currentBranchName.startsWith(prefixHotfix);
+        return isBranchHotfix(currentBranchName);
     }
 
     //checks whether the current branch also exists on the remote
@@ -75,6 +75,13 @@ public class GitflowBranchUtil {
         return getRemoteBranchesWithPrefix(currentBranchName).isEmpty()==false;
     }
 
+    public boolean isBranchFeature(String branchName){
+        return branchName.startsWith(prefixFeature);
+    }
+
+    public boolean isBranchHotfix(String branchName){
+        return branchName.startsWith(prefixHotfix);
+    }
 
     //if no prefix specified, returns all remote branches
     public ArrayList<String> getRemoteBranchesWithPrefix(String prefix){
