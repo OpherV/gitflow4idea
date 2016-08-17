@@ -49,6 +49,8 @@ public class FinishHotfixAction extends GitflowAction {
     }
 
     public void runAction(final Project project, final String hotfixName, final String tagMessage){
+        super.runAction(project, null, hotfixName);
+
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
         if (tagMessage!=null){

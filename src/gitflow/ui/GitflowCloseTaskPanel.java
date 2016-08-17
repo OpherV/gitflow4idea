@@ -79,6 +79,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     public JComponent getPanel() {
         String taskBranchName = gitflowState.getTaskBranch(myTask);
         if (taskBranchName != null) {
+
             myPanel.setVisible(true);
             if (gitflowBranchUtil.isBranchFeature(taskBranchName)) {
                 finishFeaturePanel.setVisible(true);
@@ -101,11 +102,11 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         String taskFullBranchName = gitflowState.getTaskBranch(myTask);
         String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
 
-        if (finishFeatureCheckbox.isEnabled()){
+        if (finishFeatureCheckbox.isSelected()){
             FinishFeatureAction action = new FinishFeatureAction();
             action.runAction(myProject, taskBranchName);
         }
-        else if (finishHotfixCheckbox.isEnabled()){
+        else if (finishHotfixCheckbox.isSelected()){
             FinishHotfixAction action = new FinishHotfixAction();
             action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
         }
