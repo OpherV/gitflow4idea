@@ -3,6 +3,7 @@ package gitflow.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsException;
 import git4idea.branch.GitBranchUtil;
@@ -16,7 +17,7 @@ public class FinishFeatureAction extends GitflowAction {
 
     String customFeatureName=null;
 
-    FinishFeatureAction() {
+    public FinishFeatureAction() {
         super("Finish Feature");
     }
 
@@ -41,46 +42,54 @@ public class FinishFeatureAction extends GitflowAction {
             else{
                 featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
             }
-            final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
-            new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
-                @Override
-                public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result =  myGitflow.finishFeature(repo,featureName,errorLineHandler);
-
-
-                    if (result.success()) {
-                        String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
-                        NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
-                    }
-                    else if(errorLineHandler.hasMergeError){
-                        // (merge errors are handled in the onSuccess handler)
-                    }
-                    else {
-                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
-                    }
-
-                    repo.update();
-
-                }
-
-                @Override
-                public void onSuccess() {
-                    super.onSuccess();
-
-	                //merge conflicts if necessary
-	                if (errorLineHandler.hasMergeError){
-		                if (handleMerge()){
-			                FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
-			                completeFinishFeatureAction.actionPerformed(event);
-		                }
-
-	                }
-
-                }
-            }.queue();
+            this.runAction(myProject, featureName);
         }
 
+    }
+
+    public void runAction(final Project project, final String featureName){
+        super.runAction(project, null, featureName);
+
+        final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
+        final FinishFeatureAction that = this;
+
+        new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
+            @Override
+            public void run(@NotNull ProgressIndicator indicator) {
+                GitCommandResult result =  myGitflow.finishFeature(repo,featureName,errorLineHandler);
+
+
+                if (result.success()) {
+                    String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
+                    NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
+                }
+                else if(errorLineHandler.hasMergeError){
+                    // (merge errors are handled in the onSuccess handler)
+                }
+                else {
+                    NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                }
+
+                repo.update();
+
+            }
+
+            @Override
+            public void onSuccess() {
+                super.onSuccess();
+
+                //merge conflicts if necessary
+                if (errorLineHandler.hasMergeError){
+                    if (handleMerge()){
+                        that.runAction(project, featureName);
+                        FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
+                    }
+
+                }
+
+            }
+        }.queue();;
     }
 
 }

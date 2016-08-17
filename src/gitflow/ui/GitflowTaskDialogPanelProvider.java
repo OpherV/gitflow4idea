@@ -1,4 +1,5 @@
 package gitflow.ui;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.Task;
@@ -9,7 +10,10 @@ import gitflow.GitflowBranchUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider{
+import java.util.Enumeration;
+import java.util.HashMap;
+
+public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider {
 
     @Nullable
     @Override
@@ -25,7 +29,15 @@ public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider{
 
     @Nullable
     @Override
-    public TaskDialogPanel getCloseTaskPanel(@NotNull Project project, @NotNull LocalTask localTask) {
-        return null; //TaskManager.getManager(project).isVcsEnabled() ? new VcsCloseTaskPanel(project, task) : null;
+    public TaskDialogPanel getCloseTaskPanel(@NotNull Project project, @NotNull LocalTask task) {
+        GitflowBranchUtil branchUtil = new GitflowBranchUtil(project);
+
+        if (branchUtil.hasGitflow()) {
+            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowCloseTaskPanel(project, task) : null;
+        }
+        else{
+            return null;
+        }
     }
+
 }

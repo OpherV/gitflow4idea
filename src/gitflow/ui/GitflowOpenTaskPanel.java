@@ -1,5 +1,6 @@
 package gitflow.ui;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.tasks.Task;
@@ -10,6 +11,7 @@ import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowConfigUtil;
+import gitflow.GitflowState;
 import gitflow.actions.GitflowAction;
 import gitflow.actions.StartFeatureAction;
 import gitflow.actions.StartHotfixAction;
@@ -34,11 +36,14 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     private GitflowBranchUtil gitflowBranchUtil;
     private TaskManagerImpl myTaskManager;
     private VcsTaskHandler myVcsTaskHandler;
+    private Task currentTask;
 
+    private GitflowState gitflowState;
 
 
     public GitflowOpenTaskPanel(Project project, Task task){
         myProject = project;
+        currentTask = task;
         myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);
         VcsTaskHandler[] vcsTaskHAndlers = VcsTaskHandler.getAllHandlers(project);
         if (vcsTaskHAndlers.length > 0){
@@ -46,7 +51,9 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
             myVcsTaskHandler = vcsTaskHAndlers[0];
         }
 
+        gitflowState = ServiceManager.getService(GitflowState.class);
         gitflowBranchUtil = new GitflowBranchUtil(project);
+
 
         String defaultFeatureBranch = GitflowConfigUtil.getDevelopBranch(project);
         featureBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultFeatureBranch));
@@ -87,18 +94,20 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     @Override
     public void commit() {
 
-        final GitflowBranchUtil.ComboEntry selectedFeatureBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
-        final GitflowBranchUtil.ComboEntry selectedHotfixBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedFeatureBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
 
         GitflowAction action;
 
         if (startFeatureRadioButton.isSelected()) {
             action = new StartFeatureAction();
-            action.runAction(myProject, selectedFeatureBranch.getBranchName(), featureName.getText());
+            action.runAction(myProject, selectedFeatureBaseBranch.getBranchName(), featureName.getText());
+            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getFeaturePrefix(myProject) + featureName.getText());
         }
         else if (startHotfixRadioButton.isSelected()) {
             action =  new StartHotfixAction();
-            action.runAction(myProject, selectedHotfixBranch.getBranchName(), hotfixName.getText());
+            action.runAction(myProject, selectedHotfixBaseBranch.getBranchName(), hotfixName.getText());
+            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getHotfixPrefix(myProject) + hotfixName.getText());
         }
 
     }
