@@ -10,7 +10,9 @@ import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowConfigUtil;
+import gitflow.actions.GitflowAction;
 import gitflow.actions.StartFeatureAction;
+import gitflow.actions.StartHotfixAction;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,6 +27,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     private JComboBox featureBaseBranch;
     private JTextField hotfixName;
     private JPanel myPanel;
+    private JComboBox hotfixBaseBranch;
 
     private Project myProject;
     private GitRepository myRepo;
@@ -44,8 +47,12 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         }
 
         gitflowBranchUtil = new GitflowBranchUtil(project);
+
         String defaultFeatureBranch = GitflowConfigUtil.getDevelopBranch(project);
         featureBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultFeatureBranch));
+
+        String defaultHotfixBranch = GitflowConfigUtil.getMasterBranch(project);
+        hotfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultHotfixBranch));
 
         myRepo = GitBranchUtil.getCurrentRepository(project);
 
@@ -62,6 +69,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         hotfixName.setEnabled(false);
 
         featureBaseBranch.setEnabled(false);
+        hotfixBaseBranch.setEnabled(false);
 
         //add listeners
         noActionRadioButton.addItemListener(this);
@@ -79,12 +87,20 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     @Override
     public void commit() {
 
-        final GitflowBranchUtil.ComboEntry selectedBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedFeatureBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedHotfixBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+
+        GitflowAction action;
 
         if (startFeatureRadioButton.isSelected()) {
-            final StartFeatureAction startFeatureAction = new StartFeatureAction();
-            startFeatureAction.runAction(myProject, selectedBranch.getBranchName(), featureName.getText());
+            action = new StartFeatureAction();
+            action.runAction(myProject, selectedFeatureBranch.getBranchName(), featureName.getText());
         }
+        else if (startHotfixRadioButton.isSelected()) {
+            action =  new StartHotfixAction();
+            action.runAction(myProject, selectedHotfixBranch.getBranchName(), hotfixName.getText());
+        }
+
     }
 
     @Override
@@ -99,6 +115,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
             hotfixName.setEditable(false);
             hotfixName.setEnabled(false);
+            hotfixBaseBranch.setEnabled(false);
         }
         else if (e.getStateChange() == ItemEvent.SELECTED && source == startFeatureRadioButton) {
             featureName.setEditable(true);
@@ -107,6 +124,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
             hotfixName.setEditable(false);
             hotfixName.setEnabled(false);
+            hotfixBaseBranch.setEnabled(false);
         }
         else if (e.getStateChange() == ItemEvent.SELECTED && source == startHotfixRadioButton) {
             featureName.setEditable(false);
@@ -115,6 +133,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
             hotfixName.setEditable(true);
             hotfixName.setEnabled(true);
+            hotfixBaseBranch.setEnabled(true);
         }
 
     }
