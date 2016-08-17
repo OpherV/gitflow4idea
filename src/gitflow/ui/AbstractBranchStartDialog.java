@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
@@ -37,7 +38,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
         branchNameLabel.setText(String.format("Enter a name for the new %s...", label));
         setModal(true);
 
-        branchFromCombo.setModel(createBranchComboModel());
+        branchFromCombo.setModel(gitflowBranchUtil.createBranchComboModel(getDefaultBranch()));
     }
 
     @Override
@@ -57,7 +58,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
      * based on)
      */
     public String getBaseBranchName() {
-        ComboEntry selectedBranch = (ComboEntry) branchFromCombo.getModel().getSelectedItem();
+        GitflowBranchUtil.ComboEntry selectedBranch = (GitflowBranchUtil.ComboEntry) branchFromCombo.getModel().getSelectedItem();
         return selectedBranch.getBranchName();
     }
 
@@ -90,41 +91,5 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         return contentPane;
-    }
-
-    private ComboBoxModel createBranchComboModel() {
-        final List<String> branchList = gitflowBranchUtil.getLocalBranchNames();
-        final String defaultBranch = getDefaultBranch();
-        branchList.remove(defaultBranch);
-
-        ComboEntry[] entries = new ComboEntry[branchList.size() + 1];
-        entries[0] = new ComboEntry(defaultBranch, defaultBranch + " (default)");
-        for (int i = 1; i <= branchList.size(); i++) {
-            String branchName = branchList.get(i - 1);
-            entries[i] = new ComboEntry(branchName, branchName);
-        }
-
-        return new DefaultComboBoxModel(entries);
-    }
-
-    /**
-     * An entry for the branch selection dropdown/combo.
-     */
-    private static class ComboEntry {
-        private String branchName, label;
-
-        public ComboEntry(String branchName, String label) {
-            this.branchName = branchName;
-            this.label = label;
-        }
-
-        public String getBranchName() {
-            return branchName;
-        }
-
-        @Override
-        public String toString() {
-            return label;
-        }
     }
 }

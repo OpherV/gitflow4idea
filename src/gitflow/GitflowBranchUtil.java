@@ -6,10 +6,13 @@ import git4idea.GitRemoteBranch;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
+import gitflow.ui.AbstractBranchStartDialog;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -55,7 +58,7 @@ public class GitflowBranchUtil {
     }
 
     public boolean isCurrentBranchFeature(){
-        return currentBranchName.startsWith(prefixFeature);
+        return isBranchFeature(currentBranchName);
     }
 
 
@@ -64,7 +67,7 @@ public class GitflowBranchUtil {
     }
 
     public boolean isCurrentBranchHotfix(){
-        return currentBranchName.startsWith(prefixHotfix);
+        return isBranchHotfix(currentBranchName);
     }
 
     //checks whether the current branch also exists on the remote
@@ -72,6 +75,13 @@ public class GitflowBranchUtil {
         return getRemoteBranchesWithPrefix(currentBranchName).isEmpty()==false;
     }
 
+    public boolean isBranchFeature(String branchName){
+        return branchName.startsWith(prefixFeature);
+    }
+
+    public boolean isBranchHotfix(String branchName){
+        return branchName.startsWith(prefixHotfix);
+    }
 
     //if no prefix specified, returns all remote branches
     public ArrayList<String> getRemoteBranchesWithPrefix(String prefix){
@@ -179,5 +189,57 @@ public class GitflowBranchUtil {
         }
 
         return true;
+    }
+
+    public ComboBoxModel createBranchComboModel(String defaultBranch) {
+        final List<String> branchList = this.getLocalBranchNames();
+        branchList.remove(defaultBranch);
+
+        ComboEntry[] entries = new ComboEntry[branchList.size() + 1];
+        entries[0] = new ComboEntry(defaultBranch, defaultBranch + " (default)");
+        for (int i = 1; i <= branchList.size(); i++) {
+            String branchName = branchList.get(i - 1);
+            entries[i] = new ComboEntry(branchName, branchName);
+        }
+
+        return new DefaultComboBoxModel(entries);
+    }
+
+    /**
+     * Strip a full branch name from its gitflow prefix
+     * @param taskFullBranchName full name of the branch (e.g. 'feature/hello');
+     * @return the branch name, prefix free (e.g. 'hello')
+     */
+    public String stripFullBranchName(String taskFullBranchName) {
+        if (taskFullBranchName.startsWith(prefixFeature)){
+            return taskFullBranchName.substring(prefixFeature.length(), taskFullBranchName.length());
+        }
+        else if (taskFullBranchName.startsWith(prefixHotfix)){
+            return taskFullBranchName.substring(prefixHotfix.length(), taskFullBranchName.length());
+        }
+        else{
+            return null;
+        }
+    };
+
+    /**
+     * An entry for the branch selection dropdown/combo.
+     */
+    public static class ComboEntry {
+        private String branchName, label;
+
+        public ComboEntry(String branchName, String label) {
+            this.branchName = branchName;
+            this.label = label;
+        }
+
+        public String getBranchName() {
+            return branchName;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }

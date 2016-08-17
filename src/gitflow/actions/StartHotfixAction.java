@@ -3,6 +3,7 @@ package gitflow.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import gitflow.ui.NotifyUtil;
 
 public class StartHotfixAction extends GitflowAction {
 
-    StartHotfixAction() {
+    public StartHotfixAction() {
         super("Start Hotfix");
     }
 
@@ -29,6 +30,12 @@ public class StartHotfixAction extends GitflowAction {
 
         final String hotfixName = dialog.getNewBranchName();
         final String baseBranchName = dialog.getBaseBranchName();
+
+        this.runAction(e.getProject(), baseBranchName, hotfixName);
+    }
+
+    public void runAction(Project project, final String baseBranchName, final String hotfixName){
+        super.runAction(project, baseBranchName, hotfixName);
 
         new Task.Backgroundable(myProject, "Starting hotfix " + hotfixName, false) {
             @Override
