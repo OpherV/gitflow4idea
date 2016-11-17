@@ -95,7 +95,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     public void commit() {
 
         final GitflowBranchUtil.ComboEntry selectedFeatureBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
-        final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) hotfixBaseBranch.getModel().getSelectedItem();
 
         GitflowAction action;
 

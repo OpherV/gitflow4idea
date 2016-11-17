@@ -34,21 +34,25 @@ public class GitflowBranchUtil {
         myProject=project;
         repo = GitBranchUtil.getCurrentRepository(project);
 
-        currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+        if (repo != null) {
+            currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
 
-        branchnameMaster= GitflowConfigUtil.getMasterBranch(project);
-        prefixFeature = GitflowConfigUtil.getFeaturePrefix(project);
-        prefixRelease = GitflowConfigUtil.getReleasePrefix(project);
-        prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project);
+            branchnameMaster= GitflowConfigUtil.getMasterBranch(project);
+            prefixFeature = GitflowConfigUtil.getFeaturePrefix(project);
+            prefixRelease = GitflowConfigUtil.getReleasePrefix(project);
+            prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project);
+        }
     }
 
     public boolean hasGitflow(){
         boolean hasGitflow=false;
-        hasGitflow=GitflowConfigUtil.getMasterBranch(myProject)!=null
-                   && GitflowConfigUtil.getDevelopBranch(myProject)!=null
-                   && GitflowConfigUtil.getFeaturePrefix(myProject)!=null
-                   && GitflowConfigUtil.getReleasePrefix(myProject)!=null
-                   && GitflowConfigUtil.getHotfixPrefix(myProject)!=null;
+
+        hasGitflow = repo!= null
+                       && GitflowConfigUtil.getMasterBranch(myProject)!=null
+                       && GitflowConfigUtil.getDevelopBranch(myProject)!=null
+                       && GitflowConfigUtil.getFeaturePrefix(myProject)!=null
+                       && GitflowConfigUtil.getReleasePrefix(myProject)!=null
+                       && GitflowConfigUtil.getHotfixPrefix(myProject)!=null;
 
         return hasGitflow;
     }

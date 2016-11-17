@@ -4,9 +4,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
@@ -23,6 +27,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     private JTextField branchNameTextField;
     private JComboBox branchFromCombo;
     private JLabel branchNameLabel;
+    private JLabel spacesLabel;
 
     private Project project;
     private GitflowBranchUtil gitflowBranchUtil;
@@ -38,7 +43,29 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
         branchNameLabel.setText(String.format("Enter a name for the new %s...", label));
         setModal(true);
 
+        //set the base branch combo
         branchFromCombo.setModel(gitflowBranchUtil.createBranchComboModel(getDefaultBranch()));
+
+        branchNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                checkSpaces();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                checkSpaces();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                checkSpaces();
+            }
+
+            public void checkSpaces() {
+                if (branchNameTextField.getText().contains(" ")){
+                    spacesLabel.setVisible(true);
+                }
+                else{
+                    spacesLabel.setVisible(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -50,7 +77,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
      * @return The name of the new branch as specified by the user
      */
     public String getNewBranchName() {
-        return branchNameTextField.getText().trim();
+        return branchNameTextField.getText().trim().replaceAll(" ", "_");
     }
 
     /**
