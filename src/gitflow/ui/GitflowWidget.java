@@ -165,7 +165,10 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
 
         myText = hasGitflow ? "Gitflow" : "No Gitflow";
         myTooltip = getDisplayableBranchTooltip(repo);
-        myStatusBar.updateWidget(ID());
+
+        if (myStatusBar != null){
+            myStatusBar.updateWidget(ID());
+        }
     }
 
     private void emptyTextAndTooltip() {
