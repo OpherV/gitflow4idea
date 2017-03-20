@@ -4,17 +4,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import git4idea.branch.GitBranchUtil;
-import git4idea.repo.GitRepository;
-import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
 
 /**
@@ -48,21 +41,28 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
 
         branchNameTextField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
-                checkSpaces();
+                validateBranchName();
             }
             public void removeUpdate(DocumentEvent e) {
-                checkSpaces();
+                validateBranchName();
             }
             public void insertUpdate(DocumentEvent e) {
-                checkSpaces();
+                validateBranchName();
             }
 
-            public void checkSpaces() {
+            public void validateBranchName() {
                 if (branchNameTextField.getText().contains(" ")){
                     spacesLabel.setVisible(true);
                 }
                 else{
                     spacesLabel.setVisible(false);
+                }
+
+                if (branchNameTextField.getText().contains("&")){
+                    AbstractBranchStartDialog.this.setOKActionEnabled(false);
+                }
+                else{
+                    AbstractBranchStartDialog.this.setOKActionEnabled(true);
                 }
             }
         });
