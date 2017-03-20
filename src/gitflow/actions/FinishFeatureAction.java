@@ -54,6 +54,9 @@ public class FinishFeatureAction extends GitflowAction {
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
         final FinishFeatureAction that = this;
 
+        //get the base branch for this feature
+        final String baseBranch = GitflowConfigUtil.getBaseBranch(project, featurePrefix+featureName);
+
         new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
@@ -61,7 +64,7 @@ public class FinishFeatureAction extends GitflowAction {
 
 
                 if (result.success()) {
-                    String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, developBranch);
+                    String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, baseBranch);
                     NotifyUtil.notifySuccess(myProject, featureName, finishedFeatureMessage);
                 }
                 else if(errorLineHandler.hasMergeError){

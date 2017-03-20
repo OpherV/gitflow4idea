@@ -197,4 +197,19 @@ public class GitflowConfigUtil {
             NotifyUtil.notifyError(project, "Config error", e);
         }
     }
+    
+    public static String getBaseBranch(Project project, String branchName){
+        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+        VirtualFile root = repo.getRoot();
+
+        String baseBranch=null;
+        try{
+            baseBranch = GitConfigUtil.getValue(project, root, "gitflow.branch."+branchName+".base");
+        }
+        catch (VcsException e) {
+            NotifyUtil.notifyError(project, "Config error", e);
+        }
+
+        return baseBranch;
+    }
 }
