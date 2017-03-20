@@ -9,23 +9,25 @@ import java.awt.event.ItemListener;
  * @author Opher Vishnia (opherv@gmail.com)
  */
 public class GitflowOptionsForm  implements ItemListener {
+
     private JPanel contentPane;
     private JCheckBox releaseFetchOrigin;
-    private JCheckBox featureKeepRemote;
 
+    private JCheckBox featureKeepRemote;
+    private JCheckBox featureKeepLocal;
     private JCheckBox featureFetchOrigin;
+    private JCheckBox featureNoFastForward;
+
     private JCheckBox pushOnFinishRelease;
     private JCheckBox dontTagRelease;
     private JCheckBox useCustomTagCommitMessage;
     private JTextField customTagCommitMessage;
-
 
     private JCheckBox hotfixFetchOrigin;
     private JCheckBox pushOnFinishHotfix;
     private JCheckBox dontTagHotfix;
     private JCheckBox useCustomHotfixCommitMessage;
     private JTextField customHotfixCommitMessage;
-    private JCheckBox featureKeepLocal;
 
     public JPanel getContentPane() {
         dontTagRelease.addItemListener(this);
@@ -87,32 +89,63 @@ public class GitflowOptionsForm  implements ItemListener {
                 }
             }
         }
-
-
     }
 
     // feature getters/setters
 
-    public boolean isFeatureFetchOrigin() { return featureFetchOrigin.isSelected(); }
-    public void setFeatureFetchOrigin(boolean selected) { featureFetchOrigin.setSelected(selected); }
+    public boolean isFeatureFetchOrigin() {
+        return featureFetchOrigin.isSelected();
+    }
 
-    public boolean isFeatureKeepRemote() { return featureKeepRemote.isSelected(); }
-    public void setFeatureKeepRemote(boolean selected) { featureKeepRemote.setSelected(selected); }
+    public void setFeatureFetchOrigin(boolean selected) {
+        featureFetchOrigin.setSelected(selected);
+    }
 
-    public boolean isFeatureKeepLocal() { return featureKeepLocal.isSelected(); }
-    public void setFeatureKeepLocal(boolean selected) { featureKeepLocal.setSelected(selected); }
+    public boolean isFeatureKeepRemote() {
+        return featureKeepRemote.isSelected();
+    }
 
+    public void setFeatureKeepRemote(boolean selected) {
+        featureKeepRemote.setSelected(selected);
+    }
+
+    public boolean isFeatureKeepLocal() {
+        return featureKeepLocal.isSelected();
+    }
+
+    public void setFeatureKeepLocal(boolean selected) {
+        featureKeepLocal.setSelected(selected);
+    }
+
+    public boolean isFeatureNoFastForward() {
+        return featureNoFastForward.isSelected();
+    }
+
+    public void setFeatureNoFastForward(boolean selected) {
+        featureNoFastForward.setSelected(selected);
+    }
 
     // release getters/setters
 
-    public boolean isReleaseFetchOrigin() { return releaseFetchOrigin.isSelected(); }
-    public void setReleaseFetchOrigin(boolean selected) { releaseFetchOrigin.setSelected(selected); }
+    public boolean isReleaseFetchOrigin() {
+        return releaseFetchOrigin.isSelected();
+    }
 
-    public boolean isPushOnFinishRelease() { return pushOnFinishRelease.isSelected(); }
-    public void setPushOnFinishRelease(boolean selected) { pushOnFinishRelease.setSelected(selected); }
+    public void setReleaseFetchOrigin(boolean selected) {
+        releaseFetchOrigin.setSelected(selected);
+    }
 
-    public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
+    public boolean isPushOnFinishRelease() {
+        return pushOnFinishRelease.isSelected();
+    }
 
+    public void setPushOnFinishRelease(boolean selected) {
+        pushOnFinishRelease.setSelected(selected);
+    }
+
+    public boolean isDontTagRelease() {
+        return dontTagRelease.isSelected();
+    }
 
     /* custom finish release tag commit message */
 
@@ -132,41 +165,52 @@ public class GitflowOptionsForm  implements ItemListener {
         customTagCommitMessage.setText(message);
     }
 
-
     // hotfix getters/setters
 
-    public boolean isHotfixFetchOrigin() { return hotfixFetchOrigin.isSelected(); }
-    public void setHotfixFetchOrigin(boolean selected) { hotfixFetchOrigin.setSelected(selected); }
+    public boolean isHotfixFetchOrigin() {
+        return hotfixFetchOrigin.isSelected();
+    }
 
+    public void setHotfixFetchOrigin(boolean selected) {
+        hotfixFetchOrigin.setSelected(selected);
+    }
 
-    public boolean isPushOnFinishHotfix() { return pushOnFinishHotfix.isSelected(); }
-    public void setPushOnFinishHotfix(boolean selected) { pushOnFinishHotfix.setSelected(selected); }
+    public boolean isPushOnFinishHotfix() {
+        return pushOnFinishHotfix.isSelected();
+    }
 
+    public void setPushOnFinishHotfix(boolean selected) {
+        pushOnFinishHotfix.setSelected(selected);
+    }
 
-    public boolean isDontTagHotfix() { return dontTagHotfix.isSelected(); }
+    public boolean isDontTagHotfix() {
+        return dontTagHotfix.isSelected();
+    }
 
     public void setDontTagRelease(boolean selected) {
         dontTagRelease.setSelected(selected);
     }
 
-    public void setDontTagHotfix(boolean selected) { dontTagHotfix.setSelected(selected); }
-
-
+    public void setDontTagHotfix(boolean selected) {
+        dontTagHotfix.setSelected(selected);
+    }
 
     /* custom finish hotfix commit message */
 
-    public boolean isUseCustomHotfixComitMessage(){
+    public boolean isUseCustomHotfixComitMessage() {
         return useCustomHotfixCommitMessage.isSelected();
     }
 
-    public void setUseCustomHotfixCommitMessage(boolean selected){
+    public void setUseCustomHotfixCommitMessage(boolean selected) {
         useCustomHotfixCommitMessage.setSelected(selected);
     }
 
-    public String getCustomHotfixCommitMessage(){
+    public String getCustomHotfixCommitMessage() {
         return customHotfixCommitMessage.getText();
     }
-    public void setCustomHotfixCommitMessage(String message){
+
+    public void setCustomHotfixCommitMessage(String message) {
         customHotfixCommitMessage.setText(message);
     }
+
 }
