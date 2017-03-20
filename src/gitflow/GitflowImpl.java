@@ -160,6 +160,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-F");
         }
 
+        if (GitflowConfigurable.featureNoFastForward(repository.getProject())) {
+            h.addParameters("--no-ff");
+        }
+
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {

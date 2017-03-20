@@ -77,7 +77,7 @@ public class FinishReleaseAction extends GitflowAction {
                         GitCommandResult result =  myGitflow.finishRelease(repo, releaseName, tagMessage, errorLineHandler);
 
                         if (result.success()) {
-                            String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", featurePrefix, releaseName, developBranch, masterBranch);
+                            String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", releasePrefix, releaseName, developBranch, masterBranch);
                             NotifyUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
                         }
                         else if(errorLineHandler.hasMergeError){
