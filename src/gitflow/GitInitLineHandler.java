@@ -42,29 +42,30 @@ public class GitInitLineHandler extends GitLineHandler {
     protected void onTextAvailable(String s, Key key) {
         super.onTextAvailable(s, key);
         try {
-            if (s.contains("Branch name for production releases")) {
+            if (s.contains("name for production releases")) {
                 writer.write(_initOptions.getProductionBranch());
                 myVcs.showCommandLine(_initOptions.getProductionBranch());
                 writer.newLine();
                 writer.flush();
             }
 
-            if (s.contains("Branch name for \"next release\"")) {
-
+            if (s.contains("name for \"next release\"")) {
                 writer.write(_initOptions.getDevelopmentBranch());
                 myVcs.showCommandLine(_initOptions.getDevelopmentBranch());
                 writer.newLine();
                 writer.flush();
             }
 
-            if (s.contains("Which branch should be used for integration of the")) {
-                writer.newLine();
-                writer.flush();
-            }
 
             if (s.contains("Feature branches")) {
                 writer.write(_initOptions.getFeaturePrefix());
                 myVcs.showCommandLine(_initOptions.getFeaturePrefix());
+                writer.newLine();
+                writer.flush();
+            }
+            if (s.contains("Bugfix branches")) {
+                writer.write(_initOptions.getBugfixPrefix());
+                myVcs.showCommandLine(_initOptions.getBugfixPrefix());
                 writer.newLine();
                 writer.flush();
             }
