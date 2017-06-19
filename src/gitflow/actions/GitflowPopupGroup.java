@@ -1,8 +1,10 @@
 package gitflow.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.LayeredIcon;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
@@ -38,17 +40,19 @@ public class GitflowPopupGroup {
     private void createActionGroup(){
         actionGroup = new DefaultActionGroup(null, false);
 
-        GitflowActions actions = new GitflowActions(myProject);
 
-        Iterator gitRepositoriesIterator = gitRepositories.iterator();
-        while(gitRepositoriesIterator.hasNext()){
-            GitRepository gitRepository = (GitRepository) gitRepositoriesIterator.next();
-            String repoName = gitRepository.getRoot().toString();
-            actionGroup.addSeparator(repoName);
-            ActionGroup repoActions = actions.getActionsForRepo(gitRepository);
-            actionGroup.addAll(repoActions);
+        if (gitRepositories.size() == 1){
+            RepoActions repoActions = new RepoActions(myProject, gitRepositories.get(0));
+            actionGroup.add(repoActions);
         }
-
+        else{
+            Iterator gitRepositoriesIterator = gitRepositories.iterator();
+            while(gitRepositoriesIterator.hasNext()){
+                GitRepository repo = (GitRepository) gitRepositoriesIterator.next();
+                RepoActions repoActions = new RepoActions(myProject, repo);
+                actionGroup.add(repoActions);
+            }
+        }
     }
 
     public ActionGroup getActionGroup (){

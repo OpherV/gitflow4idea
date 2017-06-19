@@ -39,7 +39,7 @@ public class InitRepoAction extends GitflowAction {
                     GitCommandResult result = myGitflow.initRepo(myRepo, initOptions, errorLineHandler, localLineHandler);
 
                     if (result.success()) {
-                        String publishedFeatureMessage = String.format("Initialized gitflow repo");
+                        String publishedFeatureMessage = String.format("Initialized gitflow in repo " + myRepo.getRoot().getPresentableName() );
                         NotifyUtil.notifySuccess(myProject, "", publishedFeatureMessage);
                     } else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
