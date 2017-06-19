@@ -17,6 +17,10 @@ public class InitRepoAction extends GitflowAction {
         super("Init Repo");
     }
 
+    InitRepoAction(GitRepository repo) {
+        super(repo,"Init Repo");
+    }
+
     @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
@@ -32,18 +36,18 @@ public class InitRepoAction extends GitflowAction {
             new Task.Backgroundable(myProject,"Initializing repo",false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result = myGitflow.initRepo(repo, initOptions, errorLineHandler, localLineHandler);
+                    GitCommandResult result = myGitflow.initRepo(myRepo, initOptions, errorLineHandler, localLineHandler);
 
                     if (result.success()) {
-                        String publishedFeatureMessage = String.format("Initialized gitflow repo");
+                        String publishedFeatureMessage = String.format("Initialized gitflow in repo " + myRepo.getRoot().getPresentableName() );
                         NotifyUtil.notifySuccess(myProject, "", publishedFeatureMessage);
                     } else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
                     //update the widget
-                    myProject.getMessageBus().syncPublisher(GitRepository.GIT_REPO_CHANGE).repositoryChanged(repo);
-                    repo.update();
+                    myProject.getMessageBus().syncPublisher(GitRepository.GIT_REPO_CHANGE).repositoryChanged(myRepo);
+                    myRepo.update();
                 }
             }.queue();
         }

@@ -12,6 +12,7 @@ import git4idea.merge.GitMerger;
 import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 
@@ -21,7 +22,7 @@ public class GitflowAction extends DumbAwareAction {
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
-    GitRepository repo;
+    GitRepository myRepo;
     GitflowBranchUtil branchUtil;
 
     VirtualFileManager virtualFileMananger;
@@ -35,8 +36,11 @@ public class GitflowAction extends DumbAwareAction {
     String masterBranch;
     String developBranch;
 
-    GitflowAction(String actionName){
+    GitflowAction( String actionName){ super(actionName); }
+
+    GitflowAction(GitRepository repo, String actionName){
         super(actionName);
+        myRepo = repo;
     }
 
     @Override
@@ -48,20 +52,13 @@ public class GitflowAction extends DumbAwareAction {
         myProject = project;
         virtualFileMananger = VirtualFileManager.getInstance();
 
-        featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject);
-        releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject);
-        hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject);
-        masterBranch= GitflowConfigUtil.getMasterBranch(myProject);
-        developBranch= GitflowConfigUtil.getDevelopBranch(myProject);
+        featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
+        releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
+        hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject, myRepo);
+        masterBranch= GitflowConfigUtil.getMasterBranch(myProject, myRepo);
+        developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
 
-        branchUtil=new GitflowBranchUtil(project);
-
-        repo = GitBranchUtil.getCurrentRepository(myProject);
-        repos.add(repo);
-
-        if (repo!=null){
-            currentBranchName= GitBranchUtil.getBranchNameOrRev(repo);
-        }
+        branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
     }
 
     public void runAction(Project project, final String baseBranchName, final String branchName){
@@ -81,7 +78,7 @@ public class GitflowAction extends DumbAwareAction {
 
 
         GitflowActions.runMergeTool();
-        repo.update();
+        myRepo.update();
 
         //if merge was completed successfully, finish the action
         //note that if it wasn't intellij is left in the "merging state", and git4idea provides no UI way to resolve it

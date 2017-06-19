@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.VcsException;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
 import git4idea.merge.GitMerger;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +22,12 @@ public class FinishFeatureAction extends GitflowAction {
         super("Finish Feature");
     }
 
-    FinishFeatureAction(String name) {
-        super("Finish Feature");
+    FinishFeatureAction(GitRepository repo) {
+        super(repo, "Finish Feature");
+    }
+
+    FinishFeatureAction(GitRepository repo, String name) {
+        super(repo, "Finish Feature");
         customFeatureName=name;
     }
 
@@ -30,7 +35,7 @@ public class FinishFeatureAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+        String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
         if (currentBranchName.isEmpty()==false){
 
             final AnActionEvent event=e;
@@ -40,7 +45,7 @@ public class FinishFeatureAction extends GitflowAction {
                 featureName = customFeatureName;
             }
             else{
-                featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, currentBranchName);
+                featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, currentBranchName);
             }
 
             this.runAction(myProject, featureName);
@@ -55,12 +60,12 @@ public class FinishFeatureAction extends GitflowAction {
         final FinishFeatureAction that = this;
 
         //get the base branch for this feature
-        final String baseBranch = GitflowConfigUtil.getBaseBranch(project, featurePrefix+featureName);
+        final String baseBranch = GitflowConfigUtil.getBaseBranch(project, myRepo, featurePrefix+featureName);
 
         new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                GitCommandResult result =  myGitflow.finishFeature(repo,featureName,errorLineHandler);
+                GitCommandResult result =  myGitflow.finishFeature(myRepo,featureName,errorLineHandler);
 
 
                 if (result.success()) {
@@ -74,7 +79,7 @@ public class FinishFeatureAction extends GitflowAction {
                     NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                 }
 
-                repo.update();
+                myRepo.update();
 
             }
 
@@ -86,7 +91,7 @@ public class FinishFeatureAction extends GitflowAction {
                 if (errorLineHandler.hasMergeError){
                     if (handleMerge()){
                         that.runAction(project, featureName);
-                        FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(featureName);
+                        FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(myRepo, featureName);
                     }
 
                 }

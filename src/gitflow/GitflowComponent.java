@@ -53,10 +53,13 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
         //git repo present
         if (vcsRoots.length>0 && vcsRoots[0].getVcs() instanceof GitVcs){
 
-            myGitflowWidget  = new GitflowWidget(myProject);
-            StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
-            if (statusBar != null) {
-                statusBar.addWidget(myGitflowWidget, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
+            //make sure to not reinitialize the widget if it's already present
+            if (myGitflowWidget ==  null) {
+                myGitflowWidget = new GitflowWidget(myProject);
+                StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+                if (statusBar != null) {
+                    statusBar.addWidget(myGitflowWidget, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
+                }
             }
         }
         else{

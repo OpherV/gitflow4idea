@@ -6,6 +6,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 
+import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 
 import git4idea.commands.GitCommandResult;
@@ -15,6 +16,10 @@ import gitflow.ui.NotifyUtil;
 
 public class StartHotfixAction extends GitflowAction {
 
+    public StartHotfixAction(GitRepository repo) {
+        super(repo, "Start Hotfix");
+    }
+
     public StartHotfixAction() {
         super("Start Hotfix");
     }
@@ -23,7 +28,7 @@ public class StartHotfixAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitflowStartHotfixDialog dialog = new GitflowStartHotfixDialog(myProject);
+        GitflowStartHotfixDialog dialog = new GitflowStartHotfixDialog(myProject, myRepo);
         dialog.show();
 
         if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;
@@ -47,7 +52,7 @@ public class StartHotfixAction extends GitflowAction {
 
     private void createHotfixBranch(String baseBranchName, String hotfixBranchName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
-        GitCommandResult result = myGitflow.startHotfix(repo, hotfixBranchName, baseBranchName, errorListener);
+        GitCommandResult result = myGitflow.startHotfix(myRepo, hotfixBranchName, baseBranchName, errorListener);
 
         if (result.success()) {
             String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'",
@@ -57,6 +62,6 @@ public class StartHotfixAction extends GitflowAction {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
         }
 
-        repo.update();
+        myRepo.update();
     }
 }
