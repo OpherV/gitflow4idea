@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import git4idea.validators.GitNewBranchNameValidator;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,10 @@ public class StartReleaseAction extends GitflowAction {
 
     StartReleaseAction() {
         super("Start Release");
+    }
+
+    StartReleaseAction(GitRepository repo) {
+        super(repo,"Start Release");
     }
 
     @Override
@@ -27,7 +32,7 @@ public class StartReleaseAction extends GitflowAction {
             new Task.Backgroundable(myProject,"Starting release "+releaseName,false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result=  myGitflow.startRelease(repo, releaseName, errorLineHandler);
+                    GitCommandResult result=  myGitflow.startRelease(myRepo, releaseName, errorLineHandler);
 
                     if (result.success()) {
                         String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", releasePrefix, releaseName, developBranch);
@@ -37,7 +42,7 @@ public class StartReleaseAction extends GitflowAction {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
-                    repo.update();
+                    myRepo.update();
 
                 }
             }.queue();

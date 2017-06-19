@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowConfigurable;
 import gitflow.ui.NotifyUtil;
@@ -17,18 +18,21 @@ public class FinishHotfixAction extends GitflowAction {
     public FinishHotfixAction() {
         super("Finish Hotfix");
     }
+    public FinishHotfixAction(GitRepository repo) {
+        super(repo, "Finish Hotfix");
+    }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+        String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
 
 
         if (currentBranchName.isEmpty()==false){
 
             //TODO HOTFIX NAME
-            final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, currentBranchName);
+            final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, myRepo, currentBranchName);
 
             final String tagMessage;
 
@@ -57,7 +61,7 @@ public class FinishHotfixAction extends GitflowAction {
             new Task.Backgroundable(myProject,"Finishing hotfix "+hotfixName,false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result=  myGitflow.finishHotfix(repo, hotfixName, tagMessage, errorLineHandler);
+                    GitCommandResult result=  myGitflow.finishHotfix(myRepo, hotfixName, tagMessage, errorLineHandler);
 
                     if (result.success()) {
                         String finishedHotfixMessage = String.format("The hotfix branch '%s%s' was merged into '%s' and '%s'", hotfixPrefix, hotfixName, developBranch, masterBranch);
@@ -67,7 +71,7 @@ public class FinishHotfixAction extends GitflowAction {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
 
-                    repo.update();
+                    myRepo.update();
 
                 }
             }.queue();

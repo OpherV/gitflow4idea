@@ -9,10 +9,7 @@ import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.tasks.ui.TaskDialogPanel;
 import git4idea.repo.GitRepository;
-import gitflow.GitflowBranchUtil;
-import gitflow.GitflowConfigUtil;
-import gitflow.GitflowConfigurable;
-import gitflow.GitflowState;
+import gitflow.*;
 import gitflow.actions.FinishFeatureAction;
 import gitflow.actions.FinishHotfixAction;
 import gitflow.actions.GitflowAction;
@@ -44,7 +41,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         myTask = task;
         gitflowState = ServiceManager.getService(GitflowState.class);
 
-        gitflowBranchUtil = new GitflowBranchUtil(project);
+        gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
         myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);
         VcsTaskHandler[] vcsTaskHAndlers = VcsTaskHandler.getAllHandlers(project);
         if (vcsTaskHAndlers.length > 0){

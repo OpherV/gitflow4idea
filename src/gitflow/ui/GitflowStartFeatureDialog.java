@@ -2,12 +2,13 @@ package gitflow.ui;
 
 import com.intellij.openapi.project.Project;
 
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 
 public class GitflowStartFeatureDialog extends AbstractBranchStartDialog {
 
-    public GitflowStartFeatureDialog(Project project) {
-        super(project);
+    public GitflowStartFeatureDialog(Project project, GitRepository repo) {
+        super(project, repo);
     }
 
     @Override
@@ -17,6 +18,6 @@ public class GitflowStartFeatureDialog extends AbstractBranchStartDialog {
 
     @Override
     protected String getDefaultBranch() {
-        return GitflowConfigUtil.getDevelopBranch(getProject());
+        return GitflowConfigUtil.getDevelopBranch(getProject(), myRepo);
     }
 }
