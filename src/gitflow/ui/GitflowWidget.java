@@ -29,6 +29,9 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 
+import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
+import gitflow.actions.GitflowPopupGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +55,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     private volatile String myText = "";
     private volatile String myTooltip = "";
 
-    private GitflowActions actions;
+    private GitflowPopupGroup popupGroup;
 
     public GitflowWidget(@NotNull Project project) {
         super(project);
@@ -107,11 +110,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             return null;
         }
 
-        if (actions == null)
-            return null;
-
-        ActionGroup popupGroup = actions.getActions();
-        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup, SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
+        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup.getActionGroup(), SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
                 null, null);
 
         return listPopup;
@@ -148,6 +147,10 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
 
     private void update() {
         Project project = getProject();
+
+        //repopulate the branchUtil
+        GitflowBranchUtilManager.update(project);
+
         if (project == null) {
             emptyTextAndTooltip();
             return;
@@ -159,9 +162,10 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             return;
         }
 
-        actions = new GitflowActions(project);
+        popupGroup = new GitflowPopupGroup(project);
 
-        boolean hasGitflow = actions.hasGitflow();
+        GitflowBranchUtil gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(repo);
+        boolean hasGitflow = gitflowBranchUtil.hasGitflow();
 
         myText = hasGitflow ? "Gitflow" : "No Gitflow";
         myTooltip = getDisplayableBranchTooltip(repo);

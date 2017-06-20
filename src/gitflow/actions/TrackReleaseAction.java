@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.GitflowBranchChooseDialog;
 import gitflow.ui.NotifyUtil;
@@ -16,6 +17,10 @@ public class TrackReleaseAction extends GitflowAction {
 
     TrackReleaseAction(){
         super("Track Release");
+    }
+
+    TrackReleaseAction(GitRepository repo){
+        super(repo,"Track Release");
     }
 
     @Override
@@ -39,13 +44,13 @@ public class TrackReleaseAction extends GitflowAction {
             branchChoose.show();
             if (branchChoose.isOK()){
                 String branchName= branchChoose.getSelectedBranchName();
-                final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, branchName);
+                final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, branchName);
                 final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
                 new Task.Backgroundable(myProject,"Tracking release "+releaseName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult result = myGitflow.trackRelease(repo, releaseName, errorLineHandler);
+                        GitCommandResult result = myGitflow.trackRelease(myRepo, releaseName, errorLineHandler);
 
                         if (result.success()) {
                             String trackedReleaseMessage = String.format(" A new remote tracking branch '%s%s' was created", releasePrefix, releaseName);
@@ -55,7 +60,7 @@ public class TrackReleaseAction extends GitflowAction {
                             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
-                        repo.update();
+                        myRepo.update();
                     }
                 }.queue();
             }

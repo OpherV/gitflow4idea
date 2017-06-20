@@ -10,6 +10,7 @@ import com.intellij.tasks.ui.TaskDialogPanel;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowState;
 import gitflow.actions.GitflowAction;
@@ -52,13 +53,13 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         }
 
         gitflowState = ServiceManager.getService(GitflowState.class);
-        gitflowBranchUtil = new GitflowBranchUtil(project);
+        gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
 
 
-        String defaultFeatureBranch = GitflowConfigUtil.getDevelopBranch(project);
+        String defaultFeatureBranch = GitflowConfigUtil.getDevelopBranch(project, myRepo);
         featureBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultFeatureBranch));
 
-        String defaultHotfixBranch = GitflowConfigUtil.getMasterBranch(project);
+        String defaultHotfixBranch = GitflowConfigUtil.getMasterBranch(project, myRepo);
         hotfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultHotfixBranch));
 
         myRepo = GitBranchUtil.getCurrentRepository(project);
@@ -102,12 +103,12 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         if (startFeatureRadioButton.isSelected()) {
             action = new StartFeatureAction();
             action.runAction(myProject, selectedFeatureBaseBranch.getBranchName(), featureName.getText());
-            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getFeaturePrefix(myProject) + featureName.getText());
+            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText());
         }
         else if (startHotfixRadioButton.isSelected()) {
             action =  new StartHotfixAction();
             action.runAction(myProject, selectedHotfixBaseBranch.getBranchName(), hotfixName.getText());
-            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getHotfixPrefix(myProject) + hotfixName.getText());
+            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText());
         }
 
     }

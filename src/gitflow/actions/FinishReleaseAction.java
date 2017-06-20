@@ -6,6 +6,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowConfigurable;
 import gitflow.ui.NotifyUtil;
@@ -20,6 +21,10 @@ public class FinishReleaseAction extends GitflowAction {
         super("Finish Release");
     }
 
+    FinishReleaseAction(GitRepository repo) {
+        super(repo, "Finish Release");
+    }
+
 	FinishReleaseAction(String name, String tagMessage) {
 		super("Finish Release");
 		customReleaseName=name;
@@ -30,7 +35,7 @@ public class FinishReleaseAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        String currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
+        String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
         if (currentBranchName.isEmpty()==false){
 
 	        final AnActionEvent event=e;
@@ -39,7 +44,7 @@ public class FinishReleaseAction extends GitflowAction {
             final String releaseName;
 
 	        // Check if a release name was specified, otherwise take name from current branch
-	        releaseName = customReleaseName!=null ? customReleaseName:GitflowConfigUtil.getReleaseNameFromBranch(myProject, currentBranchName);
+	        releaseName = customReleaseName!=null ? customReleaseName:GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, currentBranchName);
 
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
             String defaultTagMessage= GitflowConfigurable.getCustomTagCommitMessage(myProject);
@@ -74,7 +79,7 @@ public class FinishReleaseAction extends GitflowAction {
                 new Task.Backgroundable(myProject,"Finishing release "+releaseName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult result =  myGitflow.finishRelease(repo, releaseName, tagMessage, errorLineHandler);
+                        GitCommandResult result =  myGitflow.finishRelease(myRepo, releaseName, tagMessage, errorLineHandler);
 
                         if (result.success()) {
                             String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", releasePrefix, releaseName, developBranch, masterBranch);
@@ -87,7 +92,7 @@ public class FinishReleaseAction extends GitflowAction {
                             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
-                        repo.update();
+                        myRepo.update();
 
                     }
 

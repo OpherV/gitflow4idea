@@ -22,7 +22,7 @@ import java.util.List;
 public class GitflowBranchUtil {
 
     Project myProject;
-    GitRepository repo;
+    GitRepository myRepo;
 
     String currentBranchName;
     String branchnameMaster;
@@ -30,29 +30,29 @@ public class GitflowBranchUtil {
     String prefixRelease;
     String prefixHotfix;
 
-    public GitflowBranchUtil(Project project){
+    public GitflowBranchUtil(Project project, GitRepository repo){
         myProject=project;
-        repo = GitBranchUtil.getCurrentRepository(project);
+        myRepo = repo;
 
         if (repo != null) {
             currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
 
-            branchnameMaster= GitflowConfigUtil.getMasterBranch(project);
-            prefixFeature = GitflowConfigUtil.getFeaturePrefix(project);
-            prefixRelease = GitflowConfigUtil.getReleasePrefix(project);
-            prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project);
+            branchnameMaster= GitflowConfigUtil.getMasterBranch(project, repo);
+            prefixFeature = GitflowConfigUtil.getFeaturePrefix(project, repo);
+            prefixRelease = GitflowConfigUtil.getReleasePrefix(project, repo);
+            prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project, repo);
         }
     }
 
     public boolean hasGitflow(){
         boolean hasGitflow=false;
 
-        hasGitflow = repo!= null
-                       && GitflowConfigUtil.getMasterBranch(myProject)!=null
-                       && GitflowConfigUtil.getDevelopBranch(myProject)!=null
-                       && GitflowConfigUtil.getFeaturePrefix(myProject)!=null
-                       && GitflowConfigUtil.getReleasePrefix(myProject)!=null
-                       && GitflowConfigUtil.getHotfixPrefix(myProject)!=null;
+        hasGitflow = myRepo != null
+                       && GitflowConfigUtil.getMasterBranch(myProject, myRepo)!=null
+                       && GitflowConfigUtil.getDevelopBranch(myProject, myRepo)!=null
+                       && GitflowConfigUtil.getFeaturePrefix(myProject, myRepo)!=null
+                       && GitflowConfigUtil.getReleasePrefix(myProject, myRepo)!=null
+                       && GitflowConfigUtil.getHotfixPrefix(myProject, myRepo)!=null;
 
         return hasGitflow;
     }
@@ -117,7 +117,7 @@ public class GitflowBranchUtil {
     }
 
     public ArrayList<String> getRemoteBranchNames(){
-        ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
+        ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(myRepo.getBranches().getRemoteBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
 
         for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
@@ -130,7 +130,7 @@ public class GitflowBranchUtil {
 
 
     public ArrayList<String> getLocalBranchNames(){
-        ArrayList<GitLocalBranch> localBranches = new ArrayList<GitLocalBranch>(repo.getBranches().getLocalBranches());
+        ArrayList<GitLocalBranch> localBranches = new ArrayList<GitLocalBranch>(myRepo.getBranches().getLocalBranches());
         ArrayList<String> branchNameList = new ArrayList<String>();
 
         for(Iterator<GitLocalBranch> i = localBranches.iterator(); i.hasNext(); ) {
@@ -146,7 +146,7 @@ public class GitflowBranchUtil {
     public GitRemote getRemoteByBranch(String branchName){
         GitRemote remote=null;
 
-        ArrayList<GitRemoteBranch> remoteBranches= new ArrayList<GitRemoteBranch>(repo.getBranches().getRemoteBranches());
+        ArrayList<GitRemoteBranch> remoteBranches= new ArrayList<GitRemoteBranch>(myRepo.getBranches().getRemoteBranches());
 
         for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
             GitRemoteBranch branch = i.next();
