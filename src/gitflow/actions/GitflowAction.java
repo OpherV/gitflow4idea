@@ -59,6 +59,8 @@ public class GitflowAction extends DumbAwareAction {
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
 
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
+
+        currentBranchName= GitBranchUtil.getBranchNameOrRev(myRepo);
     }
 
     public void runAction(Project project, final String baseBranchName, final String branchName){
