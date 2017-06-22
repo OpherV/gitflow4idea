@@ -51,6 +51,7 @@ public class GitflowAction extends DumbAwareAction {
     public void setup(Project project){
         myProject = project;
         virtualFileMananger = VirtualFileManager.getInstance();
+        repos.add(myRepo);
 
         featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
         releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
