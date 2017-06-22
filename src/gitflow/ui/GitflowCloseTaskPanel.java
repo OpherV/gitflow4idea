@@ -36,9 +36,10 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
 
     final private GitflowState gitflowState;
 
-    GitflowCloseTaskPanel(Project project, Task task){
+    GitflowCloseTaskPanel(Project project, Task task, GitRepository repo){
         myProject = project;
         myTask = task;
+        myRepo = repo;
         gitflowState = ServiceManager.getService(GitflowState.class);
 
         gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
@@ -100,11 +101,11 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
 
         if (finishFeatureCheckbox.isSelected()){
-            FinishFeatureAction action = new FinishFeatureAction();
+            FinishFeatureAction action = new FinishFeatureAction(myRepo);
             action.runAction(myProject, taskBranchName);
         }
         else if (finishHotfixCheckbox.isSelected()){
-            FinishHotfixAction action = new FinishHotfixAction();
+            FinishHotfixAction action = new FinishHotfixAction(myRepo);
             action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
         }
     }
