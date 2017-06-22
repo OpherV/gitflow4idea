@@ -22,7 +22,7 @@ public class FinishFeatureAction extends GitflowAction {
         super("Finish Feature");
     }
 
-    FinishFeatureAction(GitRepository repo) {
+    public FinishFeatureAction(GitRepository repo) {
         super(repo, "Finish Feature");
     }
 

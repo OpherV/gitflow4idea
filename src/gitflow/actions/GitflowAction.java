@@ -51,6 +51,7 @@ public class GitflowAction extends DumbAwareAction {
     public void setup(Project project){
         myProject = project;
         virtualFileMananger = VirtualFileManager.getInstance();
+        repos.add(myRepo);
 
         featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
         releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
@@ -59,6 +60,8 @@ public class GitflowAction extends DumbAwareAction {
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
 
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
+
+        currentBranchName= GitBranchUtil.getBranchNameOrRev(myRepo);
     }
 
     public void runAction(Project project, final String baseBranchName, final String branchName){

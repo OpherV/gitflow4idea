@@ -42,9 +42,11 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     private GitflowState gitflowState;
 
 
-    public GitflowOpenTaskPanel(Project project, Task task){
+    public GitflowOpenTaskPanel(Project project, Task task, GitRepository repo){
         myProject = project;
         currentTask = task;
+        myRepo = repo;
+
         myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);
         VcsTaskHandler[] vcsTaskHAndlers = VcsTaskHandler.getAllHandlers(project);
         if (vcsTaskHAndlers.length > 0){
@@ -101,12 +103,12 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         GitflowAction action;
 
         if (startFeatureRadioButton.isSelected()) {
-            action = new StartFeatureAction();
+            action = new StartFeatureAction(myRepo);
             action.runAction(myProject, selectedFeatureBaseBranch.getBranchName(), featureName.getText());
             gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText());
         }
         else if (startHotfixRadioButton.isSelected()) {
-            action =  new StartHotfixAction();
+            action =  new StartHotfixAction(myRepo);
             action.runAction(myProject, selectedHotfixBaseBranch.getBranchName(), hotfixName.getText());
             gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText());
         }

@@ -24,7 +24,7 @@ public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider {
         GitRepository currentRepo = GitBranchUtil.getCurrentRepository(project);
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(currentRepo);
         if (branchUtil.hasGitflow()) {
-            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowOpenTaskPanel(project, task) : null;
+            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowOpenTaskPanel(project, task, currentRepo) : null;
         }
         else{
             return null;
@@ -38,7 +38,7 @@ public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider {
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(currentRepo);
 
         if (branchUtil.hasGitflow()) {
-            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowCloseTaskPanel(project, task) : null;
+            return TaskManager.getManager(project).isVcsEnabled() ? new GitflowCloseTaskPanel(project, task, currentRepo) : null;
         }
         else{
             return null;
