@@ -64,10 +64,10 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
                 }
 
                 if (branchNameTextField.getText().contains("&")){
-                    AbstractBranchStartDialog.this.setOKActionEnabled(false);
+                    AbstractBranchStartDialog.super.setOKActionEnabled(false);
                 }
                 else{
-                    AbstractBranchStartDialog.this.setOKActionEnabled(true);
+                    AbstractBranchStartDialog.super.setOKActionEnabled(true);
                 }
             }
         });
