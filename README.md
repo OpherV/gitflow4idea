@@ -56,6 +56,6 @@ I have worked hard on this plugin on my spare time. If you feel it is useful to 
 ## License
 
 This plugin is under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
-Copyright 2013-2016, Opher Vishnia.
+Copyright 2013-2018, Opher Vishnia.
 
 
