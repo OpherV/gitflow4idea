@@ -11,7 +11,9 @@ import java.util.List;
 
 /**
  * This class maps repos to their corresponding branch utils
+ * Note that the static class is used across projects
  */
+
 public class GitflowBranchUtilManager {
     private static HashMap<GitRepository, GitflowBranchUtil> repoBranchUtilMap;
 
@@ -32,7 +34,6 @@ public class GitflowBranchUtilManager {
         if (repoBranchUtilMap == null){
             repoBranchUtilMap = new HashMap<GitRepository, GitflowBranchUtil>();
         }
-        repoBranchUtilMap.clear();
 
         List<GitRepository> gitRepositories = GitUtil.getRepositoryManager(project).getRepositories();
 
