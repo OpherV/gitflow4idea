@@ -20,12 +20,15 @@ public class StartFeatureAction extends GitflowAction {
     public StartFeatureAction() {
         super("Start Feature");
     }
+    public StartFeatureAction(GitRepository repo) {
+        super(repo, "Start Feature");
+    }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitflowStartFeatureDialog dialog = new GitflowStartFeatureDialog(myProject);
+        GitflowStartFeatureDialog dialog = new GitflowStartFeatureDialog(myProject, myRepo);
         dialog.show();
 
         if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;
@@ -49,7 +52,7 @@ public class StartFeatureAction extends GitflowAction {
 
     private void createFeatureBranch(String baseBranchName, String featureName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
-        GitCommandResult result = myGitflow.startFeature(repo, featureName, baseBranchName, errorListener);
+        GitCommandResult result = myGitflow.startFeature(myRepo, featureName, baseBranchName, errorListener);
 
         if (result.success()) {
             String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, baseBranchName);
@@ -58,7 +61,7 @@ public class StartFeatureAction extends GitflowAction {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
         }
 
-        repo.update();
+        myRepo.update();
         virtualFileMananger.asyncRefresh(null); //update editors
     }
 }

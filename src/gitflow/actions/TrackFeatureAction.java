@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import git4idea.commands.GitCommandResult;
 import git4idea.repo.GitRemote;
+import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.GitflowBranchChooseDialog;
 import gitflow.ui.NotifyUtil;
@@ -17,6 +18,10 @@ public class TrackFeatureAction extends GitflowAction {
 
     TrackFeatureAction(){
         super("Track Feature");
+    }
+
+    TrackFeatureAction(GitRepository repo){
+        super(repo,"Track Feature");
     }
 
     @Override
@@ -40,14 +45,14 @@ public class TrackFeatureAction extends GitflowAction {
             branchChoose.show();
             if (branchChoose.isOK()){
                 String branchName= branchChoose.getSelectedBranchName();
-                final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, branchName);
+                final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, branchName);
                 final GitRemote remote=branchUtil.getRemoteByBranch(branchName);
                 final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
                 new Task.Backgroundable(myProject,"Tracking feature "+featureName,false){
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        GitCommandResult result = myGitflow.trackFeature(repo, featureName, remote, errorLineHandler);
+                        GitCommandResult result = myGitflow.trackFeature(myRepo, featureName, remote, errorLineHandler);
 
                         if (result.success()) {
                             String trackedFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
@@ -57,7 +62,7 @@ public class TrackFeatureAction extends GitflowAction {
                             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                         }
 
-                        repo.update();
+                        myRepo.update();
 
                     }
                 }.queue();

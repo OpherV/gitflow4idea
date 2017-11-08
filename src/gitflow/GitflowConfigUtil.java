@@ -26,8 +26,7 @@ public class GitflowConfigUtil {
     public static final String PREFIX_SUPPORT = "gitflow.prefix.support";
     public static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
 
-    public static String getMasterBranch(Project project){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getMasterBranch(Project project, GitRepository repo){
         VirtualFile root = repo.getRoot();
 
         String masterBranch=null;
@@ -41,8 +40,7 @@ public class GitflowConfigUtil {
         return masterBranch;
     }
 
-    public static String getDevelopBranch(Project project){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getDevelopBranch(Project project, GitRepository repo){
         VirtualFile root = repo.getRoot();
 
         String developBranch=null;
@@ -56,8 +54,7 @@ public class GitflowConfigUtil {
         return developBranch;
     }
 
-    public static String getFeaturePrefix(Project project){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getFeaturePrefix(Project project, GitRepository repo){
         VirtualFile root = repo.getRoot();
 
         String featurePrefix=null;
@@ -71,8 +68,7 @@ public class GitflowConfigUtil {
         return featurePrefix;
     }
 
-    public static String getReleasePrefix(Project project){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getReleasePrefix(Project project, GitRepository repo){
         VirtualFile root = repo.getRoot();
 
         String releasePrefix=null;
@@ -86,8 +82,7 @@ public class GitflowConfigUtil {
         return releasePrefix;
     }
 
-    public static String getHotfixPrefix(Project project){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getHotfixPrefix(Project project, GitRepository repo){
         VirtualFile root = repo.getRoot();
 
         String hotfixPrefix=null;
@@ -101,18 +96,18 @@ public class GitflowConfigUtil {
         return hotfixPrefix;
     }
 
-    public static String getFeatureNameFromBranch(Project project, String branchName){
-        String featurePrefix= GitflowConfigUtil.getFeaturePrefix(project);
+    public static String getFeatureNameFromBranch(Project project, GitRepository repo, String branchName){
+        String featurePrefix= GitflowConfigUtil.getFeaturePrefix(project, repo);
         return branchName.substring(branchName.indexOf(featurePrefix)+featurePrefix.length(),branchName.length());
     }
 
-    public static String getReleaseNameFromBranch(Project project, String branchName){
-        String releasePrefix= GitflowConfigUtil.getReleasePrefix(project);
+    public static String getReleaseNameFromBranch(Project project, GitRepository repo, String branchName){
+        String releasePrefix= GitflowConfigUtil.getReleasePrefix(project, repo);
         return branchName.substring(branchName.indexOf(releasePrefix) + releasePrefix.length(), branchName.length());
     }
 
-    public static String getHotfixNameFromBranch(Project project, String branchName){
-        String hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(project);
+    public static String getHotfixNameFromBranch(Project project, GitRepository repo, String branchName){
+        String hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(project, repo);
         return branchName.substring(branchName.indexOf(hotfixPrefix) + hotfixPrefix.length(), branchName.length());
     }
 
@@ -120,9 +115,8 @@ public class GitflowConfigUtil {
         return branchName.substring(0,branchName.indexOf("/"));
     }
 
-    public static void setMasterBranch(Project project, String branchName)
+    public static void setMasterBranch(Project project, GitRepository repo, String branchName)
     {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
         VirtualFile root = repo.getRoot();
 
         try {
@@ -132,8 +126,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setDevelopBranch(Project project, String branchName) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setDevelopBranch(Project project, GitRepository repo, String branchName) {
+        
         VirtualFile root = repo.getRoot();
 
         try {
@@ -143,8 +137,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setReleasePrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setReleasePrefix(Project project, GitRepository repo, String prefix) {
+        
         VirtualFile root = repo.getRoot();
 
         try {
@@ -154,8 +148,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setFeaturePrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setFeaturePrefix(Project project, GitRepository repo, String prefix) {
+        
         VirtualFile root = repo.getRoot();
 
         try {
@@ -165,8 +159,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setHotfixPrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setHotfixPrefix(Project project, GitRepository repo, String prefix) {
+
         VirtualFile root = repo.getRoot();
 
         try {
@@ -176,8 +170,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setSupportPrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setSupportPrefix(Project project, GitRepository repo, String prefix) {
+        
         VirtualFile root = repo.getRoot();
 
         try {
@@ -187,8 +181,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setVersionPrefix(Project project, String prefix) {
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static void setVersionPrefix(Project project, GitRepository repo, String prefix) {
+        
         VirtualFile root = repo.getRoot();
 
         try {
@@ -198,8 +192,8 @@ public class GitflowConfigUtil {
         }
     }
     
-    public static String getBaseBranch(Project project, String branchName){
-        GitRepository repo = GitBranchUtil.getCurrentRepository(project);
+    public static String getBaseBranch(Project project, GitRepository repo, String branchName){
+        
         VirtualFile root = repo.getRoot();
 
         String baseBranch=null;
