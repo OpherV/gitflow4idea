@@ -28,6 +28,7 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
     private JTextField hotfixPrefixTextField;
     private JTextField supportPrefixTextField;
     private JTextField versionPrefixTextField;
+    private JTextField bugfixPrefixTextField;
 
     public GitflowInitOptionsDialog(Project project, List<String> localBranches) {
         super(project);
@@ -53,6 +54,7 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
         releasePrefixTextField.setEnabled(enable);
         hotfixPrefixTextField.setEnabled(enable);
         supportPrefixTextField.setEnabled(enable);
+        bugfixPrefixTextField.setEnabled(enable);
         versionPrefixTextField.setEnabled(enable);
     }
 
@@ -71,6 +73,7 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
         options.setFeaturePrefix(featurePrefixTextField.getText());
         options.setReleasePrefix(releasePrefixTextField.getText());
         options.setHotfixPrefix(hotfixPrefixTextField.getText());
+        options.setBugfixPrefix(bugfixPrefixTextField.getText());
         options.setSupportPrefix(supportPrefixTextField.getText());
         options.setVersionPrefix(versionPrefixTextField.getText());
 
@@ -97,6 +100,9 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
             }
             if (StringUtil.isEmptyOrSpaces(supportPrefixTextField.getText())) {
                 return new ValidationInfo(message, supportPrefixTextField);
+            }
+            if (StringUtil.isEmptyOrSpaces(bugfixPrefixTextField.getText())) {
+                return new ValidationInfo(message, bugfixPrefixTextField);
             }
         }
 

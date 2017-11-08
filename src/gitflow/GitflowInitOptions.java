@@ -10,6 +10,7 @@ public class GitflowInitOptions {
     private String featurePrefix;
     private String releasePrefix;
     private String hotfixPrefix;
+    private String bugfixPrefix;
     private String supportPrefix;
     private String versionPrefix;
 
@@ -67,6 +68,14 @@ public class GitflowInitOptions {
 
     public void setSupportPrefix(String supportPrefix) {
         this.supportPrefix = supportPrefix;
+    }
+
+    public String getBugfixPrefix() {
+        return bugfixPrefix;
+    }
+
+    public void setBugfixPrefix(String bugfixPrefix) {
+        this.bugfixPrefix = bugfixPrefix;
     }
 
     public String getVersionPrefix() {
