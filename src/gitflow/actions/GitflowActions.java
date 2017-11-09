@@ -13,6 +13,8 @@ import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
+import gitflow.PopupElementWithAdditionalInfo;
+import gitflow.BranchActionGroup;
 import org.jetbrains.annotations.NotNull;
 
 /**
