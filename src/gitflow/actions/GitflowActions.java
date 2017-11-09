@@ -1,7 +1,5 @@
 package gitflow.actions;
 
-import com.intellij.dvcs.ui.BranchActionGroup;
-import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
