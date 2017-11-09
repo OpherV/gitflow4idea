@@ -1,8 +1,6 @@
 package gitflow.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -20,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 class RepoActions extends BranchActionGroup implements PopupElementWithAdditionalInfo, FileEditorManagerListener {
     Project myProject;
@@ -35,11 +34,8 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 
-
-    @NotNull
-    @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        ArrayList<AnAction> children = new ArrayList<AnAction>();
+    public ArrayList<AnAction> getRepoActions(){
+        ArrayList<AnAction> actionList = new ArrayList<AnAction>();
 
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
 
@@ -69,66 +65,85 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
 
         //gitflow not setup
         if (branchUtil.hasGitflow()!=true){
-            children.add(new InitRepoAction(myRepo));
+            actionList.add(new InitRepoAction(myRepo));
         }
         else{
 
             //FEATURE ACTIONS
 
-            children.add(new Separator("Feature"));
-            children.add(new StartFeatureAction(myRepo));
+            actionList.add(new Separator("Feature"));
+            actionList.add(new StartFeatureAction(myRepo));
             //feature only actions
             if (branchUtil.isCurrentBranchFeature()){
-                children.add(new FinishFeatureAction(myRepo));
+                actionList.add(new FinishFeatureAction(myRepo));
 
                 //can't publish feature if it's already published
                 if (branchUtil.isCurrentBranchPublished()==false){
-                    children.add(new PublishFeatureAction(myRepo));
+                    actionList.add(new PublishFeatureAction(myRepo));
                 }
             }
 
             //make sure there's a feature to track, and that not all features are tracked
             if (noRemoteFeatureBranches == false && trackedAllFeatureBranches == false){
-                children.add(new TrackFeatureAction(myRepo));
+                actionList.add(new TrackFeatureAction(myRepo));
             }
 
 
             //RELEASE ACTIONS
 
-            children.add(new Separator("Release"));
-            children.add(new StartReleaseAction(myRepo));
+            actionList.add(new Separator("Release"));
+            actionList.add(new StartReleaseAction(myRepo));
             //release only actions
             if (branchUtil.isCurrentBranchRelease()){
-                children.add(new FinishReleaseAction(myRepo));
+                actionList.add(new FinishReleaseAction(myRepo));
 
                 //can't publish release if it's already published
                 if (branchUtil.isCurrentBranchPublished()==false){
-                    children.add(new PublishReleaseAction(myRepo));
+                    actionList.add(new PublishReleaseAction(myRepo));
                 }
             }
 
             //make sure there's something to track and that not all features are tracked
             if (noRemoteTrackBranches==false  && trackedAllReleaseBranches ==false){
-                children.add(new TrackReleaseAction(myRepo));
+                actionList.add(new TrackReleaseAction(myRepo));
             }
 
 
             //HOTFIX ACTIONS
-            children.add(new Separator("Hotfix"));
+            actionList.add(new Separator("Hotfix"));
 
             //master only actions
-            children.add(new StartHotfixAction(myRepo));
+            actionList.add(new StartHotfixAction(myRepo));
             if (branchUtil.isCurrentBranchHotfix()){
-                children.add(new FinishHotfixAction(myRepo));
+                actionList.add(new FinishHotfixAction(myRepo));
 
                 //can't publish hotfix if it's already published
                 if (branchUtil.isCurrentBranchPublished() == false) {
-                    children.add(new PublishHotfixAction(myRepo));
+                    actionList.add(new PublishHotfixAction(myRepo));
                 }
             }
 
         }
 
+        return actionList;
+    }
+
+    public DefaultActionGroup getRepoActionGroup(){
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
+
+        Iterator actionsIterator = this.getRepoActions().iterator();
+        while(actionsIterator.hasNext()){
+            AnAction action = (AnAction) actionsIterator.next();
+            actionGroup.add(action);
+        }
+
+        return actionGroup;
+    }
+
+    @NotNull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        ArrayList<AnAction> children = this.getRepoActions();
         return children.toArray(new AnAction[children.size()]);
     }
 

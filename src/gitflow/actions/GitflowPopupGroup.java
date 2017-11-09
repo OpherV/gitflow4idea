@@ -1,7 +1,9 @@
 package gitflow.actions;
 
+import com.intellij.diff.merge.TextMergeViewer;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.LayeredIcon;
@@ -42,8 +44,8 @@ public class GitflowPopupGroup {
 
 
         if (gitRepositories.size() == 1){
-            RepoActions repoActions = new RepoActions(myProject, gitRepositories.get(0));
-            actionGroup.add(repoActions);
+            ActionGroup repoActions = (new RepoActions(myProject, gitRepositories.get(0))).getRepoActionGroup();
+            actionGroup.addAll(repoActions);
         }
         else{
             Iterator gitRepositoriesIterator = gitRepositories.iterator();
