@@ -13,6 +13,8 @@ import git4idea.commands.GitCommandResult;
 import gitflow.ui.GitflowStartHotfixDialog;
 import gitflow.ui.NotifyUtil;
 
+import javax.annotation.Nullable;
+
 
 public class StartHotfixAction extends GitflowAction {
 
@@ -36,21 +38,24 @@ public class StartHotfixAction extends GitflowAction {
         final String hotfixName = dialog.getNewBranchName();
         final String baseBranchName = dialog.getBaseBranchName();
 
-        this.runAction(e.getProject(), baseBranchName, hotfixName);
+        this.runAction(e.getProject(), baseBranchName, hotfixName, null);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String hotfixName){
-        super.runAction(project, baseBranchName, hotfixName);
+    public void runAction(Project project, final String baseBranchName, final String hotfixName, @Nullable final Runnable callInAwtLater){
+        super.runAction(project, baseBranchName, hotfixName, callInAwtLater);
 
         new Task.Backgroundable(myProject, "Starting hotfix " + hotfixName, false) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                createHotfixBranch(baseBranchName, hotfixName);
+                final GitCommandResult commandResult = createHotfixBranch(baseBranchName, hotfixName);
+                if (callInAwtLater != null && commandResult.success()) {
+                    callInAwtLater.run();
+                }
             }
         }.queue();
     }
 
-    private void createHotfixBranch(String baseBranchName, String hotfixBranchName) {
+    private GitCommandResult createHotfixBranch(String baseBranchName, String hotfixBranchName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
         GitCommandResult result = myGitflow.startHotfix(myRepo, hotfixBranchName, baseBranchName, errorListener);
 
@@ -63,5 +68,7 @@ public class StartHotfixAction extends GitflowAction {
         }
 
         myRepo.update();
+
+        return result;
     }
 }

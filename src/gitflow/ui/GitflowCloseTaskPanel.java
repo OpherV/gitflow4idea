@@ -2,7 +2,6 @@ package gitflow.ui;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
@@ -12,8 +11,6 @@ import git4idea.repo.GitRepository;
 import gitflow.*;
 import gitflow.actions.FinishFeatureAction;
 import gitflow.actions.FinishHotfixAction;
-import gitflow.actions.GitflowAction;
-import gitflow.actions.StartFeatureAction;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -106,7 +103,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         }
         else if (finishHotfixCheckbox.isSelected()){
             FinishHotfixAction action = new FinishHotfixAction(myRepo);
-            action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
+            action.runAction(myProject, taskBranchName, tagMessageTextField.getText(), null);
         }
     }
 }

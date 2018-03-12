@@ -53,7 +53,7 @@ public class FinishHotfixAction extends GitflowAction {
     }
 
     public void runAction(final Project project, final String hotfixName, final String tagMessage){
-        super.runAction(project, null, hotfixName);
+        super.runAction(project, null, hotfixName, null);
 
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 

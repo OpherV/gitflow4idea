@@ -4,11 +4,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vcs.VcsException;
 import git4idea.branch.GitBranchUtil;
 import git4idea.commands.GitCommandResult;
-import git4idea.merge.GitMerger;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
@@ -54,7 +51,7 @@ public class FinishFeatureAction extends GitflowAction {
     }
 
     public void runAction(final Project project, final String featureName){
-        super.runAction(project, null, featureName);
+        super.runAction(project, null, featureName, null);
 
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
         final FinishFeatureAction that = this;
