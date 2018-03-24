@@ -16,7 +16,7 @@ import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class GitflowAction extends DumbAwareAction {

@@ -13,7 +13,7 @@ import git4idea.commands.GitCommandResult;
 import gitflow.ui.GitflowStartHotfixDialog;
 import gitflow.ui.NotifyUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 public class StartHotfixAction extends GitflowAction {

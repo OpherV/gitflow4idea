@@ -13,7 +13,7 @@ import git4idea.commands.GitCommandResult;
 import gitflow.ui.GitflowStartFeatureDialog;
 import gitflow.ui.NotifyUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class StartFeatureAction extends GitflowAction {
 
