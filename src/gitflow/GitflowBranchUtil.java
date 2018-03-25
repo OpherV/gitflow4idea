@@ -211,15 +211,15 @@ public class GitflowBranchUtil {
 
     /**
      * Strip a full branch name from its gitflow prefix
-     * @param taskFullBranchName full name of the branch (e.g. 'feature/hello');
+     * @param fullBranchName full name of the branch (e.g. 'feature/hello');
      * @return the branch name, prefix free (e.g. 'hello')
      */
-    public String stripFullBranchName(String taskFullBranchName) {
-        if (taskFullBranchName.startsWith(prefixFeature)){
-            return taskFullBranchName.substring(prefixFeature.length(), taskFullBranchName.length());
+    public String stripFullBranchName(String fullBranchName) {
+        if (fullBranchName.startsWith(prefixFeature)){
+            return fullBranchName.substring(prefixFeature.length(), fullBranchName.length());
         }
-        else if (taskFullBranchName.startsWith(prefixHotfix)){
-            return taskFullBranchName.substring(prefixHotfix.length(), taskFullBranchName.length());
+        else if (fullBranchName.startsWith(prefixHotfix)){
+            return fullBranchName.substring(prefixHotfix.length(), fullBranchName.length());
         }
         else{
             return null;

@@ -108,22 +108,21 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
         if (startFeatureRadioButton.isSelected()) {
             final String branchName = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText();
-            attachTaskAndRunAction(new StartFeatureAction(myRepo), selectedFeatureBaseBranch.getBranchName(), featureName.getText(), branchName);
+            attachTaskAndRunAction(new StartFeatureAction(myRepo), selectedFeatureBaseBranch.getBranchName(), branchName);
         }
         else if (startHotfixRadioButton.isSelected()) {
             final String branchName = GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText();
-            attachTaskAndRunAction(new StartHotfixAction(myRepo), selectedHotfixBaseBranch.getBranchName(), hotfixName.getText(), branchName);
+            attachTaskAndRunAction(new StartHotfixAction(myRepo), selectedHotfixBaseBranch.getBranchName(), branchName);
         }
     }
 
     /**
      * @param action instance of GitflowAction
      * @param baseBranchName Branch name of the branch the new one is based on
-     * @param branchName Branch name without feature/hotfix prefix, because the prefix is also set in checkout
      * @param fullBranchName Branch name with feature/hotfix prefix for saving to task
      */
-    private void attachTaskAndRunAction(GitflowAction action, String baseBranchName, final String branchName, final String fullBranchName) {
-        final TaskInfo[] current = myVcsTaskHandler.getCurrentTasks();
+    private void attachTaskAndRunAction(GitflowAction action, String baseBranchName, final String fullBranchName) {
+        final String branchName = gitflowBranchUtil.stripFullBranchName(fullBranchName);
 
         //Create new branch / checkout branch
         action.runAction(myProject, baseBranchName, branchName, new Runnable() {
