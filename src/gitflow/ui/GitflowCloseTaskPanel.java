@@ -95,15 +95,18 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     @Override
     public void commit() {
         String taskFullBranchName = gitflowState.getTaskBranch(myTask);
-        String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
 
-        if (finishFeatureCheckbox.isSelected()){
-            FinishFeatureAction action = new FinishFeatureAction(myRepo);
-            action.runAction(myProject, taskBranchName);
-        }
-        else if (finishHotfixCheckbox.isSelected()){
-            FinishHotfixAction action = new FinishHotfixAction(myRepo);
-            action.runAction(myProject, taskBranchName, tagMessageTextField.getText(), null);
+        // test if current task is a gitflow task
+        if (taskFullBranchName != null) {
+            String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
+
+            if (finishFeatureCheckbox.isSelected()) {
+                FinishFeatureAction action = new FinishFeatureAction(myRepo);
+                action.runAction(myProject, taskBranchName);
+            } else if (finishHotfixCheckbox.isSelected()) {
+                FinishHotfixAction action = new FinishHotfixAction(myRepo);
+                action.runAction(myProject, taskBranchName, tagMessageTextField.getText(), null);
+            }
         }
     }
 }
