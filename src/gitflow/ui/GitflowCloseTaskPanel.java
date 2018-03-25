@@ -105,7 +105,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
                 action.runAction(myProject, taskBranchName);
             } else if (finishHotfixCheckbox.isSelected()) {
                 FinishHotfixAction action = new FinishHotfixAction(myRepo);
-                action.runAction(myProject, taskBranchName, tagMessageTextField.getText(), null);
+                action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
             }
         }
     }
