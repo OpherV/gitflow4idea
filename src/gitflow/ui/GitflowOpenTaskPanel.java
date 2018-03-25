@@ -3,6 +3,7 @@ package gitflow.ui;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsTaskHandler;
+import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
@@ -21,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collections;
+
+import static com.intellij.openapi.vcs.VcsTaskHandler.*;
 
 public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListener {
     private JRadioButton noActionRadioButton;
@@ -37,6 +41,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     private GitflowBranchUtil gitflowBranchUtil;
     private TaskManagerImpl myTaskManager;
     private VcsTaskHandler myVcsTaskHandler;
+    private LocalTask myPreviousTask;
     private Task currentTask;
 
     private GitflowState gitflowState;
@@ -48,6 +53,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         myRepo = repo;
 
         myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);
+        myPreviousTask = myTaskManager.getActiveTask();
         VcsTaskHandler[] vcsTaskHAndlers = VcsTaskHandler.getAllHandlers(project);
         if (vcsTaskHAndlers.length > 0){
             //todo handle case of multiple vcs handlers
@@ -100,19 +106,39 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         final GitflowBranchUtil.ComboEntry selectedFeatureBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
         final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) hotfixBaseBranch.getModel().getSelectedItem();
 
-        GitflowAction action;
-
         if (startFeatureRadioButton.isSelected()) {
-            action = new StartFeatureAction(myRepo);
-            action.runAction(myProject, selectedFeatureBaseBranch.getBranchName(), featureName.getText());
-            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText());
+            final String branchName = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText();
+            attachTaskAndRunAction(new StartFeatureAction(myRepo), selectedFeatureBaseBranch.getBranchName(), featureName.getText(), branchName);
         }
         else if (startHotfixRadioButton.isSelected()) {
-            action =  new StartHotfixAction(myRepo);
-            action.runAction(myProject, selectedHotfixBaseBranch.getBranchName(), hotfixName.getText());
-            gitflowState.setTaskBranch(currentTask, GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText());
+            final String branchName = GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText();
+            attachTaskAndRunAction(new StartHotfixAction(myRepo), selectedHotfixBaseBranch.getBranchName(), hotfixName.getText(), branchName);
         }
+    }
 
+    /**
+     * @param action instance of GitflowAction
+     * @param baseBranchName Branch name of the branch the new one is based on
+     * @param branchName Branch name without feature/hotfix prefix, because the prefix is also set in checkout
+     * @param fullBranchName Branch name with feature/hotfix prefix for saving to task
+     */
+    private void attachTaskAndRunAction(GitflowAction action, String baseBranchName, final String branchName, final String fullBranchName) {
+        final TaskInfo[] current = myVcsTaskHandler.getCurrentTasks();
+
+        //Create new branch / checkout branch
+        action.runAction(myProject, baseBranchName, branchName, new Runnable() {
+            @Override
+            public void run() {
+                final TaskInfo[] next = {new TaskInfo(fullBranchName, Collections.singleton(myRepo.getPresentableUrl()))};
+                final LocalTask localTask = myTaskManager.getActiveTask();
+
+                //Add branch to task
+                TaskManagerImpl.addBranches(localTask, next, false);
+
+                //maps branch to task
+                gitflowState.setTaskBranch(currentTask, fullBranchName);
+            }
+        });
     }
 
     @Override

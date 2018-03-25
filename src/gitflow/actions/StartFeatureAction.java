@@ -1,8 +1,6 @@
 package gitflow.actions;
 
-import com.intellij.dvcs.repo.Repository;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -14,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import git4idea.commands.GitCommandResult;
 import gitflow.ui.GitflowStartFeatureDialog;
 import gitflow.ui.NotifyUtil;
+
+import org.jetbrains.annotations.Nullable;
 
 public class StartFeatureAction extends GitflowAction {
 
@@ -36,21 +36,24 @@ public class StartFeatureAction extends GitflowAction {
         final String featureName = dialog.getNewBranchName();
         final String baseBranchName = dialog.getBaseBranchName();
 
-        this.runAction(e.getProject(), baseBranchName, featureName);
+        this.runAction(e.getProject(), baseBranchName, featureName, null);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String featureName){
-        super.runAction(project, baseBranchName, featureName);
+    public void runAction(Project project, final String baseBranchName, final String featureName, @Nullable final Runnable callInAwtLater){
+        super.runAction(project, baseBranchName, featureName, callInAwtLater);
 
         new Task.Backgroundable(myProject, "Starting feature " + featureName, false) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                createFeatureBranch(baseBranchName, featureName);
+                final GitCommandResult commandResult = createFeatureBranch(baseBranchName, featureName);
+                if (callInAwtLater != null && commandResult.success()) {
+                    callInAwtLater.run();
+                }
             }
         }.queue();
     }
 
-    private void createFeatureBranch(String baseBranchName, String featureName) {
+    private GitCommandResult createFeatureBranch(String baseBranchName, String featureName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
         GitCommandResult result = myGitflow.startFeature(myRepo, featureName, baseBranchName, errorListener);
 
@@ -63,5 +66,6 @@ public class StartFeatureAction extends GitflowAction {
 
         myRepo.update();
         virtualFileMananger.asyncRefresh(null); //update editors
+        return result;
     }
 }
