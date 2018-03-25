@@ -2,7 +2,6 @@ package gitflow.ui;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
@@ -12,8 +11,6 @@ import git4idea.repo.GitRepository;
 import gitflow.*;
 import gitflow.actions.FinishFeatureAction;
 import gitflow.actions.FinishHotfixAction;
-import gitflow.actions.GitflowAction;
-import gitflow.actions.StartFeatureAction;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -98,15 +95,18 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     @Override
     public void commit() {
         String taskFullBranchName = gitflowState.getTaskBranch(myTask);
-        String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
 
-        if (finishFeatureCheckbox.isSelected()){
-            FinishFeatureAction action = new FinishFeatureAction(myRepo);
-            action.runAction(myProject, taskBranchName);
-        }
-        else if (finishHotfixCheckbox.isSelected()){
-            FinishHotfixAction action = new FinishHotfixAction(myRepo);
-            action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
+        // test if current task is a gitflow task
+        if (taskFullBranchName != null) {
+            String taskBranchName = gitflowBranchUtil.stripFullBranchName(taskFullBranchName);
+
+            if (finishFeatureCheckbox.isSelected()) {
+                FinishFeatureAction action = new FinishFeatureAction(myRepo);
+                action.runAction(myProject, taskBranchName);
+            } else if (finishHotfixCheckbox.isSelected()) {
+                FinishHotfixAction action = new FinishHotfixAction(myRepo);
+                action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
+            }
         }
     }
 }

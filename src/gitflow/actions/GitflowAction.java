@@ -16,6 +16,7 @@ import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class GitflowAction extends DumbAwareAction {
@@ -70,7 +71,7 @@ public class GitflowAction extends DumbAwareAction {
         currentBranchName= GitBranchUtil.getBranchNameOrRev(myRepo);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String branchName){
+    public void runAction(Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
         setup(project);
     }
 

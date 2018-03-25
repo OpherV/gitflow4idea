@@ -12,16 +12,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import git4idea.GitVcs;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitLineHandler;
 
 
 public class GitInitLineHandler extends GitLineHandler {
+    @NotNull private final GitVcs myVcs;
+
     private BufferedWriter writer;
     GitflowInitOptions _initOptions;
 
     public GitInitLineHandler(GitflowInitOptions initOptions, @NotNull Project project, @NotNull VirtualFile vcsRoot, @NotNull GitCommand command) {
         super(project, vcsRoot, command);
+        myVcs = GitVcs.getInstance(project);
         _initOptions = initOptions;
     }
 
