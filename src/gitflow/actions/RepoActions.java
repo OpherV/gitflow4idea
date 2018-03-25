@@ -1,7 +1,5 @@
 package gitflow.actions;
 
-import com.intellij.dvcs.ui.BranchActionGroup;
-import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -13,6 +11,8 @@ import git4idea.repo.GitRepositoryChangeListener;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
+import gitflow.BranchActionGroup;
+import gitflow.PopupElementWithAdditionalInfo;
 import gitflow.actions.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
