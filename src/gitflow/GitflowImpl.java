@@ -50,30 +50,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return command;
     }
 
-    //we must use reflection to add this command, since the git4idea implementation doesn't expose it
-    private static GitCommandResult run(@org.jetbrains.annotations.NotNull git4idea.commands.GitLineHandler handler) {
-        Method m = null;
-        try {
-            m = GitImpl.class.getDeclaredMethod("run", GitLineHandler.class);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        m.setAccessible(true);//Abracadabra
-
-        GitCommandResult result = null;
-
-        try {
-            result = (GitCommandResult) m.invoke(null, handler);//now its ok
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
 
@@ -88,7 +64,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("init");
             h.addParameters("-d");
 
-            result = run(h);
+            result = runCommand(h);
         } else {
 
 
@@ -103,7 +79,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             for (GitLineHandlerListener listener : listeners) {
                 h.addLineListener(listener);
             }
-            result = run(h);
+            result = runCommand(h);
         }
 
 
@@ -134,7 +110,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
@@ -169,7 +145,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -187,7 +163,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -208,7 +184,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult trackFeature(@NotNull GitRepository repository,
@@ -225,7 +201,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -249,7 +225,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishRelease(@NotNull GitRepository repository,
@@ -281,7 +257,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -300,7 +276,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult trackRelease(@NotNull GitRepository repository,
@@ -317,7 +293,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -344,7 +320,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishHotfix(@NotNull GitRepository repository,
@@ -377,7 +353,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult publishHotfix(@NotNull GitRepository repository,
@@ -395,7 +371,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     private void setUrl(GitLineHandler h, GitRepository repository) {
