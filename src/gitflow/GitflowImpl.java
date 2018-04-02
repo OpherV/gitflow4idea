@@ -140,6 +140,10 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("--no-ff");
         }
 
+        if (GitflowConfigurable.featureSquash(repository.getProject())) {
+            h.addParameters("-S");
+        }
+
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {
@@ -241,9 +245,15 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
             h.addParameters("-F");
         }
+
         if (GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
             h.addParameters("-p");
         }
+
+        if (GitflowConfigurable.releaseSquash(repository.getProject())) {
+            h.addParameters("-S");
+        }
+
 
         if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
             h.addParameters("-n");

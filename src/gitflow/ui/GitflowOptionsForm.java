@@ -17,11 +17,14 @@ public class GitflowOptionsForm  implements ItemListener {
     private JCheckBox featureKeepLocal;
     private JCheckBox featureFetchOrigin;
     private JCheckBox featureNoFastForward;
+    private JCheckBox featureSquash;
+
 
     private JCheckBox pushOnFinishRelease;
     private JCheckBox dontTagRelease;
     private JCheckBox useCustomTagCommitMessage;
     private JTextField customTagCommitMessage;
+    private JCheckBox releaseSquash;
 
     private JCheckBox hotfixFetchOrigin;
     private JCheckBox pushOnFinishHotfix;
@@ -125,11 +128,13 @@ public class GitflowOptionsForm  implements ItemListener {
         featureNoFastForward.setSelected(selected);
     }
 
+    public boolean isSquashFeature() { return featureSquash.isSelected(); }
+
+    public void setSquashFeature(boolean selected){ featureSquash.setSelected(selected); }
+
     // release getters/setters
 
-    public boolean isReleaseFetchOrigin() {
-        return releaseFetchOrigin.isSelected();
-    }
+    public boolean isReleaseFetchOrigin() {  return releaseFetchOrigin.isSelected(); }
 
     public void setReleaseFetchOrigin(boolean selected) {
         releaseFetchOrigin.setSelected(selected);
@@ -143,9 +148,12 @@ public class GitflowOptionsForm  implements ItemListener {
         pushOnFinishRelease.setSelected(selected);
     }
 
-    public boolean isDontTagRelease() {
-        return dontTagRelease.isSelected();
-    }
+    public boolean isDontTagRelease() { return dontTagRelease.isSelected(); }
+
+    public void setSquashRelease(boolean selected) { releaseSquash.setSelected(selected); }
+
+    public boolean isSquashRelease() { return releaseSquash.isSelected(); }
+
 
     /* custom finish release tag commit message */
 
