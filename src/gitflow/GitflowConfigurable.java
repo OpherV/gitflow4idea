@@ -8,6 +8,8 @@ import gitflow.ui.GitflowOptionsForm;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author Andreas Vogler (Andreas.Vogler@geneon.de)
@@ -15,117 +17,22 @@ import javax.swing.*;
  */
 public class GitflowConfigurable implements Configurable {
 
-    public static final String GITFLOW_FEATURE_FETCH_ORIGIN = "Gitflow.featureFetchOrigin";
-    public static final String GITFLOW_FEATURE_KEEP_REMOTE = "Gitflow.featureKeepRemote";
-    public static final String GITFLOW_FEATURE_KEEP_LOCAL = "Gitflow.featureKeepLocal";
-    public static final String GITFLOW_FEATURE_NO_FF = "Gitflow.featureNoFastForward";
-    public static final String GITFLOW_FEATURE_SQUASH = "Gitflow.featureSquash";
-
-    public static final String GITFLOW_RELEASE_FETCH_ORIGIN = "Gitflow.releaseFetchOrigin";
-    public static final String GITFLOW_PUSH_ON_FINISH_RELEASE = "Gitflow.pushOnFinishRelease";
-    public static final String GITFLOW_PUSH_ON_FINISH_HOTFIX = "Gitflow.pushOnFinishHotfix";
-    public static final String GITFLOW_DONT_TAG_RELEASE = "Gitflow.dontTagRelease";
-    public static final String GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE = "Gitflow.useCustomTagCommitMessage";
-    public static final String GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE = "Gitflow.customTagCommitMessage";
-    public static final String GITFLOW_RELEASE_SQUASH = "Gitflow.releaseSquash";
-
-    public static final String GITFLOW_HOTFIX_FETCH_ORIGIN = "Gitflow.hotfixFetchOrigin";
-    public static final String GITFLOW_DONT_TAG_HOTFIX = "Gitflow.dontTagHotfix";
-    public static final String GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "Gitflow.useCustomHotfixTagCommitMessage";
-    public static final String GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE = "Gitflow.customHotfixTagCommitMessage";
-
-    public static final String DEFAULT_TAG_COMMIT_MESSAGE ="Tagging version %name%";
-    public static final String DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE ="Tagging version %name%";
-
     Project project;
     GitflowOptionsForm gitflowOptionsForm;
+    PropertiesComponent propertiesComponent;
+    Map<Enum<GitflowOptionsFactory.TYPE>, ArrayList<Map<String,String>>> gitflowOptions;
+
+    static GitflowConfigurable instance;
 
     public GitflowConfigurable(Project project) {
+        gitflowOptions = GitflowOptionsFactory.getOptions();
+        propertiesComponent = PropertiesComponent.getInstance(project);
         this.project = project;
+        instance = this;
     }
 
-    /* feature */
-
-    public static boolean featureFetchOrigin(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_FETCH_ORIGIN, false);
-    }
-
-    public static boolean featureKeepRemote(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_KEEP_REMOTE, false);
-    }
-
-    public static boolean featureKeepLocal(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_KEEP_LOCAL, false);
-    }
-
-    public static boolean featureNoFastForward(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_NO_FF, false);
-    }
-
-    public static boolean featureSquash(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_FEATURE_SQUASH, false);
-    }
-
-    /* release */
-
-    public static boolean releaseFetchOrigin(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_RELEASE_FETCH_ORIGIN, false);
-    }
-
-    public static boolean pushOnReleaseFinish(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_RELEASE, false);
-    }
-
-    public static boolean dontTagRelease(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_DONT_TAG_RELEASE, false);
-    }
-
-    public static boolean releaseSquash(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_RELEASE_SQUASH, false);
-    }
-
-    /* finish release custom commit message */
-
-    public static boolean useCustomTagCommitMessage(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false);
-    }
-
-    public static String getCustomTagCommitMessage(Project project) {
-        if (useCustomTagCommitMessage(project)){
-            return PropertiesComponent.getInstance(project).getValue(GitflowConfigurable.GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE);
-        }
-        else{
-            return GitflowConfigurable.DEFAULT_TAG_COMMIT_MESSAGE;
-        }
-    }
-
-    /*hotfix*/
-
-    public static boolean hotfixFetchOrigin(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_HOTFIX_FETCH_ORIGIN, false);
-    }
-
-    public static boolean pushOnHotfixFinish(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_PUSH_ON_FINISH_HOTFIX, false);
-    }
-
-    public static boolean dontTagHotfix(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_DONT_TAG_HOTFIX, false);
-    }
-
-    /* finish hotfix custom commit message */
-
-    public static boolean useCustomHotfixTagCommitMessage(Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(GitflowConfigurable.GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false);
-    }
-
-    public static String getCustomHotfixTagCommitMessage(Project project) {
-        if (useCustomHotfixTagCommitMessage(project)){
-            return PropertiesComponent.getInstance(project).getValue(GitflowConfigurable.GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE);
-        }
-        else{
-            return GitflowConfigurable.DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE;
-        }
+    static public GitflowConfigurable getInstance(){
+        return instance;
     }
 
     @Override
@@ -146,70 +53,80 @@ public class GitflowConfigurable implements Configurable {
         return gitflowOptionsForm.getContentPane();
     }
 
+    public boolean isOptionActive(String optionId){
+        return propertiesComponent.getBoolean(optionId+"_active");
+    }
+
+    public String getOptionTextString (String optionId){
+        return propertiesComponent.getValue(optionId+"_text");
+    }
+
     @Override
     public boolean isModified() {
-        return PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_FETCH_ORIGIN, false) != gitflowOptionsForm.isFeatureFetchOrigin() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_REMOTE, false) != gitflowOptionsForm.isFeatureKeepRemote() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_LOCAL, false) != gitflowOptionsForm.isFeatureKeepLocal() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_NO_FF, false) != gitflowOptionsForm.isFeatureNoFastForward() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_SQUASH, false) != gitflowOptionsForm.isSquashFeature() ||
+        // iterate over branch types (feature/release/hotfix)
+        for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
+            for (Map<String, String> optionMap : gitflowOptions.get(type)) {
+                String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
 
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_FETCH_ORIGIN, false) != gitflowOptionsForm.isReleaseFetchOrigin() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false) != gitflowOptionsForm.isPushOnFinishRelease() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_RELEASE, false) != gitflowOptionsForm.isDontTagRelease() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false) != gitflowOptionsForm.isUseCustomTagCommitMessage() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_SQUASH, false) != gitflowOptionsForm.isSquashRelease() ||
-               PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE, DEFAULT_TAG_COMMIT_MESSAGE).equals(gitflowOptionsForm.getCustomTagCommitMessage())==false ||
+                boolean isOptionActiveInForm = gitflowOptionsForm.isOptionActive(optionId);
+                boolean savedOptionIsActive = propertiesComponent.getBoolean(optionId+"_active");
 
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_HOTFIX_FETCH_ORIGIN, false) != gitflowOptionsForm.isHotfixFetchOrigin() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false) != gitflowOptionsForm.isPushOnFinishHotfix() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_HOTFIX, false) != gitflowOptionsForm.isDontTagHotfix() ||
-               PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false) != gitflowOptionsForm.isUseCustomHotfixComitMessage() ||
-               PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE).equals(gitflowOptionsForm.getCustomHotfixCommitMessage())==false;
+                if (isOptionActiveInForm != savedOptionIsActive) return true;
+
+                // option has text value
+                if (optionMap.get("inputText") != null){
+                    String textInForm = gitflowOptionsForm.getOptionText(optionId);
+                    String savedOptionText = propertiesComponent.getValue(optionId+"text");
+                    if (textInForm.equals(savedOptionText) == false){
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return false;
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isFeatureFetchOrigin()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_KEEP_REMOTE, Boolean.toString(gitflowOptionsForm.isFeatureKeepRemote()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_KEEP_LOCAL, Boolean.toString(gitflowOptionsForm.isFeatureKeepLocal()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_NO_FF, Boolean.toString(gitflowOptionsForm.isFeatureNoFastForward()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_FEATURE_SQUASH, gitflowOptionsForm.isSquashFeature());
+        // iterate over branch types (feature/release/hotfix)
+        for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
+            for (Map<String, String> optionMap : gitflowOptions.get(type)) {
+                String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
 
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_RELEASE_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isReleaseFetchOrigin()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_RELEASE, Boolean.toString(gitflowOptionsForm.isPushOnFinishRelease()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_DONT_TAG_RELEASE, Boolean.toString(gitflowOptionsForm.isDontTagRelease()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, Boolean.toString(gitflowOptionsForm.isUseCustomTagCommitMessage()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE, gitflowOptionsForm.getCustomTagCommitMessage());
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_RELEASE_SQUASH, Boolean.toString(gitflowOptionsForm.isSquashRelease()));
+                // set isActive value
+                propertiesComponent.setValue(optionId+"_active",  gitflowOptionsForm.isOptionActive(optionId));
 
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_HOTFIX_FETCH_ORIGIN, Boolean.toString(gitflowOptionsForm.isHotfixFetchOrigin()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_PUSH_ON_FINISH_HOTFIX, Boolean.toString(gitflowOptionsForm.isPushOnFinishHotfix()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_DONT_TAG_HOTFIX, Boolean.toString(gitflowOptionsForm.isDontTagHotfix()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, Boolean.toString(gitflowOptionsForm.isUseCustomHotfixComitMessage()));
-        PropertiesComponent.getInstance(project).setValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, gitflowOptionsForm.getCustomHotfixCommitMessage());
+                // set text value, if relevant
+                if (optionMap.get("inputText") != null){
+                    propertiesComponent.setValue(optionId+"_text",  gitflowOptionsForm.getOptionText(optionId));
+                }
+
+            }
+        }
+
     }
 
     @Override
     public void reset() {
-        gitflowOptionsForm.setFeatureFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_FETCH_ORIGIN, false));
-        gitflowOptionsForm.setFeatureKeepRemote(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_REMOTE, false));
-        gitflowOptionsForm.setFeatureKeepLocal(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_KEEP_LOCAL, false));
-        gitflowOptionsForm.setFeatureNoFastForward(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_NO_FF, false));
-        gitflowOptionsForm.setSquashFeature(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_FEATURE_SQUASH, false));
+        // iterate over branch types (feature/release/hotfix)
+        for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
+            for (Map<String, String> optionMap : gitflowOptions.get(type)) {
+                String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
+                boolean savedOptionIsActive = propertiesComponent.getBoolean(optionId+"_active");
+                gitflowOptionsForm.setOptionActive(optionId, savedOptionIsActive);
 
-        gitflowOptionsForm.setReleaseFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_FETCH_ORIGIN, false));
-        gitflowOptionsForm.setPushOnFinishRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_RELEASE, false));
-        gitflowOptionsForm.setDontTagRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_RELEASE, false));
-        gitflowOptionsForm.setUseCustomTagCommitMessage(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_TAG_COMMIT_MESSAGE, false));
-        gitflowOptionsForm.setCustomTagCommitMessage(PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_TAG_COMMIT_MESSAGE,DEFAULT_TAG_COMMIT_MESSAGE));
-        gitflowOptionsForm.setSquashRelease(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_RELEASE_SQUASH, false));
+                // option has text value
+                if (optionMap.get("inputText") != null){
+                    String textInForm = gitflowOptionsForm.getOptionText(optionId);
+                    String savedOptionText = propertiesComponent.getValue(optionId+"text");
+                    gitflowOptionsForm.setOptionText(optionId, savedOptionText);
 
-        gitflowOptionsForm.setHotfixFetchOrigin(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_HOTFIX_FETCH_ORIGIN, false));
-        gitflowOptionsForm.setPushOnFinishHotfix(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_PUSH_ON_FINISH_HOTFIX, false));
-        gitflowOptionsForm.setDontTagHotfix(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_DONT_TAG_HOTFIX, false));
-        gitflowOptionsForm.setUseCustomHotfixCommitMessage(PropertiesComponent.getInstance(project).getBoolean(GITFLOW_USE_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE, false));
-        gitflowOptionsForm.setCustomHotfixCommitMessage(PropertiesComponent.getInstance(project).getValue(GITFLOW_CUSTOM_HOTFIX_TAG_COMMIT_MESSAGE,DEFAULT_TAG_HOTFIX_COMMIT_MESSAGE));
+                }
+
+            }
+        }
     }
 
     @Override

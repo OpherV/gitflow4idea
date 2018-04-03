@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import git4idea.commands.GitCommand;
@@ -22,7 +23,6 @@ import git4idea.repo.GitRepository;
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
-
 
 public class GitflowImpl extends GitImpl implements Gitflow {
 
@@ -48,6 +48,14 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
 
         return command;
+    }
+
+
+    private void addOptionsCommand(GitLineHandler h, String optionId){
+        HashMap<String,String> optionMap = GitflowOptionsFactory.getOptionById(optionId);
+        if (GitflowConfigurable.getInstance().isOptionActive(optionMap.get("id"))){
+            h.addParameters(optionMap.get("flag"));
+        }
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
@@ -98,9 +106,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("feature");
         h.addParameters("start");
-        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+
+        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
+
         h.addParameters(featureName);
 
         if (baseBranch != null) {
@@ -124,25 +132,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("feature");
         h.addParameters("finish");
 
-        if (GitflowConfigurable.featureKeepRemote(repository.getProject())) {
-            h.addParameters("--keepremote");
-        }
 
-        if (GitflowConfigurable.featureKeepLocal(repository.getProject())) {
-            h.addParameters("--keeplocal");
-        }
-
-        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-
-        if (GitflowConfigurable.featureNoFastForward(repository.getProject())) {
-            h.addParameters("--no-ff");
-        }
-
-        if (GitflowConfigurable.featureSquash(repository.getProject())) {
-            h.addParameters("-S");
-        }
+        addOptionsCommand(h, "FEATURE_keepRemote");
+        addOptionsCommand(h, "FEATURE_keepLocal");
+        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
+        addOptionsCommand(h, "FEATURE_squash");
 
         h.addParameters(featureName);
 
@@ -220,9 +214,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("release");
         h.addParameters("start");
 
-        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
 
         h.addParameters(releaseName);
 
@@ -242,22 +234,16 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
-        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
+
+        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
+        addOptionsCommand(h, "RELEASE_pushOnFinish");
+        addOptionsCommand(h, "RELEASE_squash");
+
+        HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("RELEASE_dontTag");
+        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+            h.addParameters(dontTag.get("flag"));
         }
-
-        if (GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
-            h.addParameters("-p");
-        }
-
-        if (GitflowConfigurable.releaseSquash(repository.getProject())) {
-            h.addParameters("-S");
-        }
-
-
-        if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
-            h.addParameters("-n");
-        } else {
+        else{
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
@@ -318,9 +304,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("start");
-        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+
+        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
+
         h.addParameters(hotfixName);
 
         if (baseBranch != null) {
@@ -343,17 +329,15 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
-        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-        if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
-            h.addParameters("-p");
-        }
 
+        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
+        addOptionsCommand(h, "HOTFIX_pushOnFinish");
 
-        if (GitflowConfigurable.dontTagHotfix(repository.getProject())) {
-            h.addParameters("-n");
-        } else {
+        HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("HOTFIX_dontTag");
+        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+            h.addParameters(dontTag.get("flag"));
+        }
+        else{
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
