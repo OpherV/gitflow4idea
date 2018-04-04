@@ -28,7 +28,13 @@ public class StartReleaseAction extends GitflowAction {
                 GitNewBranchNameValidator.newInstance(repos));
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
-        if (releaseName!=null && !releaseName.isEmpty()){
+        if (releaseName == null){
+            // user clicked cancel
+        }
+        else if (releaseName.isEmpty()){
+            Messages.showWarningDialog(myProject, "You must provide a name for the release", "Whoops");
+        }
+        else {
             new Task.Backgroundable(myProject,"Starting release "+releaseName,false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
@@ -47,9 +53,6 @@ public class StartReleaseAction extends GitflowAction {
                 }
             }.queue();
 
-        }
-        else{
-            Messages.showWarningDialog(myProject, "You must provide a name for the release", "Whoops");
         }
 
     }

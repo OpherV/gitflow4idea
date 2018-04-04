@@ -51,9 +51,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
     }
 
 
-    private void addOptionsCommand(GitLineHandler h, String optionId){
+    private void addOptionsCommand(GitLineHandler h, Project project, String optionId){
         HashMap<String,String> optionMap = GitflowOptionsFactory.getOptionById(optionId);
-        if (GitflowConfigurable.getInstance().isOptionActive(optionMap.get("id"))){
+        if (GitflowConfigurable.isOptionActive(project, optionMap.get("id"))){
             h.addParameters(optionMap.get("flag"));
         }
     }
@@ -107,7 +107,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("feature");
         h.addParameters("start");
 
-        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_fetchFromOrigin");
 
         h.addParameters(featureName);
 
@@ -133,11 +133,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("finish");
 
 
-        addOptionsCommand(h, "FEATURE_keepRemote");
-        addOptionsCommand(h, "FEATURE_keepLocal");
-        addOptionsCommand(h, "FEATURE_keepBranch");
-        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
-//        addOptionsCommand(h, "FEATURE_squash");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_keepRemote");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_keepLocal");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_keepBranch");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_fetchFromOrigin");
+//        addOptionsCommand(h, repository.getProject(),"FEATURE_squash");
 
         h.addParameters(featureName);
 
@@ -215,7 +215,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("release");
         h.addParameters("start");
 
-        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_fetchFromOrigin");
 
         h.addParameters(releaseName);
 
@@ -236,15 +236,15 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("release");
         h.addParameters("finish");
 
-        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
-        addOptionsCommand(h, "RELEASE_pushOnFinish");
-        addOptionsCommand(h, "RELEASE_keepRemote");
-        addOptionsCommand(h, "RELEASE_keepLocal");
-        addOptionsCommand(h, "RELEASE_keepBranch");
-//        addOptionsCommand(h, "RELEASE_squash");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_pushOnFinish");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_keepRemote");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_keepLocal");
+        addOptionsCommand(h, repository.getProject(),"RELEASE_keepBranch");
+//        addOptionsCommand(h, repository.getProject(),"RELEASE_squash");
 
         HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("RELEASE_dontTag");
-        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+        if (GitflowConfigurable.isOptionActive(repository.getProject(), dontTag.get("id"))){
             h.addParameters(dontTag.get("flag"));
         }
         else{
@@ -309,7 +309,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("hotfix");
         h.addParameters("start");
 
-        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"HOTFIX_fetchFromOrigin");
 
         h.addParameters(hotfixName);
 
@@ -334,11 +334,11 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("hotfix");
         h.addParameters("finish");
 
-        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
-        addOptionsCommand(h, "HOTFIX_pushOnFinish");
+        addOptionsCommand(h, repository.getProject(),"HOTFIX_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"HOTFIX_pushOnFinish");
 
         HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("HOTFIX_dontTag");
-        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+        if (GitflowConfigurable.isOptionActive(repository.getProject(), dontTag.get("id"))){
             h.addParameters(dontTag.get("flag"));
         }
         else{
