@@ -53,12 +53,12 @@ public class GitflowConfigurable implements Configurable {
         return gitflowOptionsForm.getContentPane();
     }
 
-    public boolean isOptionActive(String optionId){
-        return propertiesComponent.getBoolean(optionId+"_active");
+    public static boolean isOptionActive(Project project, String optionId){
+        return PropertiesComponent.getInstance(project).getBoolean(optionId+"_active");
     }
 
-    public String getOptionTextString (String optionId){
-        return propertiesComponent.getValue(optionId+"_text");
+    public static String getOptionTextString (Project project, String optionId){
+        return PropertiesComponent.getInstance(project).getValue(optionId+"_text");
     }
 
     @Override

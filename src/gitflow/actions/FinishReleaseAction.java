@@ -48,14 +48,14 @@ public class FinishReleaseAction extends GitflowAction {
 
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
-            String defaultTagMessage = GitflowConfigurable.getInstance().getOptionTextString("RELEASE_customTagCommitMessage");
+            String defaultTagMessage = GitflowConfigurable.getOptionTextString(myProject, "RELEASE_customTagCommitMessage");
             defaultTagMessage = defaultTagMessage.replace("%name%", releaseName);
 
             String tagMessageDraft;
 
             boolean cancelAction=false;
 
-            if (GitflowConfigurable.getInstance().isOptionActive("RELEASE_dontTag")) {
+            if (GitflowConfigurable.isOptionActive(myProject, "RELEASE_dontTag")) {
                 tagMessage="";
             }
             else if (customtagMessage!=null){
