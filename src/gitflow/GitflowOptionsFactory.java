@@ -31,6 +31,8 @@ public class GitflowOptionsFactory {
         addBranchType(TYPE.RELEASE);
         addOption(TYPE.RELEASE, "Fetch from Origin", "fetchFromOrigin" , "-F");
         addOption(TYPE.RELEASE, "Push on finish release", "pushOnFinish" , "-p");
+        addOption(TYPE.RELEASE, "Keep Local", "keepLocal", "--keeplocal");
+        addOption(TYPE.RELEASE, "Keep Remote", "keepRemote", "--keepremote");
         addOption(TYPE.RELEASE, "Keep branch after performing finish", "keepBranch" , "-k");
 //        addOption(TYPE.RELEASE, "Squash release during merge", "squash" , "-S");
         addOption(TYPE.RELEASE, "Don't tag release", "dontTag" , "-n");

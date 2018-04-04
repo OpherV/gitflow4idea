@@ -238,6 +238,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         addOptionsCommand(h, "RELEASE_fetchFromOrigin");
         addOptionsCommand(h, "RELEASE_pushOnFinish");
+        addOptionsCommand(h, "RELEASE_keepRemote");
+        addOptionsCommand(h, "RELEASE_keepLocal");
         addOptionsCommand(h, "RELEASE_keepBranch");
 //        addOptionsCommand(h, "RELEASE_squash");
 
