@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="contentPane" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="497"/>
+      <xy x="20" y="20" width="500" height="447"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -13,187 +13,32 @@
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <grid id="6abe9" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none" title="Release"/>
-        <children>
-          <component id="1f588" class="javax.swing.JCheckBox" binding="dontTagRelease">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Don't tag release (-n)"/>
-            </properties>
-          </component>
-          <component id="ece6c" class="javax.swing.JCheckBox" binding="pushOnFinishRelease">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Push on finish release (-p)"/>
-            </properties>
-          </component>
-          <component id="4a471" class="javax.swing.JCheckBox" binding="useCustomTagCommitMessage">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Use custom tag commit message"/>
-            </properties>
-          </component>
-          <component id="8f1c7" class="javax.swing.JTextField" binding="customTagCommitMessage">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <enabled value="false"/>
-              <text value="Tagging version %name%"/>
-              <toolTipText value="Use %name% for the branch name"/>
-            </properties>
-          </component>
-          <component id="b8797" class="javax.swing.JCheckBox" binding="releaseFetchOrigin">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Fetch from origin (-F)"/>
-              <toolTipText value="Fetch from origin before performing start/finish (-F)"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <grid id="35b8b" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="35b8b" binding="hotfixPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none" title="Hotfix"/>
-        <children>
-          <component id="a8413" class="javax.swing.JTextField" binding="customHotfixCommitMessage">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <enabled value="false"/>
-              <text value="tagging hotfix %name%"/>
-              <toolTipText value="Use %name% for the branch name"/>
-            </properties>
-          </component>
-          <component id="4c1d4" class="javax.swing.JCheckBox" binding="useCustomHotfixCommitMessage">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Use custom hotfix commit message"/>
-            </properties>
-          </component>
-          <component id="e578c" class="javax.swing.JCheckBox" binding="pushOnFinishHotfix">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Push on finish hotfix (-p)"/>
-            </properties>
-          </component>
-          <component id="88094" class="javax.swing.JCheckBox" binding="dontTagHotfix">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Don't tag hotfix (-n)"/>
-            </properties>
-          </component>
-          <component id="648e" class="javax.swing.JCheckBox" binding="hotfixFetchOrigin">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Fetch from origin (-F)"/>
-              <toolTipText value="Fetch from origin before performing start/finish (-F)"/>
-            </properties>
-          </component>
-        </children>
+        <children/>
       </grid>
-      <grid id="ee6f8" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="ee6f8" binding="featurePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none" title="Feature"/>
-        <children>
-          <component id="88b52" class="javax.swing.JCheckBox" binding="featureKeepRemote">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Keep remote (--keepremote)"/>
-            </properties>
-          </component>
-          <hspacer id="7cd8c">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="1e7f4">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <component id="df59e" class="javax.swing.JCheckBox" binding="featureFetchOrigin">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Fetch from origin (-F)"/>
-              <toolTipText value="Fetch from origin before performing start/finish (-F)"/>
-            </properties>
-          </component>
-          <component id="4655f" class="javax.swing.JCheckBox" binding="featureKeepLocal">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <selected value="false"/>
-              <text value="Keep local (--keeplocal)"/>
-            </properties>
-          </component>
-          <hspacer id="7eec3">
-            <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <component id="76e5a" class="javax.swing.JCheckBox" binding="featureNoFastForward">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Do not fast-forward when merging, always create commit (--no-ff)"/>
-            </properties>
-          </component>
-          <hspacer id="2bce3">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-        </children>
+        <children/>
+      </grid>
+      <grid id="f770" binding="releasePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none" title="Release"/>
+        <children/>
       </grid>
     </children>
   </grid>

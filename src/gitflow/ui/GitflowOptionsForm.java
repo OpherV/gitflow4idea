@@ -1,8 +1,15 @@
 package gitflow.ui;
 
+import gitflow.GitflowOptionsFactory;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Andreas Vogler (Andreas.Vogler@geneon.de)
@@ -11,206 +18,159 @@ import java.awt.event.ItemListener;
 public class GitflowOptionsForm  implements ItemListener {
 
     private JPanel contentPane;
-    private JCheckBox releaseFetchOrigin;
+    private JPanel releasePanel;
+    private JPanel featurePanel;
+    private JPanel hotfixPanel;
 
-    private JCheckBox featureKeepRemote;
-    private JCheckBox featureKeepLocal;
-    private JCheckBox featureFetchOrigin;
-    private JCheckBox featureNoFastForward;
+    Map<Enum<GitflowOptionsFactory.TYPE>, ArrayList<Map<String,String>>> gitflowOptions;
+    Map<String, OptionComponent> optionComponents;
 
-    private JCheckBox pushOnFinishRelease;
-    private JCheckBox dontTagRelease;
-    private JCheckBox useCustomTagCommitMessage;
-    private JTextField customTagCommitMessage;
+    private class OptionComponent{
+        public JComponent checkbox;
+        public JComponent textfield;
 
-    private JCheckBox hotfixFetchOrigin;
-    private JCheckBox pushOnFinishHotfix;
-    private JCheckBox dontTagHotfix;
-    private JCheckBox useCustomHotfixCommitMessage;
-    private JTextField customHotfixCommitMessage;
+        public OptionComponent(JComponent checkboxComponent, @Nullable JComponent textfieldComponent){
+            this.checkbox = checkboxComponent;
+            this.textfield = textfieldComponent;
+        }
+    }
+
+    public GitflowOptionsForm(){
+        gitflowOptions = GitflowOptionsFactory.getOptions();
+
+        optionComponents = new HashMap<String,OptionComponent>();
+        featurePanel.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
+        hotfixPanel.setLayout(new BoxLayout(hotfixPanel, BoxLayout.Y_AXIS));
+        releasePanel.setLayout(new BoxLayout(releasePanel, BoxLayout.Y_AXIS));
+
+
+        HashMap<GitflowOptionsFactory.TYPE, JPanel> branchTypeToPanel = new HashMap<GitflowOptionsFactory.TYPE, JPanel>();
+
+        branchTypeToPanel.put(GitflowOptionsFactory.TYPE.FEATURE, featurePanel);
+        branchTypeToPanel.put(GitflowOptionsFactory.TYPE.RELEASE, releasePanel);
+        branchTypeToPanel.put(GitflowOptionsFactory.TYPE.HOTFIX, hotfixPanel);
+
+        for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
+            JPanel optionPanel = branchTypeToPanel.get(type);
+
+            for (Map<String, String> optionMap : gitflowOptions.get(type)) {
+                JPanel optionRow = new JPanel();
+                optionRow.setLayout(new BoxLayout(optionRow, BoxLayout.X_AXIS));
+                optionRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JCheckBox checkbox = new JCheckBox();
+                String checkboxText = optionMap.get("description");
+                if (optionMap.get("flag") != null){
+                    checkboxText += " (" + optionMap.get("flag") + ")";
+                }
+                checkbox.setText(checkboxText);
+                checkbox.setMargin(new Insets(0, 0, 0, 20));
+                checkbox.addItemListener(this);
+                optionRow.add(checkbox);
+
+                JTextField textField = null;
+
+                // some options have input text
+                if (optionMap.get("inputText") != null) {
+                    textField = new JTextField();
+                    textField.setText(optionMap.get("inputText"));
+                    textField.setToolTipText(optionMap.get("toolTip"));
+                    optionRow.add(textField);
+                }
+
+                optionPanel.add(optionRow);
+
+                // keep a reference for the components for future use
+                OptionComponent optionComponent = new OptionComponent(checkbox, textField);
+                optionComponents.put(GitflowOptionsFactory.getOptionId(type, optionMap.get("key")), optionComponent);
+            }
+        }
+    }
+
 
     public JPanel getContentPane() {
-        dontTagRelease.addItemListener(this);
-        dontTagHotfix.addItemListener(this);
-        useCustomTagCommitMessage.addItemListener(this);
-        useCustomHotfixCommitMessage.addItemListener(this);
         return contentPane;
     }
 
     /** Listens to the check boxes. */
     public void itemStateChanged(ItemEvent e) {
+        this.updateFormDisabledStatus();
+    }
 
-        Object source = e.getItemSelectable();
+    public void updateFormDisabledStatus(){
+        JCheckBox dontTagRelease = (JCheckBox) optionComponents.get("RELEASE_dontTag").checkbox;
+        JCheckBox customTagCommitMessageCheckbox = (JCheckBox) optionComponents.get("RELEASE_customTagCommitMessage").checkbox;
+        JTextField customTagCommitMessageTexfield = (JTextField) optionComponents.get("RELEASE_customTagCommitMessage").textfield;
+
+        JCheckBox dontTagHotfix = (JCheckBox) optionComponents.get("HOTFIX_dontTag").checkbox;
+        JCheckBox customHotfixCommitMessageCheckbox = (JCheckBox) optionComponents.get("HOTFIX_customHotfixCommitMessage").checkbox;
+        JTextField customHotfixCommitMessageTextfield = (JTextField) optionComponents.get("HOTFIX_customHotfixCommitMessage").textfield;
 
         //disable\enable the finish release tag commit message according to the checkbox state
-        if (source == useCustomTagCommitMessage) {
-            if (e.getStateChange() == ItemEvent.SELECTED && dontTagRelease.isSelected()==false) {
-                customTagCommitMessage.setEditable(true);
-                customTagCommitMessage.setEnabled(true);
-            }
-            else{
-                customTagCommitMessage.setEditable(false);
-            }
+
+        if (customTagCommitMessageCheckbox.isSelected() && dontTagRelease.isSelected()==false) {
+            customTagCommitMessageTexfield.setEditable(true);
+            customTagCommitMessageTexfield.setEnabled(true);
         }
-        else if (source == dontTagRelease) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                useCustomTagCommitMessage.setEnabled(false);
-                customTagCommitMessage.setEnabled(false);
-            }
-            else{
-                useCustomTagCommitMessage.setEnabled(true);
-                if( useCustomTagCommitMessage.isSelected()){
-                    customTagCommitMessage.setEnabled(true);
-                    customTagCommitMessage.setEditable(true);
-                }
+        else{
+            customTagCommitMessageTexfield.setEditable(false);
+        }
+
+
+        if (dontTagRelease.isSelected()) {
+            customTagCommitMessageCheckbox.setEnabled(false);
+            customTagCommitMessageTexfield.setEnabled(false);
+        }
+        else{
+            customTagCommitMessageCheckbox.setEnabled(true);
+            if( customTagCommitMessageCheckbox.isSelected()){
+                customTagCommitMessageTexfield.setEnabled(true);
+                customTagCommitMessageTexfield.setEditable(true);
             }
         }
 
         //disable\enable the finish hotfix tag commit message according to the checkbox state
-        if (source == useCustomHotfixCommitMessage) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                customHotfixCommitMessage.setEditable(true);
-                customHotfixCommitMessage.setEnabled(true);
-            }
-            else{
-                customHotfixCommitMessage.setEditable(false);
-            }
+        if (customHotfixCommitMessageCheckbox.isSelected()) {
+            customHotfixCommitMessageTextfield.setEditable(true);
+            customHotfixCommitMessageTextfield.setEnabled(true);
         }
-        else if (source == dontTagHotfix) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                useCustomHotfixCommitMessage.setEnabled(false);
-                customHotfixCommitMessage.setEnabled(false);
-            }
-            else{
-                useCustomHotfixCommitMessage.setEnabled(true);
-                if( useCustomHotfixCommitMessage.isSelected()){
-                    customHotfixCommitMessage.setEnabled(true);
-                    customHotfixCommitMessage.setEditable(true);
-                }
+        else{
+            customHotfixCommitMessageTextfield.setEditable(false);
+        }
+
+        if (dontTagHotfix.isSelected()) {
+            customHotfixCommitMessageCheckbox.setEnabled(false);
+            customHotfixCommitMessageTextfield.setEnabled(false);
+        }
+        else{
+            customHotfixCommitMessageCheckbox.setEnabled(true);
+            if( customHotfixCommitMessageCheckbox.isSelected()){
+                customHotfixCommitMessageTextfield.setEnabled(true);
+                customHotfixCommitMessageTextfield.setEditable(true);
             }
         }
     }
 
-    // feature getters/setters
-
-    public boolean isFeatureFetchOrigin() {
-        return featureFetchOrigin.isSelected();
+    public boolean isOptionActive(String optionId){
+        return ((JCheckBox) optionComponents.get(optionId).checkbox).isSelected();
     }
 
-    public void setFeatureFetchOrigin(boolean selected) {
-        featureFetchOrigin.setSelected(selected);
+    public String getOptionText(String optionId){
+        String text = null;
+        JTextField textField = (JTextField) optionComponents.get(optionId).textfield;
+        if (textField != null){
+            text = textField.getText();
+        }
+        
+        return text;
     }
 
-    public boolean isFeatureKeepRemote() {
-        return featureKeepRemote.isSelected();
+    public void setOptionActive(String optionId, boolean selected){
+        ((JCheckBox) optionComponents.get(optionId).checkbox).setSelected(selected);
     }
 
-    public void setFeatureKeepRemote(boolean selected) {
-        featureKeepRemote.setSelected(selected);
-    }
-
-    public boolean isFeatureKeepLocal() {
-        return featureKeepLocal.isSelected();
-    }
-
-    public void setFeatureKeepLocal(boolean selected) {
-        featureKeepLocal.setSelected(selected);
-    }
-
-    public boolean isFeatureNoFastForward() {
-        return featureNoFastForward.isSelected();
-    }
-
-    public void setFeatureNoFastForward(boolean selected) {
-        featureNoFastForward.setSelected(selected);
-    }
-
-    // release getters/setters
-
-    public boolean isReleaseFetchOrigin() {
-        return releaseFetchOrigin.isSelected();
-    }
-
-    public void setReleaseFetchOrigin(boolean selected) {
-        releaseFetchOrigin.setSelected(selected);
-    }
-
-    public boolean isPushOnFinishRelease() {
-        return pushOnFinishRelease.isSelected();
-    }
-
-    public void setPushOnFinishRelease(boolean selected) {
-        pushOnFinishRelease.setSelected(selected);
-    }
-
-    public boolean isDontTagRelease() {
-        return dontTagRelease.isSelected();
-    }
-
-    /* custom finish release tag commit message */
-
-    public boolean isUseCustomTagCommitMessage() {
-        return useCustomTagCommitMessage.isSelected();
-    }
-
-    public void setUseCustomTagCommitMessage(boolean selected) {
-        useCustomTagCommitMessage.setSelected(selected);
-    }
-
-    public String getCustomTagCommitMessage() {
-        return customTagCommitMessage.getText();
-    }
-
-    public void setCustomTagCommitMessage(String message) {
-        customTagCommitMessage.setText(message);
-    }
-
-    // hotfix getters/setters
-
-    public boolean isHotfixFetchOrigin() {
-        return hotfixFetchOrigin.isSelected();
-    }
-
-    public void setHotfixFetchOrigin(boolean selected) {
-        hotfixFetchOrigin.setSelected(selected);
-    }
-
-    public boolean isPushOnFinishHotfix() {
-        return pushOnFinishHotfix.isSelected();
-    }
-
-    public void setPushOnFinishHotfix(boolean selected) {
-        pushOnFinishHotfix.setSelected(selected);
-    }
-
-    public boolean isDontTagHotfix() {
-        return dontTagHotfix.isSelected();
-    }
-
-    public void setDontTagRelease(boolean selected) {
-        dontTagRelease.setSelected(selected);
-    }
-
-    public void setDontTagHotfix(boolean selected) {
-        dontTagHotfix.setSelected(selected);
-    }
-
-    /* custom finish hotfix commit message */
-
-    public boolean isUseCustomHotfixComitMessage() {
-        return useCustomHotfixCommitMessage.isSelected();
-    }
-
-    public void setUseCustomHotfixCommitMessage(boolean selected) {
-        useCustomHotfixCommitMessage.setSelected(selected);
-    }
-
-    public String getCustomHotfixCommitMessage() {
-        return customHotfixCommitMessage.getText();
-    }
-
-    public void setCustomHotfixCommitMessage(String message) {
-        customHotfixCommitMessage.setText(message);
+    public void setOptionText(String optionId, String text){
+        ((JTextField) optionComponents.get(optionId).textfield).setText(text);
     }
 
 }

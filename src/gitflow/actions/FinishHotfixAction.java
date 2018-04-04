@@ -36,10 +36,10 @@ public class FinishHotfixAction extends GitflowAction {
 
             final String tagMessage;
 
-            String defaultTagMessage= GitflowConfigurable.getCustomHotfixTagCommitMessage(myProject);
+            String defaultTagMessage = GitflowConfigurable.getInstance().getOptionTextString("HOTFIX_customHotfixCommitMessage");
             defaultTagMessage=defaultTagMessage.replace("%name%", hotfixName);
 
-            if (GitflowConfigurable.dontTagHotfix(myProject)) {
+            if (GitflowConfigurable.getInstance().isOptionActive("HOTFIX_dontTag")) {
                 tagMessage="";
             }
             else {

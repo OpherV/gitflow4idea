@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import git4idea.commands.GitCommand;
@@ -22,7 +23,6 @@ import git4idea.repo.GitRepository;
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
-
 
 public class GitflowImpl extends GitImpl implements Gitflow {
 
@@ -50,28 +50,12 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return command;
     }
 
-    //we must use reflection to add this command, since the git4idea implementation doesn't expose it
-    private static GitCommandResult run(@org.jetbrains.annotations.NotNull git4idea.commands.GitLineHandler handler) {
-        Method m = null;
-        try {
-            m = GitImpl.class.getDeclaredMethod("run", GitLineHandler.class);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+
+    private void addOptionsCommand(GitLineHandler h, String optionId){
+        HashMap<String,String> optionMap = GitflowOptionsFactory.getOptionById(optionId);
+        if (GitflowConfigurable.getInstance().isOptionActive(optionMap.get("id"))){
+            h.addParameters(optionMap.get("flag"));
         }
-
-        m.setAccessible(true);//Abracadabra
-
-        GitCommandResult result = null;
-
-        try {
-            result = (GitCommandResult) m.invoke(null, handler);//now its ok
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return result;
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
@@ -88,7 +72,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("init");
             h.addParameters("-d");
 
-            result = run(h);
+            result = runCommand(h);
         } else {
 
 
@@ -103,7 +87,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             for (GitLineHandlerListener listener : listeners) {
                 h.addLineListener(listener);
             }
-            result = run(h);
+            result = runCommand(h);
         }
 
 
@@ -122,9 +106,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("feature");
         h.addParameters("start");
-        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+
+        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
+
         h.addParameters(featureName);
 
         if (baseBranch != null) {
@@ -134,7 +118,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
@@ -148,28 +132,19 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("feature");
         h.addParameters("finish");
 
-        if (GitflowConfigurable.featureKeepRemote(repository.getProject())) {
-            h.addParameters("--keepremote");
-        }
 
-        if (GitflowConfigurable.featureKeepLocal(repository.getProject())) {
-            h.addParameters("--keeplocal");
-        }
-
-        if (GitflowConfigurable.featureFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-
-        if (GitflowConfigurable.featureNoFastForward(repository.getProject())) {
-            h.addParameters("--no-ff");
-        }
+        addOptionsCommand(h, "FEATURE_keepRemote");
+        addOptionsCommand(h, "FEATURE_keepLocal");
+        addOptionsCommand(h, "FEATURE_keepBranch");
+        addOptionsCommand(h, "FEATURE_fetchFromOrigin");
+//        addOptionsCommand(h, "FEATURE_squash");
 
         h.addParameters(featureName);
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -187,7 +162,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -208,7 +183,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult trackFeature(@NotNull GitRepository repository,
@@ -225,7 +200,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -240,16 +215,14 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("release");
         h.addParameters("start");
 
-        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
 
         h.addParameters(releaseName);
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishRelease(@NotNull GitRepository repository,
@@ -262,16 +235,19 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("release");
         h.addParameters("finish");
-        if (GitflowConfigurable.releaseFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-        if (GitflowConfigurable.pushOnReleaseFinish(repository.getProject())) {
-            h.addParameters("-p");
-        }
 
-        if (GitflowConfigurable.dontTagRelease(repository.getProject())) {
-            h.addParameters("-n");
-        } else {
+        addOptionsCommand(h, "RELEASE_fetchFromOrigin");
+        addOptionsCommand(h, "RELEASE_pushOnFinish");
+        addOptionsCommand(h, "RELEASE_keepRemote");
+        addOptionsCommand(h, "RELEASE_keepLocal");
+        addOptionsCommand(h, "RELEASE_keepBranch");
+//        addOptionsCommand(h, "RELEASE_squash");
+
+        HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("RELEASE_dontTag");
+        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+            h.addParameters(dontTag.get("flag"));
+        }
+        else{
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
@@ -281,7 +257,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -300,7 +276,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult trackRelease(@NotNull GitRepository repository,
@@ -317,7 +293,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
 
@@ -332,9 +308,9 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("start");
-        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
+
+        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
+
         h.addParameters(hotfixName);
 
         if (baseBranch != null) {
@@ -344,7 +320,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult finishHotfix(@NotNull GitRepository repository,
@@ -357,17 +333,15 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("hotfix");
         h.addParameters("finish");
-        if (GitflowConfigurable.hotfixFetchOrigin(repository.getProject())) {
-            h.addParameters("-F");
-        }
-        if (GitflowConfigurable.pushOnHotfixFinish(repository.getProject())) {
-            h.addParameters("-p");
-        }
 
+        addOptionsCommand(h, "HOTFIX_fetchFromOrigin");
+        addOptionsCommand(h, "HOTFIX_pushOnFinish");
 
-        if (GitflowConfigurable.dontTagHotfix(repository.getProject())) {
-            h.addParameters("-n");
-        } else {
+        HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("HOTFIX_dontTag");
+        if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){
+            h.addParameters(dontTag.get("flag"));
+        }
+        else{
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
@@ -377,7 +351,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     public GitCommandResult publishHotfix(@NotNull GitRepository repository,
@@ -395,7 +369,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return run(h);
+        return runCommand(h);
     }
 
     private void setUrl(GitLineHandler h, GitRepository repository) {
