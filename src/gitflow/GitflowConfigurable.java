@@ -121,12 +121,18 @@ public class GitflowConfigurable implements Configurable {
                 if (optionMap.get("inputText") != null){
                     String textInForm = gitflowOptionsForm.getOptionText(optionId);
                     String savedOptionText = propertiesComponent.getValue(optionId+"text");
-                    gitflowOptionsForm.setOptionText(optionId, savedOptionText);
+                    if (savedOptionText == null){
+                        gitflowOptionsForm.setOptionText(optionId, optionMap.get("inputText"));
+                    }
+                    else{
+                        gitflowOptionsForm.setOptionText(optionId, savedOptionText);
+                    }
 
                 }
 
             }
         }
+        gitflowOptionsForm.updateFormDisabledStatus();
     }
 
     @Override

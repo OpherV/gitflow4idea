@@ -136,7 +136,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         addOptionsCommand(h, "FEATURE_keepRemote");
         addOptionsCommand(h, "FEATURE_keepLocal");
         addOptionsCommand(h, "FEATURE_fetchFromOrigin");
-        addOptionsCommand(h, "FEATURE_squash");
+//        addOptionsCommand(h, "FEATURE_squash");
 
         h.addParameters(featureName);
 
@@ -237,7 +237,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         addOptionsCommand(h, "RELEASE_fetchFromOrigin");
         addOptionsCommand(h, "RELEASE_pushOnFinish");
-        addOptionsCommand(h, "RELEASE_squash");
+//        addOptionsCommand(h, "RELEASE_squash");
 
         HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("RELEASE_dontTag");
         if (GitflowConfigurable.getInstance().isOptionActive(dontTag.get("id"))){

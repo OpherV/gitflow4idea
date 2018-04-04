@@ -64,6 +64,8 @@ public class GitflowOptionsForm  implements ItemListener {
                     checkboxText += " (" + optionMap.get("flag") + ")";
                 }
                 checkbox.setText(checkboxText);
+                checkbox.setMargin(new Insets(0, 0, 0, 20));
+                checkbox.addItemListener(this);
                 optionRow.add(checkbox);
 
                 JTextField textField = null;
@@ -72,6 +74,7 @@ public class GitflowOptionsForm  implements ItemListener {
                 if (optionMap.get("inputText") != null) {
                     textField = new JTextField();
                     textField.setText(optionMap.get("inputText"));
+                    textField.setToolTipText(optionMap.get("toolTip"));
                     optionRow.add(textField);
                 }
 
@@ -86,66 +89,66 @@ public class GitflowOptionsForm  implements ItemListener {
 
 
     public JPanel getContentPane() {
-//        dontTagRelease.addItemListener(this);
-//        dontTagHotfix.addItemListener(this);
-//        useCustomTagCommitMessage.addItemListener(this);
-//        useCustomHotfixCommitMessage.addItemListener(this);
-
         return contentPane;
     }
 
     /** Listens to the check boxes. */
     public void itemStateChanged(ItemEvent e) {
+        this.updateFormDisabledStatus();
+    }
 
-        Object source = e.getItemSelectable();
+    public void updateFormDisabledStatus(){
+        JCheckBox dontTagRelease = (JCheckBox) optionComponents.get("RELEASE_dontTag").checkbox;
+        JCheckBox customTagCommitMessageCheckbox = (JCheckBox) optionComponents.get("RELEASE_customTagCommitMessage").checkbox;
+        JTextField customTagCommitMessageTexfield = (JTextField) optionComponents.get("RELEASE_customTagCommitMessage").textfield;
 
-//        //disable\enable the finish release tag commit message according to the checkbox state
-//        if (source == useCustomTagCommitMessage) {
-//            if (e.getStateChange() == ItemEvent.SELECTED && dontTagRelease.isSelected()==false) {
-//                customTagCommitMessage.setEditable(true);
-//                customTagCommitMessage.setEnabled(true);
-//            }
-//            else{
-//                customTagCommitMessage.setEditable(false);
-//            }
-//        }
-//        else if (source == dontTagRelease) {
-//            if (e.getStateChange() == ItemEvent.SELECTED) {
-//                useCustomTagCommitMessage.setEnabled(false);
-//                customTagCommitMessage.setEnabled(false);
-//            }
-//            else{
-//                useCustomTagCommitMessage.setEnabled(true);
-//                if( useCustomTagCommitMessage.isSelected()){
-//                    customTagCommitMessage.setEnabled(true);
-//                    customTagCommitMessage.setEditable(true);
-//                }
-//            }
-//        }
-//
-//        //disable\enable the finish hotfix tag commit message according to the checkbox state
-//        if (source == useCustomHotfixCommitMessage) {
-//            if (e.getStateChange() == ItemEvent.SELECTED) {
-//                customHotfixCommitMessage.setEditable(true);
-//                customHotfixCommitMessage.setEnabled(true);
-//            }
-//            else{
-//                customHotfixCommitMessage.setEditable(false);
-//            }
-//        }
-//        else if (source == dontTagHotfix) {
-//            if (e.getStateChange() == ItemEvent.SELECTED) {
-//                useCustomHotfixCommitMessage.setEnabled(false);
-//                customHotfixCommitMessage.setEnabled(false);
-//            }
-//            else{
-//                useCustomHotfixCommitMessage.setEnabled(true);
-//                if( useCustomHotfixCommitMessage.isSelected()){
-//                    customHotfixCommitMessage.setEnabled(true);
-//                    customHotfixCommitMessage.setEditable(true);
-//                }
-//            }
-//        }
+        JCheckBox dontTagHotfix = (JCheckBox) optionComponents.get("HOTFIX_dontTag").checkbox;
+        JCheckBox customHotfixCommitMessageCheckbox = (JCheckBox) optionComponents.get("HOTFIX_customHotfixCommitMessage").checkbox;
+        JTextField customHotfixCommitMessageTextfield = (JTextField) optionComponents.get("HOTFIX_customHotfixCommitMessage").textfield;
+
+        //disable\enable the finish release tag commit message according to the checkbox state
+
+        if (customTagCommitMessageCheckbox.isSelected() && dontTagRelease.isSelected()==false) {
+            customTagCommitMessageTexfield.setEditable(true);
+            customTagCommitMessageTexfield.setEnabled(true);
+        }
+        else{
+            customTagCommitMessageTexfield.setEditable(false);
+        }
+
+
+        if (dontTagRelease.isSelected()) {
+            customTagCommitMessageCheckbox.setEnabled(false);
+            customTagCommitMessageTexfield.setEnabled(false);
+        }
+        else{
+            customTagCommitMessageCheckbox.setEnabled(true);
+            if( customTagCommitMessageCheckbox.isSelected()){
+                customTagCommitMessageTexfield.setEnabled(true);
+                customTagCommitMessageTexfield.setEditable(true);
+            }
+        }
+
+        //disable\enable the finish hotfix tag commit message according to the checkbox state
+        if (customHotfixCommitMessageCheckbox.isSelected()) {
+            customHotfixCommitMessageTextfield.setEditable(true);
+            customHotfixCommitMessageTextfield.setEnabled(true);
+        }
+        else{
+            customHotfixCommitMessageTextfield.setEditable(false);
+        }
+
+        if (dontTagHotfix.isSelected()) {
+            customHotfixCommitMessageCheckbox.setEnabled(false);
+            customHotfixCommitMessageTextfield.setEnabled(false);
+        }
+        else{
+            customHotfixCommitMessageCheckbox.setEnabled(true);
+            if( customHotfixCommitMessageCheckbox.isSelected()){
+                customHotfixCommitMessageTextfield.setEnabled(true);
+                customHotfixCommitMessageTextfield.setEditable(true);
+            }
+        }
     }
 
     public boolean isOptionActive(String optionId){

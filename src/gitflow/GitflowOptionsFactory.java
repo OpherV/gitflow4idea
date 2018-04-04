@@ -25,13 +25,13 @@ public class GitflowOptionsFactory {
         addOption(TYPE.FEATURE, "Keep Remote", "keepRemote", "--keepremote");
         addOption(TYPE.FEATURE, "Keep Local", "keepLocal", "--keeplocal");
         addOption(TYPE.FEATURE, "Do not fast-forward when merging, always create commit", "noFastForward" , "--no-ff");
-        addOption(TYPE.FEATURE, "Squash feature during merge", "squash" , "-S");
+//        addOption(TYPE.FEATURE, "Squash feature during merge", "squash" , "-S");
 
         addBranchType(TYPE.RELEASE);
         addOption(TYPE.RELEASE, "Fetch from Origin", "fetchFromOrigin" , "-F");
         addOption(TYPE.RELEASE, "Push on finish release", "pushOnFinish" , "-p");
+//        addOption(TYPE.RELEASE, "Squash release during merge", "squash" , "-S");
         addOption(TYPE.RELEASE, "Don't tag release", "dontTag" , "-n");
-        addOption(TYPE.RELEASE, "Squash release during merge", "squash" , "-S");
         addOption(TYPE.RELEASE, "Use custom tag commit message", "customTagCommitMessage" , null, "Tagging version %name%" ,"Use %name% for the branch name");
 
         addBranchType(TYPE.HOTFIX);
@@ -58,6 +58,9 @@ public class GitflowOptionsFactory {
         }
         if (inputText != null){
             optionMap.put("inputText", inputText);
+        }
+        if (toolTip != null){
+            optionMap.put("toolTip", toolTip);
         }
 
         String optionId = getOptionId(branchType, key);
