@@ -27,8 +27,8 @@ public class FinishReleaseAction extends GitflowAction {
 
 	FinishReleaseAction(String name, String tagMessage) {
 		super("Finish Release");
-		customReleaseName=name;
-		customtagMessage=tagMessage;
+		customReleaseName = name;
+		customtagMessage = tagMessage;
 	}
 
     @Override
@@ -48,12 +48,21 @@ public class FinishReleaseAction extends GitflowAction {
 
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
-            String defaultTagMessage = GitflowConfigurable.getOptionTextString(myProject, "RELEASE_customTagCommitMessage");
-            defaultTagMessage = defaultTagMessage.replace("%name%", releaseName);
+	        String tagMessageTemplate;
 
-            String tagMessageDraft;
+	        String defaultTagMessage = "Tagging version %name%";
+            String customTagMessage = GitflowConfigurable.getOptionTextString(myProject, "RELEASE_customTagCommitMessage");
+            if (customTagMessage != null) {
+	            tagMessageTemplate = customTagMessage.replace("%name%", releaseName);
+            }
+            else{
+	            tagMessageTemplate = defaultTagMessage.replace("%name%", releaseName);
+            }
 
-            boolean cancelAction=false;
+	        String tagMessageDraft;
+
+
+	        boolean cancelAction=false;
 
             if (GitflowConfigurable.isOptionActive(myProject, "RELEASE_dontTag")) {
                 tagMessage="";
@@ -63,13 +72,12 @@ public class FinishReleaseAction extends GitflowAction {
 	            tagMessage=customtagMessage;
             }
             else{
-                tagMessageDraft= Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), defaultTagMessage, null);
+                tagMessageDraft = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Release", Messages.getQuestionIcon(), tagMessageTemplate, null);
                 if (tagMessageDraft==null){
                     cancelAction=true;
                     tagMessage="";
                 }
                 else{
-
                     tagMessage=tagMessageDraft;
                 }
             }
@@ -104,7 +112,7 @@ public class FinishReleaseAction extends GitflowAction {
 	                    //merge conflicts if necessary
 	                    if (errorLineHandler.hasMergeError){
 		                    if (handleMerge()) {
-			                    FinishReleaseAction completeFinisReleaseAction = new FinishReleaseAction(releaseName,tagMessage);
+			                    FinishReleaseAction completeFinisReleaseAction = new FinishReleaseAction(releaseName, tagMessage);
 			                    completeFinisReleaseAction.actionPerformed(event);
 		                    }
 	                    }
