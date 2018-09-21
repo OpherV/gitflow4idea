@@ -2,6 +2,7 @@ package gitflow.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,6 +28,16 @@ public class GitflowBranchChooseDialog extends DialogWrapper {
         branchList.setListData(branchNames.toArray());
 
         init();
+    }
+
+    @Nullable
+    @Override
+    protected ValidationInfo doValidate() {
+        if (branchList.getSelectedValue() == null){
+           return new ValidationInfo("No branch selected!");
+        } else {
+            return null;
+        }
     }
 
     @Nullable
