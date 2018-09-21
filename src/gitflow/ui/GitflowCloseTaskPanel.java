@@ -61,7 +61,18 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
 
         }
         else{
-            tagMessage = GitflowConfigurable.getOptionTextString(project, "HOTFIX_customHotfixCommitMessage").replace("%name%", branchName);
+            String tagMessageTemplate;
+
+            String defaultTagMessage = "Tagging hotfix %name%";
+            String customTagMessage = GitflowConfigurable.getOptionTextString(myProject, "HOTFIX_customHotfixCommitMessage");
+
+            if (customTagMessage != null) {
+                tagMessageTemplate = customTagMessage.replace("%name%", branchName);
+            }
+            else{
+                tagMessageTemplate = defaultTagMessage.replace("%name%", branchName);
+            }
+            tagMessage = tagMessageTemplate;
             tagMessageTextField.setToolTipText(null);
         }
 
