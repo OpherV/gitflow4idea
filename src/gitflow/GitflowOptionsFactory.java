@@ -36,13 +36,13 @@ public class GitflowOptionsFactory {
         addOption(TYPE.RELEASE, "Keep branch after performing finish", "keepBranch" , "-k");
 //        addOption(TYPE.RELEASE, "Squash release during merge", "squash" , "-S");
         addOption(TYPE.RELEASE, "Don't tag release", "dontTag" , "-n");
-        addOption(TYPE.RELEASE, "Use custom tag commit message", "customTagCommitMessage" , null, "Tagging version %name%" ,"Use %name% for the branch name");
+        addOption(TYPE.RELEASE, "Use custom tag commit message", "customTagCommitMessage" , null, DefaultOptions.getOption("RELEASE_customTagCommitMessage") ,"Use %name% for the branch name");
 
         addBranchType(TYPE.HOTFIX);
         addOption(TYPE.HOTFIX, "Fetch from Origin", "fetchFromOrigin" , "-F");
         addOption(TYPE.HOTFIX, "Push on finish Hotfix", "pushOnFinish" , "-p");
         addOption(TYPE.HOTFIX, "Don't tag Hotfix", "dontTag" , "-n");
-        addOption(TYPE.HOTFIX, "Use custom hotfix commit message", "customHotfixCommitMessage" , null, "Tagging hotfix %name%" ,"Use %name% for the branch name");
+        addOption(TYPE.HOTFIX, "Use custom hotfix commit message", "customHotfixCommitMessage" , null, DefaultOptions.getOption("HOTFIX_customHotfixCommitMessage") ,"Use %name% for the branch name");
     }
 
     private void addBranchType(Enum<TYPE> branchType){

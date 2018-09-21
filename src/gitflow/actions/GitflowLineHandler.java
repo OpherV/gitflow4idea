@@ -3,7 +3,6 @@ package gitflow.actions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import git4idea.commands.GitLineHandlerListener;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 
@@ -24,8 +23,4 @@ public abstract class GitflowLineHandler implements GitLineHandlerListener {
 
     @Override
     public void startFailed(Throwable exception) {}
-
-    public String getErrors(){
-        return StringUtils.join(myErrors, ",");
-    }
 }

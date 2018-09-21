@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,12 +22,14 @@ public class GitflowConfigurable implements Configurable {
     GitflowOptionsForm gitflowOptionsForm;
     PropertiesComponent propertiesComponent;
     Map<Enum<GitflowOptionsFactory.TYPE>, ArrayList<Map<String,String>>> gitflowOptions;
+    Map<String, String> optionDefaults;
 
     static GitflowConfigurable instance;
 
     public GitflowConfigurable(Project project) {
         gitflowOptions = GitflowOptionsFactory.getOptions();
         propertiesComponent = PropertiesComponent.getInstance(project);
+        optionDefaults = new HashMap<String, String>();
         this.project = project;
         instance = this;
     }
@@ -58,7 +61,11 @@ public class GitflowConfigurable implements Configurable {
     }
 
     public static String getOptionTextString (Project project, String optionId){
-        return PropertiesComponent.getInstance(project).getValue(optionId+"_text");
+        String retValue = PropertiesComponent.getInstance(project).getValue(optionId+"_text");
+        if (retValue == null){
+            retValue = DefaultOptions.getOption(optionId);
+        }
+        return retValue;
     }
 
     @Override

@@ -29,26 +29,16 @@ public class FinishHotfixAction extends GitflowAction {
         String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
 
 
-        if (currentBranchName.isEmpty()==false){
+        if (currentBranchName.isEmpty() == false){
 
             //TODO HOTFIX NAME
             final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, myRepo, currentBranchName);
 
             final String tagMessage;
-            String tagMessageTemplate;
-
-            String defaultTagMessage = "Tagging hotfix %name%";
-            String customTagMessage = GitflowConfigurable.getOptionTextString(myProject, "HOTFIX_customHotfixCommitMessage");
-            
-            if (customTagMessage != null) {
-                tagMessageTemplate = customTagMessage.replace("%name%", hotfixName);
-            }
-            else{
-                tagMessageTemplate = defaultTagMessage.replace("%name%", hotfixName);
-            }
+            String tagMessageTemplate = GitflowConfigurable.getOptionTextString(myProject, "HOTFIX_customHotfixCommitMessage").replace("%name%", hotfixName);
 
             if (GitflowConfigurable.isOptionActive(myProject, "HOTFIX_dontTag")) {
-                tagMessage="";
+                tagMessage = "";
             }
             else {
                 tagMessage = Messages.showInputDialog(myProject, "Enter the tag message:", "Finish Hotfix", Messages.getQuestionIcon(), tagMessageTemplate, null);
