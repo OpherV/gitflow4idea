@@ -51,9 +51,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         String branchName = myVcsTaskHandler != null
                 ? myVcsTaskHandler.cleanUpBranchName(myTaskManager.constructDefaultBranchName(task))
                 : myTaskManager.suggestBranchName(task);
-
-        //TODO same code exists in FinishHotfixAction, make DRYer
-
+        
         if (GitflowConfigurable.isOptionActive(project, "HOTFIX_dontTag")) {
             tagMessage="";
             tagMessageTextField.setEnabled(false);

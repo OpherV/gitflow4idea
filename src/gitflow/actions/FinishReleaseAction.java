@@ -47,20 +47,9 @@ public class FinishReleaseAction extends GitflowAction {
 	        releaseName = customReleaseName!=null ? customReleaseName:GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, currentBranchName);
 
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
-
-	        String tagMessageTemplate;
-
-	        String defaultTagMessage = "Tagging version %name%";
-            String customTagMessage = GitflowConfigurable.getOptionTextString(myProject, "RELEASE_customTagCommitMessage");
-            if (customTagMessage != null) {
-	            tagMessageTemplate = customTagMessage.replace("%name%", releaseName);
-            }
-            else{
-	            tagMessageTemplate = defaultTagMessage.replace("%name%", releaseName);
-            }
-
+            
+            String tagMessageTemplate = GitflowConfigurable.getOptionTextString(myProject, "RELEASE_customTagCommitMessage").replace("%name%", releaseName);
 	        String tagMessageDraft;
-
 
 	        boolean cancelAction=false;
 
