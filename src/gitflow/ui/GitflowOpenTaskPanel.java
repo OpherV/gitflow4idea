@@ -15,6 +15,7 @@ import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowState;
 import gitflow.actions.GitflowAction;
+import gitflow.actions.StartBugfixAction;
 import gitflow.actions.StartFeatureAction;
 import gitflow.actions.StartHotfixAction;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
 
-import static com.intellij.openapi.vcs.VcsTaskHandler.*;
+import static com.intellij.openapi.vcs.VcsTaskHandler.TaskInfo;
 
 public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListener {
     private JRadioButton noActionRadioButton;
@@ -35,6 +36,9 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
     private JTextField hotfixName;
     private JPanel myPanel;
     private JComboBox hotfixBaseBranch;
+    private JRadioButton startBugfixRadioButton;
+    private JTextField bugfixName;
+    private JComboBox bugfixBaseBranch;
 
     private Project myProject;
     private GitRepository myRepo;
@@ -70,6 +74,9 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         String defaultHotfixBranch = GitflowConfigUtil.getMasterBranch(project, myRepo);
         hotfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultHotfixBranch));
 
+        String defaultBugfixBranch = GitflowConfigUtil.getDevelopBranch(project, myRepo);
+        bugfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultBugfixBranch));
+
         myRepo = GitBranchUtil.getCurrentRepository(project);
 
         String branchName = myVcsTaskHandler != null
@@ -84,6 +91,10 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         hotfixName.setEditable(false);
         hotfixName.setEnabled(false);
 
+        bugfixName.setText(branchName);
+        bugfixName.setEditable(false);
+        bugfixName.setEnabled(false);
+
         featureBaseBranch.setEnabled(false);
         hotfixBaseBranch.setEnabled(false);
 
@@ -91,6 +102,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         noActionRadioButton.addItemListener(this);
         startFeatureRadioButton.addItemListener(this);
         startHotfixRadioButton.addItemListener(this);
+        startBugfixRadioButton.addItemListener(this);
 
     }
 
@@ -105,6 +117,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
         final GitflowBranchUtil.ComboEntry selectedFeatureBaseBranch = (GitflowBranchUtil.ComboEntry) featureBaseBranch.getModel().getSelectedItem();
         final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) hotfixBaseBranch.getModel().getSelectedItem();
+        final GitflowBranchUtil.ComboEntry selectedBugfixBaseBranch = (GitflowBranchUtil.ComboEntry) bugfixBaseBranch.getModel().getSelectedItem();
 
         if (startFeatureRadioButton.isSelected()) {
             final String branchName = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText();
@@ -113,13 +126,16 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         else if (startHotfixRadioButton.isSelected()) {
             final String branchName = GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText();
             attachTaskAndRunAction(new StartHotfixAction(myRepo), selectedHotfixBaseBranch.getBranchName(), branchName);
+        } else if (startBugfixRadioButton.isSelected()) {
+            final String branchName = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo) + bugfixName.getText();
+            attachTaskAndRunAction(new StartBugfixAction(myRepo), selectedBugfixBaseBranch.getBranchName(), branchName);
         }
     }
 
     /**
      * @param action instance of GitflowAction
      * @param baseBranchName Branch name of the branch the new one is based on
-     * @param fullBranchName Branch name with feature/hotfix prefix for saving to task
+     * @param fullBranchName Branch name with feature/hotfix/bugfix prefix for saving to task
      */
     private void attachTaskAndRunAction(GitflowAction action, String baseBranchName, final String fullBranchName) {
         final String branchName = gitflowBranchUtil.stripFullBranchName(fullBranchName);
@@ -153,6 +169,10 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
             hotfixName.setEditable(false);
             hotfixName.setEnabled(false);
             hotfixBaseBranch.setEnabled(false);
+
+            bugfixName.setEditable(false);
+            bugfixName.setEnabled(false);
+            bugfixBaseBranch.setEnabled(false);
         }
         else if (e.getStateChange() == ItemEvent.SELECTED && source == startFeatureRadioButton) {
             featureName.setEditable(true);
@@ -162,6 +182,10 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
             hotfixName.setEditable(false);
             hotfixName.setEnabled(false);
             hotfixBaseBranch.setEnabled(false);
+
+            bugfixName.setEditable(false);
+            bugfixName.setEnabled(false);
+            bugfixBaseBranch.setEnabled(false);
         }
         else if (e.getStateChange() == ItemEvent.SELECTED && source == startHotfixRadioButton) {
             featureName.setEditable(false);
@@ -171,6 +195,22 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
             hotfixName.setEditable(true);
             hotfixName.setEnabled(true);
             hotfixBaseBranch.setEnabled(true);
+
+            bugfixName.setEditable(false);
+            bugfixName.setEnabled(false);
+            bugfixBaseBranch.setEnabled(false);
+        } else if (e.getStateChange() == ItemEvent.SELECTED && source == startBugfixRadioButton) {
+            featureName.setEditable(false);
+            featureName.setEnabled(false);
+            featureBaseBranch.setEnabled(false);
+
+            hotfixName.setEditable(false);
+            hotfixName.setEnabled(false);
+            hotfixBaseBranch.setEnabled(false);
+
+            bugfixName.setEditable(true);
+            bugfixName.setEnabled(true);
+            bugfixBaseBranch.setEnabled(true);
         }
 
     }
