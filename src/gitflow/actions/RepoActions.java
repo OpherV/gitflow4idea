@@ -2,18 +2,18 @@ package gitflow.actions;
 
 import com.intellij.dvcs.ui.BranchActionGroup;
 import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
-import git4idea.repo.GitRepositoryChangeListener;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
-import gitflow.actions.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,9 +42,11 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
 
         boolean noRemoteTrackBranches = false;
         boolean noRemoteFeatureBranches = false;
+        boolean noRemoteBugfixBranches = false;
 
         boolean trackedAllFeatureBranches = false;
         boolean trackedAllReleaseBranches = false;
+        boolean trackedAllBugfixBranches = false;
 
         String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
 
@@ -53,6 +55,7 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         String hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject, myRepo);
         String masterBranch= GitflowConfigUtil.getMasterBranch(myProject, myRepo);
         String developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
+        String bugfixPrefix = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo);
 
         if (releasePrefix!=null){
             noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
@@ -61,6 +64,10 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         if (featurePrefix!=null){
             noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
             trackedAllFeatureBranches = branchUtil.areAllBranchesTracked(featurePrefix);
+        }
+        if (bugfixPrefix!=null){
+            noRemoteBugfixBranches = branchUtil.getRemoteBranchesWithPrefix(bugfixPrefix).isEmpty();
+            trackedAllBugfixBranches = branchUtil.areAllBranchesTracked(bugfixPrefix);
         }
 
         //gitflow not setup
@@ -108,6 +115,28 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
                 actionList.add(new TrackReleaseAction(myRepo));
             }
 
+
+            //BUGFIX ACTIONS
+
+            actionList.add(new Separator("Bugfix"));
+            actionList.add(new StartBugfixAction(myRepo));
+            //bugfix only actions
+            if (branchUtil.isCurrentBranchFeature()){
+                // TODO: Replace with bugfix
+                actionList.add(new FinishFeatureAction(myRepo));
+
+                //can't publish bugfix if it's already published
+                if (branchUtil.isCurrentBranchPublished()==false){
+                    // TODO: Replace with bugfix
+                    actionList.add(new PublishFeatureAction(myRepo));
+                }
+            }
+
+            //make sure there's a bugfix to track, and that not all bugfixes are tracked
+            if (noRemoteBugfixBranches == false && trackedAllBugfixBranches == false){
+                // TODO: Replace with bugfix
+                actionList.add(new TrackFeatureAction(myRepo));
+            }
 
             //HOTFIX ACTIONS
             actionList.add(new Separator("Hotfix"));
