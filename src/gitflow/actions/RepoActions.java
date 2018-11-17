@@ -121,21 +121,18 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
             actionList.add(new Separator("Bugfix"));
             actionList.add(new StartBugfixAction(myRepo));
             //bugfix only actions
-            if (branchUtil.isCurrentBranchFeature()){
-                // TODO: Replace with bugfix
-                actionList.add(new FinishFeatureAction(myRepo));
+            if (branchUtil.isCurrentBranchBugfix()){
+                actionList.add(new FinishBugfixAction(myRepo));
 
                 //can't publish bugfix if it's already published
                 if (branchUtil.isCurrentBranchPublished()==false){
-                    // TODO: Replace with bugfix
-                    actionList.add(new PublishFeatureAction(myRepo));
+                    actionList.add(new PublishBugfixAction(myRepo));
                 }
             }
 
             //make sure there's a bugfix to track, and that not all bugfixes are tracked
             if (noRemoteBugfixBranches == false && trackedAllBugfixBranches == false){
-                // TODO: Replace with bugfix
-                actionList.add(new TrackFeatureAction(myRepo));
+                actionList.add(new TrackBugfixAction(myRepo));
             }
 
             //HOTFIX ACTIONS

@@ -12,6 +12,7 @@ import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigurable;
 import gitflow.GitflowState;
+import gitflow.actions.FinishBugfixAction;
 import gitflow.actions.FinishFeatureAction;
 import gitflow.actions.FinishHotfixAction;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +78,6 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     public JComponent getPanel() {
         String taskBranchName = gitflowState.getTaskBranch(myTask);
         if (taskBranchName != null) {
-
             myPanel.setVisible(true);
             if (gitflowBranchUtil.isBranchFeature(taskBranchName)) {
                 finishFeaturePanel.setVisible(true);
@@ -115,7 +115,8 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
                 FinishHotfixAction action = new FinishHotfixAction(myRepo);
                 action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
              } else if (finishBugfixCheckBox.isSelected()) {
-                // TODO: Finish bugfix action
+                FinishBugfixAction action = new FinishBugfixAction(myRepo);
+                action.runAction(myProject, taskBranchName);
             }
         }
     }
