@@ -33,6 +33,9 @@
         <action id="Gitflow.PublishHotfix" class="gitflow.actions.PublishHotfixAction" text="Gitflow: Publish Hotfix"/>
 
         <action id="Gitflow.StartBugfix" class="gitflow.actions.StartBugfixAction" text="Gitflow: Start Bugfix..."/>
+        <action id="Gitflow.FinishBugfix" class="gitflow.actions.FinishBugfixAction" text="Gitflow: Finish Bugfix..."/>
+        <action id="Gitflow.PublishBugfix" class="gitflow.actions.PublishBugfixAction" text="Gitflow: Publish Bugfix"/>
+        <action id="Gitflow.TrackBugfix" class="gitflow.actions.TrackBugfixAction" text="Gitflow: Track Bugfix..."/>
 
     </actions>
 
