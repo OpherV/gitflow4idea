@@ -43,7 +43,7 @@ public class GitflowOptionsForm  implements ItemListener {
         featurePanel.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
         hotfixPanel.setLayout(new BoxLayout(hotfixPanel, BoxLayout.Y_AXIS));
         releasePanel.setLayout(new BoxLayout(releasePanel, BoxLayout.Y_AXIS));
-        bugfixPanel.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
+        bugfixPanel.setLayout(new BoxLayout(bugfixPanel, BoxLayout.Y_AXIS));
 
         HashMap<GitflowOptionsFactory.TYPE, JPanel> branchTypeToPanel = new HashMap<GitflowOptionsFactory.TYPE, JPanel>();
 
@@ -117,7 +117,6 @@ public class GitflowOptionsForm  implements ItemListener {
         else{
             customTagCommitMessageTexfield.setEditable(false);
         }
-
 
         if (dontTagRelease.isSelected()) {
             customTagCommitMessageCheckbox.setEnabled(false);
