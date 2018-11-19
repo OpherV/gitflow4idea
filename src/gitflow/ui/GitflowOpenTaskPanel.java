@@ -97,6 +97,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
 
         featureBaseBranch.setEnabled(false);
         hotfixBaseBranch.setEnabled(false);
+        bugfixBaseBranch.setEnabled(false);
 
         //add listeners
         noActionRadioButton.addItemListener(this);
