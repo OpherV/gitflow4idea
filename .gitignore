@@ -52,6 +52,7 @@ hs_err_pid*
 .idea/**/shelf
 .idea/**/hotswap_agent.xml
 .idea/**/misc.xml
+.idea/**/checkstyle-idea.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
@@ -98,4 +99,3 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
-.idea/**/checkstyle-idea.xml
