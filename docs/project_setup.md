@@ -96,9 +96,9 @@ This project is written to target Java 6, so make sure to set the project langua
     - *Create directories for empty content roots automatically*
     - *Use default gradle wrapper (recommended)*
  
-![Import project dialog](./docs/img/import_project.png?raw=true "Import Project Dialog")  
-![Import options dialog](./docs/img/import_options.png?raw=true "Import Options Dialog")  
-![Run configuration dialog](./docs/img/run_configuration.png?raw=true "Run Configuration")
+![Import project dialog](./img/import_project.png?raw=true "Import Project Dialog")  
+![Import options dialog](./img/import_options.png?raw=true "Import Options Dialog")  
+![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")
 
     
 ## Run Configuration
