@@ -12,7 +12,7 @@ public class GitflowOptionsFactory {
     private HashMap<String, HashMap<String,String>> optionsMap;
 
     public enum TYPE {
-        FEATURE, RELEASE, HOTFIX
+        FEATURE, RELEASE, HOTFIX, BUGFIX
     }
 
     //private constructor to avoid client applications to use constructor
@@ -43,6 +43,14 @@ public class GitflowOptionsFactory {
         addOption(TYPE.HOTFIX, "Push on finish Hotfix", "pushOnFinish" , "-p");
         addOption(TYPE.HOTFIX, "Don't tag Hotfix", "dontTag" , "-n");
         addOption(TYPE.HOTFIX, "Use custom hotfix commit message", "customHotfixCommitMessage" , null, DefaultOptions.getOption("HOTFIX_customHotfixCommitMessage") ,"Use %name% for the branch name");
+
+        addBranchType(TYPE.BUGFIX);
+        addOption(TYPE.BUGFIX, "Fetch from Origin", "fetchFromOrigin" , "-F");
+        addOption(TYPE.BUGFIX, "Keep Local", "keepLocal", "--keeplocal");
+        addOption(TYPE.BUGFIX, "Keep Remote", "keepRemote", "--keepremote");
+        addOption(TYPE.BUGFIX, "Keep branch after performing finish", "keepBranch" , "-k");
+        addOption(TYPE.BUGFIX, "Do not fast-forward when merging, always create commit", "noFastForward" , "--no-ff");
+//        addOption(TYPE.BUGFIX, "Squash feature during merge", "squash" , "-S");
     }
 
     private void addBranchType(Enum<TYPE> branchType){

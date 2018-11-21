@@ -6,7 +6,6 @@ import git4idea.GitRemoteBranch;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
-import gitflow.ui.AbstractBranchStartDialog;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class GitflowBranchUtil {
     String prefixFeature;
     String prefixRelease;
     String prefixHotfix;
+    String prefixBugfix;
 
     public GitflowBranchUtil(Project project, GitRepository repo){
         myProject=project;
@@ -41,6 +41,7 @@ public class GitflowBranchUtil {
             prefixFeature = GitflowConfigUtil.getFeaturePrefix(project, repo);
             prefixRelease = GitflowConfigUtil.getReleasePrefix(project, repo);
             prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project, repo);
+            prefixBugfix = GitflowConfigUtil.getBugfixPrefix(project, repo);
         }
     }
 
@@ -52,7 +53,8 @@ public class GitflowBranchUtil {
                        && GitflowConfigUtil.getDevelopBranch(myProject, myRepo)!=null
                        && GitflowConfigUtil.getFeaturePrefix(myProject, myRepo)!=null
                        && GitflowConfigUtil.getReleasePrefix(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getHotfixPrefix(myProject, myRepo)!=null;
+                       && GitflowConfigUtil.getHotfixPrefix(myProject, myRepo)!=null
+                       && GitflowConfigUtil.getBugfixPrefix(myProject, myRepo)!=null;
 
         return hasGitflow;
     }
@@ -74,6 +76,10 @@ public class GitflowBranchUtil {
         return isBranchHotfix(currentBranchName);
     }
 
+    public boolean isCurrentBranchBugfix(){
+        return isBranchBugfix(currentBranchName);
+    }
+
     //checks whether the current branch also exists on the remote
     public boolean isCurrentBranchPublished(){
         return getRemoteBranchesWithPrefix(currentBranchName).isEmpty()==false;
@@ -85,6 +91,10 @@ public class GitflowBranchUtil {
 
     public boolean isBranchHotfix(String branchName){
         return branchName.startsWith(prefixHotfix);
+    }
+
+    public boolean isBranchBugfix(String branchName){
+        return branchName.startsWith(prefixBugfix);
     }
 
     //if no prefix specified, returns all remote branches
@@ -220,8 +230,9 @@ public class GitflowBranchUtil {
         }
         else if (fullBranchName.startsWith(prefixHotfix)){
             return fullBranchName.substring(prefixHotfix.length(), fullBranchName.length());
-        }
-        else{
+        } else if (fullBranchName.startsWith(prefixBugfix)){
+            return fullBranchName.substring(prefixBugfix.length(), fullBranchName.length());
+        } else{
             return null;
         }
     };

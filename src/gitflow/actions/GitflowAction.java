@@ -15,8 +15,8 @@ import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 
 public class GitflowAction extends DumbAwareAction {
@@ -34,6 +34,7 @@ public class GitflowAction extends DumbAwareAction {
     String featurePrefix;
     String releasePrefix;
     String hotfixPrefix;
+    String bugfixPrefix;
     String masterBranch;
     String developBranch;
 
@@ -63,6 +64,7 @@ public class GitflowAction extends DumbAwareAction {
         featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
         releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
         hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject, myRepo);
+        bugfixPrefix = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo);
         masterBranch= GitflowConfigUtil.getMasterBranch(myProject, myRepo);
         developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
 
