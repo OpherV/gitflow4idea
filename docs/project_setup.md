@@ -98,8 +98,6 @@ This project is written to target Java 6, so make sure to set the project langua
  
 ![Import project dialog](./img/import_project.png?raw=true "Import Project Dialog")  
 ![Import options dialog](./img/import_options.png?raw=true "Import Options Dialog")  
-![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")
-
     
 ## Run Configuration
 Add a new run configuration of type *Gradle* with the following settings:
@@ -107,3 +105,5 @@ Add a new run configuration of type *Gradle* with the following settings:
 - In *Tasks* enter `runIde`.
 
 This should give you a basic run configuration which will start a new IntelliJ instance with the plugin deployed.
+
+![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")
