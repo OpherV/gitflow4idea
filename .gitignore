@@ -99,3 +99,6 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# GitEye project file
+/.project
