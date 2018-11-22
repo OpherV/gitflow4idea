@@ -1,13 +1,36 @@
 # Setup Guide
 This document shall assist you in setting up the development project in IntelliJ IDEA. There are two ways of setting up the project:
-1. "Classic"
-2. Gradle
+1. Gradle Setup
+2. "Classic" Setup
 
-# Classic Setup
+## Gradle Setup
 
-## Project setup help
+### Prerequisites
+- The environment variable `JAVA_HOME` is set to a valid Java environment.
+- The *Gradle* plugin is enable in IntelliJ IDEA.
 
-This is a quick overview how to setup the project for development.
+### Setup Steps
+1. Fork the original repository and checkout the fork.
+2. Import the project into IntelliJ IDEA.
+3. Choose *"Import from external model" > Gradle*.
+4. Set the following options in the import dialog:
+    - *Use Auto Import*
+    - *Create directories for empty content roots automatically*
+    - *Use default gradle wrapper (recommended)*
+ 
+![Import project dialog](./img/import_project.png?raw=true "Import Project Dialog")  
+![Import options dialog](./img/import_options.png?raw=true "Import Options Dialog")  
+    
+### Run Configuration
+Add a new run configuration of type *Gradle* with the following settings:
+- Set the current project as *Gradle project*
+- In *Tasks* enter `runIde`.
+
+This should give you a basic run configuration which will start a new IntelliJ instance with the plugin deployed.
+
+![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")
+
+## "Classic" Setup
 
 ### 1. Make sure the plugin development plugin is enabled  
 
@@ -80,30 +103,3 @@ And that's it. You can now make changes to the source and run them.
 
 This project is written to target Java 6, so make sure to set the project language level appropriately
  to avoid accidentally using newer features. You can do so in the module settings under "modules -> gitflow4idea -> sources -> Language level".
-
-# Gradle
-
-## Prerequisites
-- The environment variable `JAVA_HOME` is set to a valid Java environment.
-- The *Gradle* plugin is enable in IntelliJ IDEA.
-
-## Setup Steps
-1. Fork the original repository and checkout the fork.
-2. Import the project into IntelliJ IDEA.
-3. Choose *"Import from external model" > Gradle*.
-4. Set the following options in the import dialog:
-    - *Use Auto Import*
-    - *Create directories for empty content roots automatically*
-    - *Use default gradle wrapper (recommended)*
- 
-![Import project dialog](./img/import_project.png?raw=true "Import Project Dialog")  
-![Import options dialog](./img/import_options.png?raw=true "Import Options Dialog")  
-    
-## Run Configuration
-Add a new run configuration of type *Gradle* with the following settings:
-- Set the current project as *Gradle project*
-- In *Tasks* enter `runIde`.
-
-This should give you a basic run configuration which will start a new IntelliJ instance with the plugin deployed.
-
-![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")

@@ -70,7 +70,7 @@ public class GitflowConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        // iterate over branch types (feature/release/hotfix)
+        // iterate over branch types (feature/release/hotfix/bugfix)
         for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
             for (Map<String, String> optionMap : gitflowOptions.get(type)) {
                 String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
@@ -97,7 +97,7 @@ public class GitflowConfigurable implements Configurable {
 
     @Override
     public void apply() throws ConfigurationException {
-        // iterate over branch types (feature/release/hotfix)
+        // iterate over branch types (feature/release/hotfix/bugfix)
         for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
             for (Map<String, String> optionMap : gitflowOptions.get(type)) {
                 String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
@@ -117,7 +117,7 @@ public class GitflowConfigurable implements Configurable {
 
     @Override
     public void reset() {
-        // iterate over branch types (feature/release/hotfix)
+        // iterate over branch types (feature/release/hotfix/bugfix)
         for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
             for (Map<String, String> optionMap : gitflowOptions.get(type)) {
                 String optionId = GitflowOptionsFactory.getOptionId(type, optionMap.get("key"));
