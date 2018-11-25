@@ -129,6 +129,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepLocal");
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepBranch");
         addOptionsCommand(h, repository.getProject(),"FEATURE_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_pushOnFinish");
 //        addOptionsCommand(h, repository.getProject(),"FEATURE_squash");
 
         h.addParameters(featureName);
