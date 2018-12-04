@@ -52,38 +52,45 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
                                      GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners) {
+        return callInit(repository, initOptions, false, listeners);
+    }
 
-        GitCommandResult result;
+    public GitCommandResult reInitRepo(@NotNull GitRepository repository,
+            GitflowInitOptions initOptions,
+            @Nullable GitLineHandlerListener... listeners) {
+        return callInit(repository, initOptions, true, listeners);
+    }
+
+    private GitCommandResult callInit(@NotNull GitRepository repository,
+            GitflowInitOptions initOptions, boolean reInit,
+            @Nullable GitLineHandlerListener[] listeners) {
+        GitLineHandler h;
+        if (initOptions.isUseDefaults()) {
+            h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        } else {
+            h = new GitInitLineHandler(initOptions, repository.getProject(),
+                    repository.getRoot(), GitflowCommand());
+        }
+
+        h.setSilent(false);
+        h.setStdoutSuppressed(false);
+        h.setStderrSuppressed(false);
+
+        h.addParameters("init");
 
         if (initOptions.isUseDefaults()) {
-            final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
-            h.setSilent(false);
-            h.setStdoutSuppressed(false);
-            h.setStderrSuppressed(false);
-
-            h.addParameters("init");
             h.addParameters("-d");
-
-            result = runCommand(h);
         } else {
-
-
-            final GitInitLineHandler h = new GitInitLineHandler(initOptions, repository.getProject(), repository.getRoot(), GitflowCommand());
-
-            h.setSilent(false);
-            h.setStdoutSuppressed(false);
-            h.setStderrSuppressed(false);
-
-            h.addParameters("init");
-
             for (GitLineHandlerListener listener : listeners) {
                 h.addLineListener(listener);
             }
-            result = runCommand(h);
         }
 
+        if (reInit) {
+            h.addParameters("-f");
+        }
 
-        return result;
+        return runCommand(h);
     }
 
 

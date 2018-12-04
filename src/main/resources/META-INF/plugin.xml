@@ -19,6 +19,8 @@
 
         <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction"
                 text="Initialize Gitflow Repository"></action>
+        <action id="Gitflow.ReInitRepo" class="gitflow.actions.ReInitRepoAction"
+                text="Re-initialize Gitflow Repository"></action>
 
         <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction"
                 text="Gitflow: Start Feature..."></action>
