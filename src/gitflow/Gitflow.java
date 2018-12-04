@@ -14,8 +14,13 @@ import git4idea.repo.GitRepository;
  */
 public interface Gitflow extends Git {
 
-    public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners);
+    GitCommandResult initRepo(@NotNull GitRepository repository,
+                              GitflowInitOptions initOptions,
+                              @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult reInitRepo(@NotNull GitRepository repository,
+                                GitflowInitOptions initOptions,
+                                @Nullable GitLineHandlerListener... listeners);
 
 
     // feature

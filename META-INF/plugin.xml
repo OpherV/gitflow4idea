@@ -31,6 +31,8 @@
         <action id="Gitflow.StartHotfix" class="gitflow.actions.StartHotfixAction" text="Gitflow: Start Hotfix..."></action>
         <action id="Gitflow.FinishHotfix" class="gitflow.actions.FinishHotfixAction" text="Gitflow: Finish Hotfix"></action>
         <action id="Gitflow.PublishHotfix" class="gitflow.actions.PublishHotfixAction" text="Gitflow: Publish Hotfix"></action>
+
+        <action id="Gitflow.ReInitRepo" class="gitflow.actions.ReInitRepoAction" text="Re-initialize Gitflow Repository"></action>
     </actions>
 
     <project-components>

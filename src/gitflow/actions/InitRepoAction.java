@@ -14,11 +14,19 @@ import org.jetbrains.annotations.NotNull;
 public class InitRepoAction extends GitflowAction {
 
     InitRepoAction() {
-        super("Init Repo");
+        this( "Init Repo");
+    }
+
+    InitRepoAction(String actionName) {
+        this(null, "Init Repo");
     }
 
     InitRepoAction(GitRepository repo) {
-        super(repo,"Init Repo");
+        this(repo,"Init Repo");
+    }
+
+    InitRepoAction(GitRepository repo, String actionName) {
+        super(repo, actionName);
     }
 
     @Override
@@ -30,16 +38,19 @@ public class InitRepoAction extends GitflowAction {
 
         if(optionsDialog.isOK()) {
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
-            final LineHandler localLineHandler = new LineHandler();
+            final GitflowLineHandler localLineHandler = getLineHandler();
             final GitflowInitOptions initOptions = optionsDialog.getOptions();
 
-            new Task.Backgroundable(myProject,"Initializing repo",false){
+            new Task.Backgroundable(myProject, getTitle(),false){
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result = myGitflow.initRepo(myRepo, initOptions, errorLineHandler, localLineHandler);
+                    GitCommandResult result =
+                            executeCommand(initOptions, errorLineHandler,
+                                    localLineHandler);
 
                     if (result.success()) {
-                        String publishedFeatureMessage = String.format("Initialized gitflow in repo " + myRepo.getRoot().getPresentableName() );
+                        String publishedFeatureMessage =
+                                getPublishedFeatureMessage();
                         NotifyUtil.notifySuccess(myProject, "", publishedFeatureMessage);
                     } else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
@@ -53,6 +64,25 @@ public class InitRepoAction extends GitflowAction {
         }
 
     }
+
+    protected String getPublishedFeatureMessage() {
+        return "Initialized gitflow in repo " + myRepo.getRoot().getPresentableName();
+    }
+
+    protected GitCommandResult executeCommand(GitflowInitOptions initOptions,
+            GitflowErrorsListener errorLineHandler,
+            GitflowLineHandler localLineHandler) {
+        return myGitflow.initRepo(myRepo, initOptions, errorLineHandler, localLineHandler);
+    }
+
+    protected String getTitle() {
+        return "Initializing Repo";
+    }
+
+    protected GitflowLineHandler getLineHandler() {
+        return new LineHandler();
+    }
+
 
     private class LineHandler extends GitflowLineHandler {
         @Override
