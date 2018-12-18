@@ -56,7 +56,7 @@ public class GitInitLineHandler extends GitLineHandler {
                 consoleWriter.showCommandLine(_initOptions.getProductionBranch());
 
                 writer.write(_initOptions.getProductionBranch());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
 
@@ -64,7 +64,7 @@ public class GitInitLineHandler extends GitLineHandler {
                 consoleWriter.showCommandLine(_initOptions.getDevelopmentBranch());
 
                 writer.write(_initOptions.getDevelopmentBranch());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
 
@@ -72,46 +72,46 @@ public class GitInitLineHandler extends GitLineHandler {
                 consoleWriter.showCommandLine(_initOptions.getFeaturePrefix());
 
                 writer.write(_initOptions.getFeaturePrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Bugfix branches")) {
                 consoleWriter.showCommandLine(_initOptions.getBugfixPrefix());
 
                 writer.write(_initOptions.getBugfixPrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Release branches")) {
                 consoleWriter.showCommandLine(_initOptions.getReleasePrefix());
 
                 writer.write(_initOptions.getReleasePrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Hotfix branches")) {
                 consoleWriter.showCommandLine(_initOptions.getHotfixPrefix());
 
                 writer.write(_initOptions.getHotfixPrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Support branches")) {
                 consoleWriter.showCommandLine(_initOptions.getSupportPrefix());
 
                 writer.write(_initOptions.getSupportPrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Version tag")) {
                 consoleWriter.showCommandLine(_initOptions.getVersionPrefix());
 
                 writer.write(_initOptions.getVersionPrefix());
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Hooks and filters")) {
-                writer.newLine();
+                writer.write("\n");
                 writer.flush();
             }
 
