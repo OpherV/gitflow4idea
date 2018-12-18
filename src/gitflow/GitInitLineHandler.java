@@ -1,9 +1,15 @@
 package gitflow;
 
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
+import git4idea.commands.GitCommand;
+import git4idea.commands.GitLineHandler;
+import git4idea.commands.GitTextHandler;
 import git4idea.util.GitVcsConsoleWriter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,9 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-
-import git4idea.commands.GitCommand;
-import git4idea.commands.GitLineHandler;
 
 
 public class GitInitLineHandler extends GitLineHandler {
@@ -28,6 +31,13 @@ public class GitInitLineHandler extends GitLineHandler {
         super(project, vcsRoot, command);
         consoleWriter = GitVcsConsoleWriter.getInstance(project);
         _initOptions = initOptions;
+    }
+
+    @Override
+    protected OSProcessHandler createProcess(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+        return new MyOSProcessHandler(commandLine,
+                this.myWithMediator && Registry
+                        .is("git.execute.with.mediator"));
     }
 
     @Nullable
@@ -111,4 +121,10 @@ public class GitInitLineHandler extends GitLineHandler {
         }
     }
 
+    class MyOSProcessHandler extends GitTextHandler.MyOSProcessHandler {
+        MyOSProcessHandler(@NotNull GeneralCommandLine commandLine,
+                boolean withMediator) throws ExecutionException {
+            super(commandLine, withMediator);
+        }
+    }
 }
