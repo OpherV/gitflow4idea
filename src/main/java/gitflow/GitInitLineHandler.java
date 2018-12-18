@@ -4,7 +4,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-
+import git4idea.util.GitVcsConsoleWriter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,20 +12,21 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import git4idea.GitVcs;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitLineHandler;
 
 
 public class GitInitLineHandler extends GitLineHandler {
-    @NotNull private final GitVcs myVcs;
+    private final GitVcsConsoleWriter consoleWriter;
 
     private BufferedWriter writer;
     GitflowInitOptions _initOptions;
 
-    public GitInitLineHandler(GitflowInitOptions initOptions, @NotNull Project project, @NotNull VirtualFile vcsRoot, @NotNull GitCommand command) {
+    public GitInitLineHandler(GitflowInitOptions initOptions,
+            @NotNull Project project, @NotNull VirtualFile vcsRoot,
+            @NotNull GitCommand command) {
         super(project, vcsRoot, command);
-        myVcs = GitVcs.getInstance(project);
+        consoleWriter = GitVcsConsoleWriter.getInstance(project);
         _initOptions = initOptions;
     }
 
@@ -37,63 +38,65 @@ public class GitInitLineHandler extends GitLineHandler {
         return p;
     }
 
-    protected void processTerminated(final int exitCode) {
-        super.processTerminated(exitCode);
-    }
-
-
     @Override
     protected void onTextAvailable(String s, Key key) {
         super.onTextAvailable(s, key);
         try {
             if (s.contains("name for production releases")) {
+                consoleWriter.showCommandLine(_initOptions.getProductionBranch());
+
                 writer.write(_initOptions.getProductionBranch());
-                myVcs.showCommandLine(_initOptions.getProductionBranch());
                 writer.newLine();
                 writer.flush();
             }
 
             if (s.contains("name for \"next release\"")) {
+                consoleWriter.showCommandLine(_initOptions.getDevelopmentBranch());
+
                 writer.write(_initOptions.getDevelopmentBranch());
-                myVcs.showCommandLine(_initOptions.getDevelopmentBranch());
                 writer.newLine();
                 writer.flush();
             }
 
-
             if (s.contains("Feature branches")) {
+                consoleWriter.showCommandLine(_initOptions.getFeaturePrefix());
+
                 writer.write(_initOptions.getFeaturePrefix());
-                myVcs.showCommandLine(_initOptions.getFeaturePrefix());
                 writer.newLine();
                 writer.flush();
             }
             if (s.contains("Bugfix branches")) {
+                consoleWriter.showCommandLine(_initOptions.getBugfixPrefix());
+
                 writer.write(_initOptions.getBugfixPrefix());
-                myVcs.showCommandLine(_initOptions.getBugfixPrefix());
                 writer.newLine();
                 writer.flush();
             }
             if (s.contains("Release branches")) {
+                consoleWriter.showCommandLine(_initOptions.getReleasePrefix());
+
                 writer.write(_initOptions.getReleasePrefix());
-                myVcs.showCommandLine(_initOptions.getReleasePrefix());
                 writer.newLine();
                 writer.flush();
             }
             if (s.contains("Hotfix branches")) {
+                consoleWriter.showCommandLine(_initOptions.getHotfixPrefix());
+
                 writer.write(_initOptions.getHotfixPrefix());
-                myVcs.showCommandLine(_initOptions.getHotfixPrefix());
                 writer.newLine();
                 writer.flush();
             }
             if (s.contains("Support branches")) {
+                consoleWriter.showCommandLine(_initOptions.getSupportPrefix());
+
                 writer.write(_initOptions.getSupportPrefix());
-                myVcs.showCommandLine(_initOptions.getSupportPrefix());
                 writer.newLine();
                 writer.flush();
             }
             if (s.contains("Version tag")) {
+                consoleWriter.showCommandLine(_initOptions.getVersionPrefix());
+
                 writer.write(_initOptions.getVersionPrefix());
-                myVcs.showCommandLine(_initOptions.getVersionPrefix());
                 writer.newLine();
                 writer.flush();
             }
