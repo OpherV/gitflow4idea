@@ -1,13 +1,12 @@
 package gitflow;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
@@ -84,4 +83,30 @@ public interface Gitflow extends Git {
     GitCommandResult publishHotfix(@NotNull GitRepository repository,
                                    @NotNull String hotfixName,
                                    @Nullable GitLineHandlerListener... listeners);
+
+    // Bugfix
+
+    GitCommandResult startBugfix(@NotNull GitRepository repository,
+                                  @NotNull String bugfixName,
+                                  @Nullable String baseBranch,
+                                  @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult finishBugfix(@NotNull GitRepository repository,
+                                   @NotNull String bugfixName,
+                                   @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult publishBugfix(@NotNull GitRepository repository,
+                                    @NotNull String bugfixName,
+                                    @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult pullBugfix(@NotNull GitRepository repository,
+                                 @NotNull String bugfixName,
+                                 @NotNull GitRemote remote,
+                                 @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult trackBugfix(@NotNull GitRepository repository,
+                                  @NotNull String bugfixName,
+                                  @NotNull GitRemote remote,
+                                  @Nullable GitLineHandlerListener... listeners);
+
 }

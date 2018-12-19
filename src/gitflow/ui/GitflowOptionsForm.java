@@ -21,6 +21,7 @@ public class GitflowOptionsForm  implements ItemListener {
     private JPanel releasePanel;
     private JPanel featurePanel;
     private JPanel hotfixPanel;
+    private JPanel bugfixPanel;
 
     Map<Enum<GitflowOptionsFactory.TYPE>, ArrayList<Map<String,String>>> gitflowOptions;
     Map<String, OptionComponent> optionComponents;
@@ -42,13 +43,14 @@ public class GitflowOptionsForm  implements ItemListener {
         featurePanel.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
         hotfixPanel.setLayout(new BoxLayout(hotfixPanel, BoxLayout.Y_AXIS));
         releasePanel.setLayout(new BoxLayout(releasePanel, BoxLayout.Y_AXIS));
-
+        bugfixPanel.setLayout(new BoxLayout(bugfixPanel, BoxLayout.Y_AXIS));
 
         HashMap<GitflowOptionsFactory.TYPE, JPanel> branchTypeToPanel = new HashMap<GitflowOptionsFactory.TYPE, JPanel>();
 
         branchTypeToPanel.put(GitflowOptionsFactory.TYPE.FEATURE, featurePanel);
         branchTypeToPanel.put(GitflowOptionsFactory.TYPE.RELEASE, releasePanel);
         branchTypeToPanel.put(GitflowOptionsFactory.TYPE.HOTFIX, hotfixPanel);
+        branchTypeToPanel.put(GitflowOptionsFactory.TYPE.BUGFIX, bugfixPanel);
 
         for (GitflowOptionsFactory.TYPE type: GitflowOptionsFactory.TYPE.values()) {
             JPanel optionPanel = branchTypeToPanel.get(type);
@@ -115,7 +117,6 @@ public class GitflowOptionsForm  implements ItemListener {
         else{
             customTagCommitMessageTexfield.setEditable(false);
         }
-
 
         if (dontTagRelease.isSelected()) {
             customTagCommitMessageCheckbox.setEnabled(false);
