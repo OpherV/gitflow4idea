@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.3.12'
+}
+
+group 'gitflow4idea'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+intellij {
+    version '2018.2.1'
+    plugins 'git4idea', 'tasks'
+}
+
+patchPluginXml {
+    pluginId "Gitflow"
+    pluginDescription 'This is the description.'
+    version '0.6.6'
+    sinceBuild '182.0'
+    untilBuild '182.*'
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}

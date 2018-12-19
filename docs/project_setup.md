@@ -1,31 +1,71 @@
-# Project Setup Help
-This is a quick overview how to setup the project for development.
+# Setup Guide
+This document shall assist you in setting up the development project in IntelliJ IDEA. There are two ways of setting up the project:
+1. Gradle Setup
+2. "Classic" Setup
 
-## 1. Make Sure the Plugin Development Plugin Is Enabled  
-Start IDEA, go to *Settings -> Plugins* and make sure that `Plugin DevKit` is installed and enabled. If it's not, install it now.
+## Gradle Setup
 
-## 2. Clone Project from GitHub
-Fork the original repository on GitHub, then clone your fork of the project.
+### Prerequisites
+- The environment variable `JAVA_HOME` is set to a valid Java environment.
+- The *Gradle* plugin is enable in IntelliJ IDEA.
 
-## 3. Import Project into IDEA
-Select the *Import Project* option (e.g. by pressing shift twice and entering "import project") and navigate to the cloned repository directory when prompted. 
+### Setup Steps
+1. Fork the original repository and checkout the fork.
+2. Import the project into IntelliJ IDEA.
+3. Choose *"Import from external model" > Gradle*.
+4. Set the following options in the import dialog:
+    - *Use Auto Import*
+    - *Create directories for empty content roots automatically*
+    - *Use default gradle wrapper (recommended)*
+ 
+![Import project dialog](./img/import_project.png?raw=true "Import Project Dialog")  
+![Import options dialog](./img/import_options.png?raw=true "Import Options Dialog")  
+    
+### Run Configuration
+Add a new run configuration of type *Gradle* with the following settings:
+- Set the current project as *Gradle project*
+- In *Tasks* enter `runIde`.
 
-### Model
-Choose "Create from existing sources" when prompted for a model.
+This should give you a basic run configuration which will start a new IntelliJ instance with the plugin deployed.
 
-### SDK Setup 
+![Run configuration dialog](./img/run_configuration.png?raw=true "Run Configuration")
+
+## "Classic" Setup
+
+### 1. Make sure the plugin development plugin is enabled  
+
+Start IDEA, go to *Settings -> Plugins* and make sure that `Plugin DevKit` is installed and enabled.
+If it's not, install it now.
+
+### 2. Clone the project from GitHub
+
+Typically you check out your fork of the project on GitHub here.
+
+### 3. Import the project into IDEA 
+
+Select the *Import Project* option (e.g. by pressing shift twice and entering "import project") 
+and navigate to the cloned repository directory when prompted. 
+
+#### Model
+
+Chose "From existing sources" when prompted for a model.
+
+#### SDK Setup 
+
 If you dont have a plugin SDK yet, click `+` to add an SDK and select *IntelliJ Platform Plugin SDK*
     
 1. Navigate to your IDEA installation and select the installation directory.
-2. Afterwards select a JDK when prompted.
+2. Afterwards select a JDK when prompted
     
 Select your plugin SDK as the one to use.
 
-### Other
-The remaining options can be left at default.
+#### Other
+
+The remaining options can be left at default
     
-## 4. Change the Project Type
-Open the project's .iml file (it should be named `gitflow4idea.iml` by default) and replace its contents with this:
+### 4. Change the project type
+
+Open the projects iml file (it should be named `gitflow4idea.iml` by default) and replace its contents with this:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -43,20 +83,23 @@ Open the project's .iml file (it should be named `gitflow4idea.iml` by default) 
 
 Then close and reopen the project to apply the changes.
 
-## 5. Add Dependencies
-1. Open the module settings and navigate to *Modules -> gitflow4idea (or your project name here)* and select the *Dependencies* tab. 
-2. Click *Add -> "JARs or directories"* and select your IDEA installation directory.
-3. Add the following JARs:
-- `plugins/git4idea/lib/git4idea.lib`
-- `plugins/tasks/lib/tasks*.jar`   
-4. Change the scope of the added JARs to **provided**.
+### 5. Add git4idea dependency
 
-## 6. Create a Run Configuration
-Go to *Run/Debug configurations* and create a new configuration of type `Plugin`. Under "Use classpath of module" select the project (`gitflow4idea` by default). Click run. A new IDEA instance should start with the plugin running. 
+1. Open the module settings and navigate to *Modules -> gitflow4idea (or your project name here)* and select the *Dependencies* tab. 
+2. Click add -> "JARs or directories" and add `git4idea.jar`.
+    This can be found in your IDEA installation directory under `plugins/git4idea/lib`.
+3. Change the scope of the added JAR to **provided**.
+
+### 6. Create a run configuration
+
+Go to Run/Debug configurations and create a new configuration of the type `Plugin`. Under "Use classpath of module" select the project (`gitflow4idea` by default).
+Click run. A new IDEA instance should start with the plugin running. 
 
 And that's it. You can now make changes to the source and run them.
 
-## Notes & Hints
+### Notes & hints
 
-### Language Level
-This project is written to target Java 6, so make sure to set the project language level appropriately to avoid accidentally using newer features. You can do so in the module settings under "modules -> gitflow4idea -> sources -> Language level".
+#### Language level
+
+This project is written to target Java 6, so make sure to set the project language level appropriately
+ to avoid accidentally using newer features. You can do so in the module settings under "modules -> gitflow4idea -> sources -> Language level".

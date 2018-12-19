@@ -1,8 +1,9 @@
-<idea-plugin version="2">
+<idea-plugin>
+    <!-- Values with SET_BY_GRADLE are defined in patchPluginXml task in build.gradle. -->
     <name>Git Flow Integration</name>
-    <id>Gitflow</id>
-    <description>Git Flow Integration</description>
-    <version>0.6.6</version>
+    <id>SET_BY_GRADLE</id>
+    <description>SET_BY_GRADLE</description>
+    <version>SET_BY_GRADLE</version>
     <category>VCS Integration</category>
     <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
 
@@ -10,7 +11,7 @@
     <depends>com.intellij.tasks</depends>
     <depends>Git4Idea</depends>
 
-    <idea-version since-build="182.0" until-build="182.*"/>
+    <idea-version since-build="SET_BY_GRADLE" until-build="SET_BY_GRADLE"/>
 
     <actions>
         <action id="Gitflow.OpenGitflowPopup" class="gitflow.actions.OpenGitflowPopup"
