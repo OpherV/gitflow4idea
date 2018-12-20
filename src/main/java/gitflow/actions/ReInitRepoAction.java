@@ -14,7 +14,7 @@ public class ReInitRepoAction extends InitRepoAction {
     }
 
     @Override
-    protected String getPublishedFeatureMessage() {
+    protected String getSuccessMessage() {
         return "Re-initialized gitflow in repo " + myRepo.getRoot().getPresentableName();
     }
 

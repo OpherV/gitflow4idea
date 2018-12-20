@@ -49,9 +49,8 @@ public class InitRepoAction extends GitflowAction {
                                     localLineHandler);
 
                     if (result.success()) {
-                        String publishedFeatureMessage =
-                                getPublishedFeatureMessage();
-                        NotifyUtil.notifySuccess(myProject, "", publishedFeatureMessage);
+                        String successMessage = getSuccessMessage();
+                        NotifyUtil.notifySuccess(myProject, "", successMessage);
                     } else {
                         NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
                     }
@@ -65,7 +64,7 @@ public class InitRepoAction extends GitflowAction {
 
     }
 
-    protected String getPublishedFeatureMessage() {
+    protected String getSuccessMessage() {
         return "Initialized gitflow in repo " + myRepo.getRoot().getPresentableName();
     }
 

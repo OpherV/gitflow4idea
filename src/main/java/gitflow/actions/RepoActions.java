@@ -71,7 +71,7 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         }
 
         //gitflow not setup
-        if (!branchUtil.hasGitflow()){
+        if (branchUtil.hasGitflow()!=true){
             actionList.add(new InitRepoAction(myRepo));
         } else {
 
@@ -84,13 +84,13 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
                 actionList.add(new FinishFeatureAction(myRepo));
 
                 //can't publish feature if it's already published
-                if (!branchUtil.isCurrentBranchPublished()){
+                if (branchUtil.isCurrentBranchPublished()==false){
                     actionList.add(new PublishFeatureAction(myRepo));
                 }
             }
 
             //make sure there's a feature to track, and that not all features are tracked
-            if (!noRemoteFeatureBranches && !trackedAllFeatureBranches){
+            if (noRemoteFeatureBranches == false && trackedAllFeatureBranches == false){
                 actionList.add(new TrackFeatureAction(myRepo));
             }
 
@@ -104,13 +104,13 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
                 actionList.add(new FinishReleaseAction(myRepo));
 
                 //can't publish release if it's already published
-                if (!branchUtil.isCurrentBranchPublished()){
+                if (branchUtil.isCurrentBranchPublished()==false){
                     actionList.add(new PublishReleaseAction(myRepo));
                 }
             }
 
             //make sure there's something to track and that not all features are tracked
-            if (!noRemoteTrackBranches && !trackedAllReleaseBranches){
+            if (noRemoteTrackBranches==false  && trackedAllReleaseBranches ==false){
                 actionList.add(new TrackReleaseAction(myRepo));
             }
 
@@ -143,7 +143,7 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
                 actionList.add(new FinishHotfixAction(myRepo));
 
                 //can't publish hotfix if it's already published
-                if (!branchUtil.isCurrentBranchPublished()) {
+                if (branchUtil.isCurrentBranchPublished() == false) {
                     actionList.add(new PublishHotfixAction(myRepo));
                 }
             }
