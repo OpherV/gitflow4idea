@@ -1,0 +1,70 @@
+<idea-plugin>
+    <!-- Values with SET_BY_GRADLE are defined in patchPluginXml task in build.gradle. -->
+    <name>Git Flow Integration</name>
+    <id>SET_BY_GRADLE</id>
+    <description>SET_BY_GRADLE</description>
+    <version>SET_BY_GRADLE</version>
+    <category>VCS Integration</category>
+    <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
+
+    <depends>com.intellij.modules.vcs</depends>
+    <depends>com.intellij.tasks</depends>
+    <depends>Git4Idea</depends>
+
+    <idea-version since-build="SET_BY_GRADLE" until-build="SET_BY_GRADLE"/>
+
+    <actions>
+        <action id="Gitflow.OpenGitflowPopup" class="gitflow.actions.OpenGitflowPopup"
+                text="Gitflow Operations Popup..."></action>
+
+        <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction"
+                text="Initialize Gitflow Repository"></action>
+
+        <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction"
+                text="Gitflow: Start Feature..."></action>
+        <action id="Gitflow.FinishFeature" class="gitflow.actions.FinishFeatureAction"
+                text="Gitflow: Finish Feature..."></action>
+        <action id="Gitflow.PublishFeature" class="gitflow.actions.PublishFeatureAction"
+                text="Gitflow: Publish Feature"></action>
+        <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction"
+                text="Gitflow: Track Feature..."></action>
+
+        <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction"
+                text="Gitflow: Start Release..."></action>
+        <action id="Gitflow.FinishRelease" class="gitflow.actions.FinishReleaseAction"
+                text="Gitflow: Finish Release"></action>
+        <action id="Gitflow.PublishRelease" class="gitflow.actions.PublishReleaseAction"
+                text="Gitflow: Publish Release"></action>
+        <action id="Gitflow.TrackRelease" class="gitflow.actions.TrackReleaseAction"
+                text="Gitflow: Track Release..."></action>
+
+        <action id="Gitflow.StartHotfix" class="gitflow.actions.StartHotfixAction"
+                text="Gitflow: Start Hotfix..."></action>
+        <action id="Gitflow.FinishHotfix" class="gitflow.actions.FinishHotfixAction"
+                text="Gitflow: Finish Hotfix"></action>
+        <action id="Gitflow.PublishHotfix" class="gitflow.actions.PublishHotfixAction"
+                text="Gitflow: Publish Hotfix"></action>
+
+        <action id="Gitflow.StartBugfix" class="gitflow.actions.StartBugfixAction"
+                text="Gitflow: Start Bugfix..."></action>
+        <action id="Gitflow.FinishBugfix" class="gitflow.actions.FinishBugfixAction"
+                text="Gitflow: Finish Bugfix..."></action>
+        <action id="Gitflow.PublishBugfix" class="gitflow.actions.PublishBugfixAction"
+                text="Gitflow: Publish Bugfix"></action>
+        <action id="Gitflow.TrackBugfix" class="gitflow.actions.TrackBugfixAction"
+                text="Gitflow: Track Bugfix..."></action>
+    </actions>
+
+    <project-components>
+        <component>
+            <implementation-class>gitflow.GitflowComponent</implementation-class>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="gitflow.Gitflow" serviceImplementation="gitflow.GitflowImpl"/>
+        <applicationService serviceInterface="gitflow.GitflowState" serviceImplementation="gitflow.GitflowState"></applicationService>
+        <projectConfigurable instance="gitflow.GitflowConfigurable"/>
+        <tasks.dialogPanelProvider implementation="gitflow.ui.GitflowTaskDialogPanelProvider"/>
+    </extensions>
+</idea-plugin>

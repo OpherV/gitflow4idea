@@ -8,7 +8,11 @@ import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.tasks.ui.TaskDialogPanel;
 import git4idea.repo.GitRepository;
-import gitflow.*;
+import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
+import gitflow.GitflowConfigurable;
+import gitflow.GitflowState;
+import gitflow.actions.FinishBugfixAction;
 import gitflow.actions.FinishFeatureAction;
 import gitflow.actions.FinishHotfixAction;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +26,8 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     private JPanel finishHotfixPanel;
     private JTextField tagMessageTextField;
     private JPanel finishFeaturePanel;
+    private JPanel finishBugfixPanel;
+    private JCheckBox finishBugfixCheckBox;
 
     private Project myProject;
     private Task myTask;
@@ -72,16 +78,20 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
     public JComponent getPanel() {
         String taskBranchName = gitflowState.getTaskBranch(myTask);
         if (taskBranchName != null) {
-
             myPanel.setVisible(true);
             if (gitflowBranchUtil.isBranchFeature(taskBranchName)) {
                 finishFeaturePanel.setVisible(true);
                 finishHotfixPanel.setVisible(false);
+                finishBugfixPanel.setVisible(false);
             } else if (gitflowBranchUtil.isBranchHotfix(taskBranchName)) {
                 finishFeaturePanel.setVisible(false);
                 finishHotfixPanel.setVisible(true);
+                finishBugfixPanel.setVisible(false);
+            } else if (gitflowBranchUtil.isBranchBugfix(taskBranchName)) {
+                finishFeaturePanel.setVisible(false);
+                finishHotfixPanel.setVisible(false);
+                finishBugfixPanel.setVisible(true);
             }
-
         }
         else{
             myPanel.setVisible(false);
@@ -104,6 +114,9 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
             } else if (finishHotfixCheckbox.isSelected()) {
                 FinishHotfixAction action = new FinishHotfixAction(myRepo);
                 action.runAction(myProject, taskBranchName, tagMessageTextField.getText());
+             } else if (finishBugfixCheckBox.isSelected()) {
+                FinishBugfixAction action = new FinishBugfixAction(myRepo);
+                action.runAction(myProject, taskBranchName);
             }
         }
     }

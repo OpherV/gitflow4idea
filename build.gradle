@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.3.12'
+}
+
+group 'gitflow4idea'
+version '0.6.7'
+
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+intellij {
+    version '2018.3'
+    plugins 'git4idea', 'tasks'
+}
+
+patchPluginXml {
+    pluginId "Gitflow"
+    pluginDescription 'Git Flow Integration'
+    version '0.6.7'
+    sinceBuild '182.0'
+    untilBuild '183.*'
+    changeNotes """
+      <H2>Changelog for 0.6.7</H2>         
+      <ul>
+        <li>Support for Idea build 183 #210 (@opherv)</li>
+        <li>Feature: Bugfix support #122 (@straurob)</li>     
+        <li>Feature: pushOnFinish to feature options (@bmwsedee)</li>     
+        <li>Bugfix UI freeze on custom gitflow init #198 (@bmwsedee)</li>
+        <li>Implementation: plugin is now built with gradle (@straurob)</li>
+      </ul>
+    
+    <p>Note - if you see 'no gitflow' in the status bar you will need to re-init using <code>git flow init -f</code></p>
+      """
+}

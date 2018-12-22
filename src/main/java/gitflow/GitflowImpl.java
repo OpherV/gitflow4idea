@@ -1,8 +1,9 @@
 package gitflow;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-
+import git4idea.commands.*;
+import git4idea.repo.GitRemote;
+import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,15 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import git4idea.commands.GitCommand;
-import git4idea.commands.GitCommandResult;
-import git4idea.commands.GitImpl;
-import git4idea.commands.GitLineHandler;
-import git4idea.commands.GitLineHandlerListener;
-import git4idea.repo.GitRemote;
-import git4idea.repo.GitRepository;
 
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
@@ -137,6 +129,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepLocal");
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepBranch");
         addOptionsCommand(h, repository.getProject(),"FEATURE_fetchFromOrigin");
+        addOptionsCommand(h, repository.getProject(),"FEATURE_pushOnFinish");
 //        addOptionsCommand(h, repository.getProject(),"FEATURE_squash");
 
         h.addParameters(featureName);
@@ -381,5 +374,112 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
     }
 
+    // Bugfix
+
+    public GitCommandResult startBugfix(@NotNull GitRepository repository,
+                                         @NotNull String bugfixName,
+                                         @Nullable String baseBranch,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("start");
+
+        addOptionsCommand(h, repository.getProject(),"BUGFIX_fetchFromOrigin");
+
+        h.addParameters(bugfixName);
+
+        if (baseBranch != null) {
+            h.addParameters(baseBranch);
+        }
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
+
+    public GitCommandResult finishBugfix(@NotNull GitRepository repository,
+                                          @NotNull String bugfixName,
+                                          @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+
+        setUrl(h, repository);
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("finish");
+
+
+        addOptionsCommand(h, repository.getProject(),"BUGFIX_keepRemote");
+        addOptionsCommand(h, repository.getProject(),"BUGFIX_keepLocal");
+        addOptionsCommand(h, repository.getProject(),"BUGFIX_keepBranch");
+        addOptionsCommand(h, repository.getProject(),"BUGFIX_fetchFromOrigin");
+//        addOptionsCommand(h, repository.getProject(),"BUGFIX_squash");
+
+        h.addParameters(bugfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
+
+
+    public GitCommandResult publishBugfix(@NotNull GitRepository repository,
+                                           @NotNull String bugfixName,
+                                           @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+
+        h.addParameters("bugfix");
+        h.addParameters("publish");
+        h.addParameters(bugfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
+
+
+    // feature/bugfix pull seems to be kind of useless. see
+    // http://stackoverflow.com/questions/18412750/why-doesnt-git-flow-feature-pull-track
+    public GitCommandResult pullBugfix(@NotNull GitRepository repository,
+                                        @NotNull String bugfixName,
+                                        @NotNull GitRemote remote,
+                                        @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+        h.addParameters("bugfix");
+        h.addParameters("pull");
+        h.addParameters(remote.getName());
+        h.addParameters(bugfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
+
+    public GitCommandResult trackBugfix(@NotNull GitRepository repository,
+                                         @NotNull String bugfixName,
+                                         @NotNull GitRemote remote,
+                                         @Nullable GitLineHandlerListener... listeners) {
+        final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
+        setUrl(h, repository);
+        h.setSilent(false);
+        h.addParameters("bugfix");
+        h.addParameters("track");
+        h.addParameters(bugfixName);
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
 
 }
