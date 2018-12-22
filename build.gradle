@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'gitflow4idea'
-version '1.0-SNAPSHOT'
+version '0.6.7'
 
 sourceCompatibility = 1.6
 
@@ -28,6 +28,15 @@ patchPluginXml {
     sinceBuild '182.0'
     untilBuild '183.*'
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      <H2>Changelog for 0.6.7</H2>         
+      <ul>
+        <li>Support for Idea build 183 #210 (@opherv)</li>
+        <li>Feature: Bugfix support #122 (@straurob)</li>     
+        <li>Feature: pushOnFinish to feature options (@bmwsedee)</li>     
+        <li>Bugfix UI freeze on custom gitflow init #198 (@bmwsedee)</li>
+        <li>Implementation: plugin is now built with gradle (@straurob)</li>
+      </ul>
+    
+    <p>Note - if you see 'no gitflow' in the status bar you will need to re-init using <code>git flow init -f</code></p>
+      """
 }
