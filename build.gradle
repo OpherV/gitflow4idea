@@ -17,16 +17,16 @@ dependencies {
 }
 
 intellij {
-    version '2018.2.1'
+    version '2018.3'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
-    pluginDescription 'This is the description.'
-    version '0.6.6'
+    pluginDescription 'Git Flow Integration'
+    version '0.6.7'
     sinceBuild '182.0'
-    untilBuild '182.*'
+    untilBuild '183.*'
     changeNotes """
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
