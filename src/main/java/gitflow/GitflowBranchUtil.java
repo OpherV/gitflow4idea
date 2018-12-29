@@ -23,12 +23,13 @@ public class GitflowBranchUtil {
     Project myProject;
     GitRepository myRepo;
 
-    String currentBranchName;
-    String branchnameMaster;
-    String prefixFeature;
-    String prefixRelease;
-    String prefixHotfix;
-    String prefixBugfix;
+    private String currentBranchName;
+    private String branchnameMaster;
+    private String branchnameDevelop;
+    private String prefixFeature;
+    private String prefixRelease;
+    private String prefixHotfix;
+    private String prefixBugfix;
     private ArrayList<GitRemoteBranch> remoteBranches;
     private ArrayList<String> remoteBranchNames;
     private ArrayList<GitLocalBranch> localBranches;
@@ -42,6 +43,7 @@ public class GitflowBranchUtil {
             currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
 
             branchnameMaster= GitflowConfigUtil.getMasterBranch(project, repo);
+            branchnameDevelop = GitflowConfigUtil.getDevelopBranch(project, repo);
             prefixFeature = GitflowConfigUtil.getFeaturePrefix(project, repo);
             prefixRelease = GitflowConfigUtil.getReleasePrefix(project, repo);
             prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project, repo);
@@ -52,16 +54,18 @@ public class GitflowBranchUtil {
         }
     }
 
-    public boolean hasGitflow(){
-        boolean hasGitflow=false;
+    public String getCurrentBranchName() {
+        return currentBranchName;
+    }
 
-        hasGitflow = myRepo != null
-                       && GitflowConfigUtil.getMasterBranch(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getDevelopBranch(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getFeaturePrefix(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getReleasePrefix(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getHotfixPrefix(myProject, myRepo)!=null
-                       && GitflowConfigUtil.getBugfixPrefix(myProject, myRepo)!=null;
+    public boolean hasGitflow(){
+        boolean hasGitflow = myRepo != null
+                       && branchnameMaster != null
+                       && branchnameDevelop != null
+                       && prefixFeature != null
+                       && prefixRelease != null
+                       && prefixHotfix != null
+                       && prefixBugfix != null;
 
         return hasGitflow;
     }
