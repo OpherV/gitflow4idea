@@ -29,6 +29,10 @@ public class GitflowBranchUtil {
     String prefixRelease;
     String prefixHotfix;
     String prefixBugfix;
+    private ArrayList<GitRemoteBranch> remoteBranches;
+    private ArrayList<String> remoteBranchNames;
+    private ArrayList<GitLocalBranch> localBranches;
+    private ArrayList<String> localBranchNames;
 
     public GitflowBranchUtil(Project project, GitRepository repo){
         myProject=project;
@@ -42,6 +46,9 @@ public class GitflowBranchUtil {
             prefixRelease = GitflowConfigUtil.getReleasePrefix(project, repo);
             prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project, repo);
             prefixBugfix = GitflowConfigUtil.getBugfixPrefix(project, repo);
+
+            initRemoteBranches();
+            initLocalBranchNames();
         }
     }
 
@@ -97,9 +104,31 @@ public class GitflowBranchUtil {
         return branchName.startsWith(prefixBugfix);
     }
 
+    private void initRemoteBranches() {
+        remoteBranches =
+                new ArrayList<GitRemoteBranch>(myRepo.getBranches().getRemoteBranches());
+        remoteBranchNames = new ArrayList<String>();
+
+        for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
+            GitRemoteBranch branch = i.next();
+            remoteBranchNames.add(branch.getName());
+        }
+    }
+
+    private void initLocalBranchNames(){
+        localBranches =
+                new ArrayList<GitLocalBranch>(myRepo.getBranches().getLocalBranches());
+        localBranchNames = new ArrayList<String>();
+
+        for(Iterator<GitLocalBranch> i = localBranches.iterator(); i.hasNext(); ) {
+            GitLocalBranch branch = i.next();
+            localBranchNames.add(branch.getName());
+        }
+    }
+
     //if no prefix specified, returns all remote branches
     public ArrayList<String> getRemoteBranchesWithPrefix(String prefix){
-        ArrayList<String> remoteBranches = getRemoteBranchNames();
+        ArrayList<String> remoteBranches = remoteBranchNames;
         ArrayList<String> selectedBranches = new ArrayList<String>();
 
         for(Iterator<String> i = remoteBranches.iterator(); i.hasNext(); ) {
@@ -127,40 +156,19 @@ public class GitflowBranchUtil {
     }
 
     public ArrayList<String> getRemoteBranchNames(){
-        ArrayList<GitRemoteBranch> remoteBranches = new ArrayList<GitRemoteBranch>(myRepo.getBranches().getRemoteBranches());
-        ArrayList<String> branchNameList = new ArrayList<String>();
-
-        for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
-            GitRemoteBranch branch = i.next();
-            branchNameList.add(branch.getName());
-        }
-
-        return branchNameList;
+        return remoteBranchNames;
     }
 
-
-    public ArrayList<String> getLocalBranchNames(){
-        ArrayList<GitLocalBranch> localBranches = new ArrayList<GitLocalBranch>(myRepo.getBranches().getLocalBranches());
-        ArrayList<String> branchNameList = new ArrayList<String>();
-
-        for(Iterator<GitLocalBranch> i = localBranches.iterator(); i.hasNext(); ) {
-            GitLocalBranch branch = i.next();
-            branchNameList.add(branch.getName());
-        }
-
-        return branchNameList;
+    public ArrayList<String> getLocalBranchNames() {
+        return localBranchNames;
     }
-
-
 
     public GitRemote getRemoteByBranch(String branchName){
         GitRemote remote=null;
 
-        ArrayList<GitRemoteBranch> remoteBranches= new ArrayList<GitRemoteBranch>(myRepo.getBranches().getRemoteBranches());
-
         for(Iterator<GitRemoteBranch> i = remoteBranches.iterator(); i.hasNext(); ) {
             GitRemoteBranch branch = i.next();
-            if (branch.getName()==branchName){
+            if (branch.getName().equals(branchName)){
                 remote=branch.getRemote();
                 break;
             }
