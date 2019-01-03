@@ -70,6 +70,30 @@ public class GitflowBranchUtil {
         return hasGitflow;
     }
 
+    public String getBranchnameMaster() {
+        return branchnameMaster;
+    }
+
+    public String getBranchnameDevelop() {
+        return branchnameDevelop;
+    }
+
+    public String getPrefixFeature() {
+        return prefixFeature;
+    }
+
+    public String getPrefixRelease() {
+        return prefixRelease;
+    }
+
+    public String getPrefixHotfix() {
+        return prefixHotfix;
+    }
+
+    public String getPrefixBugfix() {
+        return prefixBugfix;
+    }
+
     public boolean isCurrentBranchMaster(){
         return currentBranchName.startsWith(branchnameMaster);
     }

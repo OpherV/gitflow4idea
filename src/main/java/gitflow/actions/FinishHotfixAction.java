@@ -13,13 +13,13 @@ import gitflow.GitflowConfigurable;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class FinishHotfixAction extends GitflowAction {
+public class FinishHotfixAction extends AbstractBranchAction {
 
     public FinishHotfixAction() {
-        super("Finish Hotfix");
+        super("Finish Hotfix", BranchType.Hotfix);
     }
     public FinishHotfixAction(GitRepository repo) {
-        super(repo, "Finish Hotfix");
+        super(repo, "Finish Hotfix", BranchType.Hotfix);
     }
 
     @Override

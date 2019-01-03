@@ -9,14 +9,14 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishReleaseAction extends GitflowAction {
+public class PublishReleaseAction extends AbstractPublishAction {
 
     PublishReleaseAction(){
-        super("Publish Release");
+        super("Publish Release", BranchType.Release);
     }
 
     PublishReleaseAction(GitRepository repo){
-        super(repo,"Publish Release");
+        super(repo,"Publish Release", BranchType.Release);
     }
 
     @Override

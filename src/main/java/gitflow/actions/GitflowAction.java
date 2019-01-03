@@ -13,7 +13,6 @@ import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
-import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +42,9 @@ public class GitflowAction extends DumbAwareAction {
     GitflowAction(GitRepository repo, String actionName){
         super(actionName);
         myRepo = repo;
+
+        branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
+        setupPrefixes();
     }
 
     @Override
@@ -56,21 +58,25 @@ public class GitflowAction extends DumbAwareAction {
         setup(project);
     }
 
-    public void setup(Project project){
+    private void setup(Project project){
         myProject = project;
         virtualFileMananger = VirtualFileManager.getInstance();
         repos.add(myRepo);
 
-        featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
-        releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
-        hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject, myRepo);
-        bugfixPrefix = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo);
-        masterBranch= GitflowConfigUtil.getMasterBranch(myProject, myRepo);
-        developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
-
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
 
-        currentBranchName= GitBranchUtil.getBranchNameOrRev(myRepo);
+        setupPrefixes();
+    }
+
+    private void setupPrefixes() {
+        featurePrefix = branchUtil.getPrefixFeature();
+        releasePrefix = branchUtil.getPrefixRelease();
+        hotfixPrefix = branchUtil.getPrefixHotfix();
+        bugfixPrefix = branchUtil.getPrefixBugfix();
+        masterBranch = branchUtil.getBranchnameMaster();
+        developBranch = branchUtil.getBranchnameDevelop();
+
+        currentBranchName = branchUtil.getCurrentBranchName();
     }
 
     public void runAction(Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
