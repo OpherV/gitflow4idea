@@ -17,7 +17,7 @@ dependencies {
 }
 
 intellij {
-    version '2018.3'
+    version '2018.3.6'
     plugins 'git4idea', 'tasks'
 }
 
