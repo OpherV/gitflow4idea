@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.3.12'
+    id 'org.jetbrains.intellij' version '0.4.7'
 }
 
 group 'gitflow4idea'
@@ -17,7 +17,7 @@ dependencies {
 }
 
 intellij {
-    version '2018.3.6'
+    version '2019.1'
     plugins 'git4idea', 'tasks'
 }
 
