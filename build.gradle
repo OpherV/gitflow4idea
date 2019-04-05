@@ -3,6 +3,10 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.7'
 }
 
+compileJava {
+    options.compilerArgs += ["-Xlint"]
+}
+
 group 'gitflow4idea'
 version '0.6.7'
 
