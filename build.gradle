@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.6.7'
+version '0.6.8'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -33,13 +33,10 @@ patchPluginXml {
     sinceBuild '182.0'
     untilBuild '191.*'
     changeNotes """
-      <H2>Changelog for 0.6.7</H2>         
+      <H2>Changelog for 0.6.8</H2>         
       <ul>
-        <li>Support for Idea build 183 #210 (@opherv)</li>
-        <li>Feature: Bugfix support #122 (@straurob)</li>     
-        <li>Feature: pushOnFinish to feature options (@bmwsedee)</li>     
-        <li>Bugfix UI freeze on custom gitflow init #198 (@bmwsedee)</li>
-        <li>Implementation: plugin is now built with gradle (@straurob)</li>
+        <li>Support for Idea build 191 #221 (@ottnorml)</li>
+        <li>Fix performance issues in plugin #195 (@bmwsedee)</li>            
       </ul>
     
     <p>Note - if you see 'no gitflow' in the status bar you will need to re-init using <code>git flow init -f</code></p>
