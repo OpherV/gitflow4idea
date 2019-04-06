@@ -9,10 +9,14 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishFeatureAction extends GitflowAction {
-    PublishFeatureAction(){ super("Publish Feature");}
+public class PublishFeatureAction extends AbstractPublishAction {
+    PublishFeatureAction(){
+        super("Publish Feature", BranchType.Feature);
+    }
 
-    PublishFeatureAction(GitRepository repo){ super(repo,"Publish Feature");}
+    PublishFeatureAction(GitRepository repo){
+        super(repo, "Publish Feature", BranchType.Feature);
+    }
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {

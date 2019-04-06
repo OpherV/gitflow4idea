@@ -10,13 +10,13 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishHotfixAction extends GitflowAction {
+public class PublishHotfixAction extends AbstractPublishAction {
     PublishHotfixAction() {
-        super("Publish Hotfix");
+        super("Publish Hotfix", BranchType.Hotfix);
     }
 
     PublishHotfixAction(GitRepository repo) {
-        super(repo, "Publish Hotfix");
+        super(repo, "Publish Hotfix", BranchType.Hotfix);
     }
 
     @Override

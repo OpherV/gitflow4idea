@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TrackBugfixAction extends GitflowAction {
+public class TrackBugfixAction extends AbstractTrackAction {
 
     TrackBugfixAction() {
-        super("Track Bugfix");
+        super("Track Bugfix", BranchType.Bugfix);
     }
 
     TrackBugfixAction(GitRepository repo) {
-        super(repo, "Track Bugfix");
+        super(repo, "Track Bugfix", BranchType.Bugfix);
     }
 
     @Override

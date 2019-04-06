@@ -6,6 +6,8 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Key;
 import git4idea.commands.GitCommandResult;
 import git4idea.repo.GitRepository;
+import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowInitOptions;
 import gitflow.ui.GitflowInitOptionsDialog;
 import gitflow.ui.NotifyUtil;
@@ -19,6 +21,18 @@ public class InitRepoAction extends GitflowAction {
 
     InitRepoAction(GitRepository repo) {
         super(repo,"Init Repo");
+    }
+
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
+
+        //Disable and hide when gitflow has not been setup
+        if (branchUtil.hasGitflow()) {
+            e.getPresentation().setEnabledAndVisible(false);
+        } else {
+            e.getPresentation().setEnabledAndVisible(true);
+        }
     }
 
     @Override
