@@ -66,8 +66,6 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         actionList.add(new FinishHotfixAction(myRepo));
         actionList.add(new PublishHotfixAction(myRepo));
 
-        }
-
         return actionList;
     }
 
