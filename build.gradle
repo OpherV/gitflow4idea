@@ -29,7 +29,7 @@ intellij {
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.6.7'
+    version '0.6.8'
     sinceBuild '182.0'
     untilBuild '191.*'
     changeNotes """
