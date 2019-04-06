@@ -9,11 +9,15 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishBugfixAction extends GitflowAction {
+public class PublishBugfixAction extends AbstractPublishAction {
 
-    PublishBugfixAction(){ super("Publish Bugfix");}
+    PublishBugfixAction(){
+        super("Publish Bugfix", BranchType.Bugfix);
+    }
 
-    PublishBugfixAction(GitRepository repo){ super(repo,"Publish Bugfix");}
+    PublishBugfixAction(GitRepository repo){
+        super(repo, "Publish Bugfix", BranchType.Bugfix);
+    }
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {

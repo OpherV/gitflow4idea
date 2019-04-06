@@ -12,21 +12,21 @@ import gitflow.GitflowConfigurable;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class FinishReleaseAction extends GitflowAction {
+public class FinishReleaseAction extends AbstractBranchAction {
 
 	String customReleaseName=null;
 	String customtagMessage=null;
 
     FinishReleaseAction() {
-        super("Finish Release");
+        super("Finish Release", AbstractBranchAction.BranchType.Release);
     }
 
     FinishReleaseAction(GitRepository repo) {
-        super(repo, "Finish Release");
+        super(repo, "Finish Release", BranchType.Release);
     }
 
 	FinishReleaseAction(String name, String tagMessage) {
-		super("Finish Release");
+		super("Finish Release", BranchType.Release);
 		customReleaseName = name;
 		customtagMessage = tagMessage;
 	}

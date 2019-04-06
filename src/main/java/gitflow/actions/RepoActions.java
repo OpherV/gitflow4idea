@@ -11,9 +11,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
-import gitflow.GitflowBranchUtil;
-import gitflow.GitflowBranchUtilManager;
-import gitflow.GitflowConfigUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +20,7 @@ import java.util.Iterator;
 class RepoActions extends BranchActionGroup implements PopupElementWithAdditionalInfo, FileEditorManagerListener {
     Project myProject;
     GitRepository myRepo;
+    private final ArrayList<AnAction> repoActions;
 
     RepoActions(@NotNull Project project, @NotNull GitRepository repo) {
         myProject = project;
@@ -32,124 +30,41 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         getTemplatePresentation().setText(repoName, false); // no mnemonics
         this.updateFavoriteIcon();
         project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+
+        repoActions = getRepoActions();
     }
 
     public ArrayList<AnAction> getRepoActions(){
         ArrayList<AnAction> actionList = new ArrayList<AnAction>();
 
-        GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
+        actionList.add(new InitRepoAction(myRepo));
 
+        //FEATURE ACTIONS
+        actionList.add(new Separator("Feature"));
+        actionList.add(new StartFeatureAction(myRepo));
+        actionList.add(new FinishFeatureAction(myRepo));
+        actionList.add(new PublishFeatureAction(myRepo));
+        actionList.add(new TrackFeatureAction(myRepo));
 
-        boolean noRemoteTrackBranches = false;
-        boolean noRemoteFeatureBranches = false;
-        boolean noRemoteBugfixBranches = false;
+        //RELEASE ACTIONS
+        actionList.add(new Separator("Release"));
+        actionList.add(new StartReleaseAction(myRepo));
+        actionList.add(new FinishReleaseAction(myRepo));
+        actionList.add(new PublishReleaseAction(myRepo));
+        actionList.add(new TrackReleaseAction(myRepo));
 
-        boolean trackedAllFeatureBranches = false;
-        boolean trackedAllReleaseBranches = false;
-        boolean trackedAllBugfixBranches = false;
+        //BUGFIX ACTIONS
+        actionList.add(new Separator("Bugfix"));
+        actionList.add(new StartBugfixAction(myRepo));
+        actionList.add(new FinishBugfixAction(myRepo));
+        actionList.add(new PublishBugfixAction(myRepo));
+        actionList.add(new TrackBugfixAction(myRepo));
 
-        String currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
-
-        String featurePrefix = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo);
-        String releasePrefix = GitflowConfigUtil.getReleasePrefix(myProject, myRepo);
-        String hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(myProject, myRepo);
-        String masterBranch= GitflowConfigUtil.getMasterBranch(myProject, myRepo);
-        String developBranch= GitflowConfigUtil.getDevelopBranch(myProject, myRepo);
-        String bugfixPrefix = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo);
-
-        if (releasePrefix!=null){
-            noRemoteTrackBranches = branchUtil.getRemoteBranchesWithPrefix(releasePrefix).isEmpty();
-            trackedAllReleaseBranches = branchUtil.areAllBranchesTracked(releasePrefix);
-        }
-        if (featurePrefix!=null){
-            noRemoteFeatureBranches = branchUtil.getRemoteBranchesWithPrefix(featurePrefix).isEmpty();
-            trackedAllFeatureBranches = branchUtil.areAllBranchesTracked(featurePrefix);
-        }
-        if (bugfixPrefix!=null){
-            noRemoteBugfixBranches = branchUtil.getRemoteBranchesWithPrefix(bugfixPrefix).isEmpty();
-            trackedAllBugfixBranches = branchUtil.areAllBranchesTracked(bugfixPrefix);
-        }
-
-        //gitflow not setup
-        if (branchUtil.hasGitflow()!=true){
-            actionList.add(new InitRepoAction(myRepo));
-        }
-        else{
-
-            //FEATURE ACTIONS
-
-            actionList.add(new Separator("Feature"));
-            actionList.add(new StartFeatureAction(myRepo));
-            //feature only actions
-            if (branchUtil.isCurrentBranchFeature()){
-                actionList.add(new FinishFeatureAction(myRepo));
-
-                //can't publish feature if it's already published
-                if (branchUtil.isCurrentBranchPublished()==false){
-                    actionList.add(new PublishFeatureAction(myRepo));
-                }
-            }
-
-            //make sure there's a feature to track, and that not all features are tracked
-            if (noRemoteFeatureBranches == false && trackedAllFeatureBranches == false){
-                actionList.add(new TrackFeatureAction(myRepo));
-            }
-
-
-            //RELEASE ACTIONS
-
-            actionList.add(new Separator("Release"));
-            actionList.add(new StartReleaseAction(myRepo));
-            //release only actions
-            if (branchUtil.isCurrentBranchRelease()){
-                actionList.add(new FinishReleaseAction(myRepo));
-
-                //can't publish release if it's already published
-                if (branchUtil.isCurrentBranchPublished()==false){
-                    actionList.add(new PublishReleaseAction(myRepo));
-                }
-            }
-
-            //make sure there's something to track and that not all features are tracked
-            if (noRemoteTrackBranches==false  && trackedAllReleaseBranches ==false){
-                actionList.add(new TrackReleaseAction(myRepo));
-            }
-
-
-            //BUGFIX ACTIONS
-
-            actionList.add(new Separator("Bugfix"));
-            actionList.add(new StartBugfixAction(myRepo));
-            //bugfix only actions
-            if (branchUtil.isCurrentBranchBugfix()){
-                actionList.add(new FinishBugfixAction(myRepo));
-
-                //can't publish bugfix if it's already published
-                if (branchUtil.isCurrentBranchPublished()==false){
-                    actionList.add(new PublishBugfixAction(myRepo));
-                }
-            }
-
-            //make sure there's a bugfix to track, and that not all bugfixes are tracked
-            if (noRemoteBugfixBranches == false && trackedAllBugfixBranches == false){
-                actionList.add(new TrackBugfixAction(myRepo));
-            }
-
-            //HOTFIX ACTIONS
-            actionList.add(new Separator("Hotfix"));
-
-            //master only actions
-            actionList.add(new StartHotfixAction(myRepo));
-            if (branchUtil.isCurrentBranchHotfix()){
-                actionList.add(new FinishHotfixAction(myRepo));
-
-                //can't publish hotfix if it's already published
-                if (branchUtil.isCurrentBranchPublished() == false) {
-                    actionList.add(new PublishHotfixAction(myRepo));
-                }
-            }
-
-        }
+        //HOTFIX ACTIONS
+        actionList.add(new Separator("Hotfix"));
+        actionList.add(new StartHotfixAction(myRepo));
+        actionList.add(new FinishHotfixAction(myRepo));
+        actionList.add(new PublishHotfixAction(myRepo));
 
         return actionList;
     }
@@ -169,8 +84,9 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
     @NotNull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        ArrayList<AnAction> children = this.getRepoActions();
-        return children.toArray(new AnAction[children.size()]);
+        ArrayList<AnAction> children = new ArrayList<AnAction>(this.repoActions);
+
+        return children.toArray(new AnAction[0]);
     }
 
     @Override

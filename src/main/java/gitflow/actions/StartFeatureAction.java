@@ -5,17 +5,14 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-
-import git4idea.repo.GitRepository;
-import org.jetbrains.annotations.NotNull;
-
 import git4idea.commands.GitCommandResult;
+import git4idea.repo.GitRepository;
 import gitflow.ui.GitflowStartFeatureDialog;
 import gitflow.ui.NotifyUtil;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StartFeatureAction extends GitflowAction {
+public class StartFeatureAction extends AbstractStartAction {
 
     public StartFeatureAction() {
         super("Start Feature");
