@@ -1,12 +1,17 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.3.12'
+    id 'org.jetbrains.intellij' version '0.4.7'
+}
+
+compileJava {
+    options.compilerArgs += ["-Xlint"]
 }
 
 group 'gitflow4idea'
 version '0.6.7'
 
-sourceCompatibility = 1.6
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -17,7 +22,7 @@ dependencies {
 }
 
 intellij {
-    version '2018.3'
+    version '2019.1'
     plugins 'git4idea', 'tasks'
 }
 
@@ -26,7 +31,7 @@ patchPluginXml {
     pluginDescription 'Git Flow Integration'
     version '0.6.7'
     sinceBuild '182.0'
-    untilBuild '183.*'
+    untilBuild '191.*'
     changeNotes """
       <H2>Changelog for 0.6.7</H2>         
       <ul>
