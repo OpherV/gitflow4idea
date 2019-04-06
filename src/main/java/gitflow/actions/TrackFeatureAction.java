@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TrackFeatureAction extends GitflowAction {
+public class TrackFeatureAction extends AbstractTrackAction {
 
     TrackFeatureAction(){
-        super("Track Feature");
+        super("Track Feature", BranchType.Feature);
     }
 
     TrackFeatureAction(GitRepository repo){
-        super(repo,"Track Feature");
+        super(repo,"Track Feature", BranchType.Feature);
     }
 
     @Override

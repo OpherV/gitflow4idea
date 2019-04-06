@@ -12,7 +12,7 @@ import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StartBugfixAction extends GitflowAction {
+public class StartBugfixAction extends AbstractStartAction {
 
     public StartBugfixAction() {
         super("Start Bugfix");

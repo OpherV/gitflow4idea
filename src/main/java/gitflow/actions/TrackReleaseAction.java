@@ -13,14 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TrackReleaseAction extends GitflowAction {
+public class TrackReleaseAction extends AbstractTrackAction {
 
     TrackReleaseAction(){
-        super("Track Release");
+        super("Track Release", BranchType.Release);
     }
 
     TrackReleaseAction(GitRepository repo){
-        super(repo,"Track Release");
+        super(repo,"Track Release", BranchType.Release);
     }
 
     @Override

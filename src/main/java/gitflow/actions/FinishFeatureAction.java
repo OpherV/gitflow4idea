@@ -11,20 +11,20 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class FinishFeatureAction extends GitflowAction {
+public class FinishFeatureAction extends AbstractBranchAction {
 
     String customFeatureName=null;
 
     public FinishFeatureAction() {
-        super("Finish Feature");
+        super("Finish Feature", BranchType.Feature);
     }
 
     public FinishFeatureAction(GitRepository repo) {
-        super(repo, "Finish Feature");
+        super(repo, "Finish Feature", BranchType.Feature);
     }
 
     FinishFeatureAction(GitRepository repo, String name) {
-        super(repo, "Finish Feature");
+        super(repo, "Finish Feature", BranchType.Feature);
         customFeatureName=name;
     }
 

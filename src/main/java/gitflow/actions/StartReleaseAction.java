@@ -10,7 +10,7 @@ import git4idea.validators.GitNewBranchNameValidator;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class StartReleaseAction extends GitflowAction {
+public class StartReleaseAction extends AbstractStartAction {
 
     StartReleaseAction() {
         super("Start Release");

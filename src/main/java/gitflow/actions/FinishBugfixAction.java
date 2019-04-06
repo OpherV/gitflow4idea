@@ -11,20 +11,20 @@ import gitflow.GitflowConfigUtil;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class FinishBugfixAction extends GitflowAction {
+public class FinishBugfixAction extends AbstractBranchAction {
 
     String customBugfixName =null;
 
     public FinishBugfixAction() {
-        super("Finish Bugfix");
+        super("Finish Bugfix", BranchType.Bugfix);
     }
 
     public FinishBugfixAction(GitRepository repo) {
-        super(repo, "Finish Bugfix");
+        super(repo, "Finish Bugfix", BranchType.Bugfix);
     }
 
     FinishBugfixAction(GitRepository repo, String name) {
-        super(repo, "Finish Bugfix");
+        super(repo, "Finish Bugfix", BranchType.Bugfix);
         customBugfixName =name;
     }
 
