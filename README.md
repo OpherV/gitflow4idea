@@ -57,10 +57,6 @@ This project is under active development.
 If you encounter any bug or an issue, I encourage you to add the them to the [Issues list](https://github.com/OpherV/gitflow4idea/issues) on Github.
 Feedback and suggestions are also very welcome.
 
-[![PayPal][2]][1]
-
-[1]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DH67M9XFKAJHA&lc=IL&item_name=gitflow4idea%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-
 ## License
 
 This plugin is under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
