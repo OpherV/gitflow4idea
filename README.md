@@ -5,6 +5,17 @@ An intelliJ plugin providing a UI layer for git-flow, which in itself is a colle
 
 ![screenshot](http://opherv.github.io/gitflow4idea/images/gitflow.jpg)
 
+## Supporting my work (so that the plugin doesn't die)
+
+Do you use this free software at work? Great! Would you like it to stay free? Of course you do.
+
+I'm not a Java developer. In fact, I don't even like Java. Still I've been actively supporting this plugin for the past 5+ years on my own free time.
+
+If saved you or your company time and effort, please consider supporting me by buying me a cup of coffee.
+Better yet, get your boss to donate 10 cups. It's company money, they won't mind.
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R0TFS7)
+
 ## Getting started
 
 For the best introduction to get started with `git flow`, please read Jeff Kreeftmeijer's blog post:
@@ -46,12 +57,9 @@ This project is under active development.
 If you encounter any bug or an issue, I encourage you to add the them to the [Issues list](https://github.com/OpherV/gitflow4idea/issues) on Github.
 Feedback and suggestions are also very welcome.
 
-I have worked hard on this plugin on my spare time. If you feel it is useful to you, please consider buying me a beer. I code better drunk.
-
 [![PayPal][2]][1]
 
 [1]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DH67M9XFKAJHA&lc=IL&item_name=gitflow4idea%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-[2]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
 
 ## License
 
