@@ -1,8 +1,6 @@
 package gitflow.actions;
 
 import git4idea.repo.GitRepository;
-import gitflow.GitflowBranchUtil;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractPublishAction extends AbstractBranchAction {
     AbstractPublishAction(String actionName, BranchType type) {
@@ -14,11 +12,11 @@ public abstract class AbstractPublishAction extends AbstractBranchAction {
     }
 
     @Override
-    protected boolean isActionAllowed(@NotNull GitflowBranchUtil branchUtil) {
-        if (!super.isActionAllowed(branchUtil)) {
+    protected boolean isActionAllowedForBranch() {
+        if (!super.isActionAllowedForBranch()) {
             return false;
         }
-
+        
         return !branchUtil.isCurrentBranchPublished();
     }
 }

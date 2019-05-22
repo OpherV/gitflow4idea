@@ -24,6 +24,18 @@ public class InitRepoAction extends GitflowAction {
     }
 
     @Override
+    public void update(@NotNull AnActionEvent e) {
+        GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
+
+        //Disable and hide when gitflow has not been setup
+        if (branchUtil.hasGitflow()) {
+            e.getPresentation().setEnabledAndVisible(false);
+        } else {
+            e.getPresentation().setEnabledAndVisible(true);
+        }
+    }
+
+    @Override
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 

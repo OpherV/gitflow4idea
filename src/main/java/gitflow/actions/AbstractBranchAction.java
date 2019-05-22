@@ -1,7 +1,7 @@
 package gitflow.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import git4idea.repo.GitRepository;
-import gitflow.GitflowBranchUtil;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractBranchAction extends GitflowAction {
@@ -21,8 +21,29 @@ public abstract class AbstractBranchAction extends GitflowAction {
         this.type = type;
     }
 
+
     @Override
-    boolean isActionAllowed(@NotNull GitflowBranchUtil branchUtil) {
+    public void update(@NotNull AnActionEvent e) {
+        if (branchUtil == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+
+        //Disable and hide when gitflow has not been setup
+        if (branchUtil.hasGitflow() == false) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+
+        //Disable and hide when the branch-type is incorrect
+        if (isActionAllowedForBranch() == false) {
+            e.getPresentation().setEnabledAndVisible(false);
+        } else {
+            e.getPresentation().setEnabledAndVisible(true);
+        }
+    }
+
+    protected boolean isActionAllowedForBranch() {
         switch (type) {
             case Feature:
                 return branchUtil.isCurrentBranchFeature();
