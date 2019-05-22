@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import git4idea.GitUtil;
 import git4idea.repo.GitRepository;
 import gitflow.actions.GitflowActions;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,12 +17,7 @@ import java.util.List;
 public class GitflowBranchUtilManager {
     private static HashMap<GitRepository, GitflowBranchUtil> repoBranchUtilMap;
 
-    @Nullable
-    static public GitflowBranchUtil getBranchUtil(@Nullable GitRepository repo){
-        if (repo == null) {
-            return null;
-        }
-
+    static public GitflowBranchUtil getBranchUtil(GitRepository repo){
         return repoBranchUtilMap.get(repo);
     }
 

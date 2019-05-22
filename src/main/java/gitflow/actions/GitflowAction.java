@@ -14,12 +14,11 @@ import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.ui.NotifyUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public abstract class GitflowAction extends DumbAwareAction {
+public class GitflowAction extends DumbAwareAction {
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
@@ -49,52 +48,22 @@ public abstract class GitflowAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
-        // if project isn't set explicitly, such as in the case of starting
-        // from keyboard shortcut, set up local variables for the project
-        // associated with the current action
-        if (myProject == null) {
-            setup(e.getProject());
-        }
-
-        if (branchUtil == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
-        }
-
-        if (branchUtil.hasGitflow() == false) {
-            //Disable and hide when gitflow has not been setup
-            e.getPresentation().setEnabledAndVisible(false);
-        } else if (isActionAllowed(branchUtil) == false) {
-            //Disable and hide when the branch-type is incorrect
-            e.getPresentation().setEnabledAndVisible(false);
-        } else {
-            e.getPresentation().setEnabledAndVisible(true);
-        }
-    }
-
-    boolean isActionAllowed(@NotNull GitflowBranchUtil branchUtil) {
-        return true;
-    }
-
-    @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
 
-        setup(project);
-    }
-
-    private void setup(Project project){
         // if repo isn't set explicitly, such as in the case of starting from keyboard shortcut, infer it
         if (myRepo == null){
             myRepo = GitBranchUtil.getCurrentRepository(project);
         }
+        setup(project);
+    }
 
+    private void setup(Project project){
         myProject = project;
         virtualFileMananger = VirtualFileManager.getInstance();
         repos.add(myRepo);
 
-        branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
+        branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
 
         setupPrefixes();
     }

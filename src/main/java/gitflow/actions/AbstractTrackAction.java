@@ -1,8 +1,6 @@
 package gitflow.actions;
 
 import git4idea.repo.GitRepository;
-import gitflow.GitflowBranchUtil;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractTrackAction extends AbstractBranchAction {
     AbstractTrackAction(String actionName, BranchType type) {
@@ -14,7 +12,7 @@ public abstract class AbstractTrackAction extends AbstractBranchAction {
     }
 
     @Override
-    protected boolean isActionAllowed(@NotNull GitflowBranchUtil branchUtil) {
+    protected boolean isActionAllowedForBranch() {
         String prefix;
         switch (type) {
             case Feature:
@@ -30,8 +28,7 @@ public abstract class AbstractTrackAction extends AbstractBranchAction {
                 return false;
         }
 
-        boolean noRemoteBranches =
-                branchUtil.getRemoteBranchesWithPrefix(prefix).isEmpty();
+        boolean noRemoteBranches = branchUtil.getRemoteBranchesWithPrefix(prefix).isEmpty();
         boolean trackedAllBranches = branchUtil.areAllBranchesTracked(prefix);
 
         return noRemoteBranches == false && trackedAllBranches == false;
