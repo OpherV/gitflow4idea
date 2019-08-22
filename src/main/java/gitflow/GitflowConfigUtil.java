@@ -7,13 +7,14 @@ import git4idea.config.GitConfigUtil;
 import git4idea.repo.GitRepository;
 import gitflow.ui.NotifyUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  *
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
-
-//TODO maybe have this as a singleton instead of static
 
 public class GitflowConfigUtil {
 
@@ -26,118 +27,81 @@ public class GitflowConfigUtil {
     public static final String PREFIX_SUPPORT = "gitflow.prefix.support";
     public static final String PREFIX_VERSIONTAG = "gitflow.prefix.versiontag";
 
-    public static String getMasterBranch(Project project, GitRepository repo){
+    private static  Map<Project, Map<GitRepository, GitflowConfigUtil>> gitflowConfigUtilMap = new HashMap<Project, Map<GitRepository, GitflowConfigUtil>>();
+
+    Project project;
+    GitRepository repo;
+    public String masterBranch;
+    public String developBranch;
+    public String featurePrefix;
+    public String releasePrefix;
+    public String hotfixPrefix;
+    public String bugfixPrefix;
+    public String supportPrefix;
+    public String versiontagPrefix;
+
+    public static GitflowConfigUtil getInstance(Project project_, GitRepository repo_)
+    {
+        GitflowConfigUtil instance;
+        if (gitflowConfigUtilMap.containsKey(project_) && gitflowConfigUtilMap.get(project_).containsKey(repo_)) {
+            instance = gitflowConfigUtilMap.get(project_).get(repo_);
+        } else {
+            Map<GitRepository, GitflowConfigUtil> innerMap = new HashMap<GitRepository, GitflowConfigUtil>();
+            instance = new GitflowConfigUtil(project_, repo_);
+
+            gitflowConfigUtilMap.put(project_, innerMap);
+            innerMap.put(repo_, instance);
+        }
+
+        return instance;
+    }
+
+    GitflowConfigUtil(Project project_, GitRepository repo_){
+        project = project_;
+        repo = repo_;
+
         VirtualFile root = repo.getRoot();
 
-        String masterBranch=null;
         try{
             masterBranch = GitConfigUtil.getValue(project, root, BRANCH_MASTER);
-        }
-        catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-
-        return masterBranch;
-    }
-
-    public static String getDevelopBranch(Project project, GitRepository repo){
-        VirtualFile root = repo.getRoot();
-
-        String developBranch=null;
-        try{
             developBranch = GitConfigUtil.getValue(project, root, BRANCH_DEVELOP);
-        }
-        catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-
-        return developBranch;
-    }
-
-    public static String getFeaturePrefix(Project project, GitRepository repo){
-        VirtualFile root = repo.getRoot();
-
-        String featurePrefix=null;
-
-        try{
             featurePrefix = GitConfigUtil.getValue(project,root,PREFIX_FEATURE);
-        }
-        catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-        return featurePrefix;
-    }
-
-    public static String getReleasePrefix(Project project, GitRepository repo){
-        VirtualFile root = repo.getRoot();
-
-        String releasePrefix=null;
-
-        try{
             releasePrefix = GitConfigUtil.getValue(project,root,PREFIX_RELEASE);
-        }
-        catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-        return releasePrefix;
-    }
-
-    public static String getHotfixPrefix(Project project, GitRepository repo){
-        VirtualFile root = repo.getRoot();
-
-        String hotfixPrefix=null;
-
-        try{
             hotfixPrefix = GitConfigUtil.getValue(project,root,PREFIX_HOTFIX);
-        }
-        catch (VcsException e) {
-            NotifyUtil.notifyError(project, "Config error", e);
-        }
-        return hotfixPrefix;
-    }
-
-    public static String getBugfixPrefix(Project project, GitRepository repo){
-        VirtualFile root = repo.getRoot();
-
-        String bugfixPrefix=null;
-
-        try{
             bugfixPrefix = GitConfigUtil.getValue(project,root,PREFIX_BUGFIX);
-        }
-        catch (VcsException e) {
+            supportPrefix = GitConfigUtil.getValue(project,root,PREFIX_SUPPORT);
+            versiontagPrefix = GitConfigUtil.getValue(project,root,PREFIX_VERSIONTAG);
+
+        } catch (VcsException e) {
             NotifyUtil.notifyError(project, "Config error", e);
         }
-        return bugfixPrefix;
     }
 
-    public static String getFeatureNameFromBranch(Project project, GitRepository repo, String branchName){
-        String featurePrefix= GitflowConfigUtil.getFeaturePrefix(project, repo);
+
+    public String getFeatureNameFromBranch(String branchName){
         return branchName.substring(branchName.indexOf(featurePrefix)+featurePrefix.length(),branchName.length());
     }
 
-    public static String getReleaseNameFromBranch(Project project, GitRepository repo, String branchName){
-        String releasePrefix= GitflowConfigUtil.getReleasePrefix(project, repo);
+    public String getReleaseNameFromBranch(String branchName){
         return branchName.substring(branchName.indexOf(releasePrefix) + releasePrefix.length(), branchName.length());
     }
 
-    public static String getHotfixNameFromBranch(Project project, GitRepository repo, String branchName){
-        String hotfixPrefix= GitflowConfigUtil.getHotfixPrefix(project, repo);
+    public String getHotfixNameFromBranch(String branchName){
         return branchName.substring(branchName.indexOf(hotfixPrefix) + hotfixPrefix.length(), branchName.length());
     }
 
-    public static String getBugfixNameFromBranch(Project project, GitRepository repo, String branchName){
-        String bugfixPrefix= GitflowConfigUtil.getBugfixPrefix(project, repo);
+    public String getBugfixNameFromBranch(String branchName){
         return branchName.substring(branchName.indexOf(bugfixPrefix)+bugfixPrefix.length(),branchName.length());
     }
 
-    public static String getRemoteNameFromBranch(Project project, String branchName){
+    public String getRemoteNameFromBranch(String branchName){
         return branchName.substring(0,branchName.indexOf("/"));
     }
 
-    public static void setMasterBranch(Project project, GitRepository repo, String branchName)
+    public void setMasterBranch(String branchName)
     {
+        masterBranch = branchName;
         VirtualFile root = repo.getRoot();
-
         try {
             GitConfigUtil.setValue(project, root, BRANCH_MASTER, branchName);
         } catch (VcsException e) {
@@ -145,10 +109,9 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setDevelopBranch(Project project, GitRepository repo, String branchName) {
-        
+    public void setDevelopBranch(String branchName) {
+        developBranch = branchName;
         VirtualFile root = repo.getRoot();
-
         try {
             GitConfigUtil.setValue(project, root, BRANCH_DEVELOP, branchName);
         } catch (VcsException e) {
@@ -156,8 +119,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setReleasePrefix(Project project, GitRepository repo, String prefix) {
-        
+    public void setReleasePrefix(String prefix) {
+        releasePrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -167,8 +130,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setFeaturePrefix(Project project, GitRepository repo, String prefix) {
-        
+    public void setFeaturePrefix(String prefix) {
+        featurePrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -178,8 +141,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setHotfixPrefix(Project project, GitRepository repo, String prefix) {
-
+    public void setHotfixPrefix(String prefix) {
+        hotfixPrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -189,8 +152,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setBugfixPrefix(Project project, GitRepository repo, String prefix) {
-
+    public void setBugfixPrefix(String prefix) {
+        bugfixPrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -200,8 +163,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setSupportPrefix(Project project, GitRepository repo, String prefix) {
-        
+    public void setSupportPrefix(String prefix) {
+        supportPrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -211,8 +174,8 @@ public class GitflowConfigUtil {
         }
     }
 
-    public static void setVersionPrefix(Project project, GitRepository repo, String prefix) {
-        
+    public void setVersionPrefix(String prefix) {
+        versiontagPrefix = prefix;
         VirtualFile root = repo.getRoot();
 
         try {
@@ -221,9 +184,10 @@ public class GitflowConfigUtil {
             NotifyUtil.notifyError(project, "Config error", e);
         }
     }
-    
-    public static String getBaseBranch(Project project, GitRepository repo, String branchName){
-        
+
+    // this still reads from config because it always runs from an action and never from the EDT
+    public String getBaseBranch(String branchName){
+
         VirtualFile root = repo.getRoot();
 
         String baseBranch=null;

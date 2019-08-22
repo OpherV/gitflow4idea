@@ -42,7 +42,8 @@ public class FinishFeatureAction extends AbstractBranchAction {
                 featureName = customFeatureName;
             }
             else{
-                featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, currentBranchName);
+                GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+                featureName = gitflowConfigUtil.getFeatureNameFromBranch(currentBranchName);
             }
 
             this.runAction(myProject, featureName);
@@ -57,7 +58,8 @@ public class FinishFeatureAction extends AbstractBranchAction {
         final FinishFeatureAction that = this;
 
         //get the base branch for this feature
-        final String baseBranch = GitflowConfigUtil.getBaseBranch(project, myRepo, featurePrefix+featureName);
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, myRepo);
+        final String baseBranch = gitflowConfigUtil.getBaseBranch(featurePrefix+featureName);
 
         new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
             @Override

@@ -42,7 +42,8 @@ public class FinishBugfixAction extends AbstractBranchAction {
                 bugfixName = customBugfixName;
             }
             else{
-                bugfixName = GitflowConfigUtil.getBugfixNameFromBranch(myProject, myRepo, currentBranchName);
+                GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+                bugfixName = gitflowConfigUtil.getBugfixNameFromBranch(currentBranchName);
             }
 
             this.runAction(myProject, bugfixName);
@@ -56,8 +57,10 @@ public class FinishBugfixAction extends AbstractBranchAction {
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
         final FinishBugfixAction that = this;
 
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, myRepo);
+
         //get the base branch for this bugfix
-        final String baseBranch = GitflowConfigUtil.getBaseBranch(project, myRepo, bugfixPrefix+bugfixName);
+        final String baseBranch = gitflowConfigUtil.getBaseBranch(bugfixPrefix+bugfixName);
 
         new Task.Backgroundable(myProject,"Finishing bugfix "+bugfixName,false){
             @Override

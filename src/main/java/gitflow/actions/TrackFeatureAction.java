@@ -45,8 +45,9 @@ public class TrackFeatureAction extends AbstractTrackAction {
             branchChoose.show();
             if (branchChoose.isOK()){
                 String branchName= branchChoose.getSelectedBranchName();
-                final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, branchName);
-                final GitRemote remote=branchUtil.getRemoteByBranch(branchName);
+                GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+                final String featureName = gitflowConfigUtil.getFeatureNameFromBranch(branchName);
+                final GitRemote remote = branchUtil.getRemoteByBranch(branchName);
                 final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
                 new Task.Backgroundable(myProject,"Tracking feature "+featureName,false){

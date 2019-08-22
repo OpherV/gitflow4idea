@@ -6,6 +6,7 @@ import git4idea.GitRemoteBranch;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
+import gitflow.GitflowConfigUtil;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,12 +43,13 @@ public class GitflowBranchUtil {
         if (repo != null) {
             currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
 
-            branchnameMaster= GitflowConfigUtil.getMasterBranch(project, repo);
-            branchnameDevelop = GitflowConfigUtil.getDevelopBranch(project, repo);
-            prefixFeature = GitflowConfigUtil.getFeaturePrefix(project, repo);
-            prefixRelease = GitflowConfigUtil.getReleasePrefix(project, repo);
-            prefixHotfix = GitflowConfigUtil.getHotfixPrefix(project, repo);
-            prefixBugfix = GitflowConfigUtil.getBugfixPrefix(project, repo);
+            GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, repo);
+            branchnameMaster = gitflowConfigUtil.masterBranch;
+            branchnameDevelop = gitflowConfigUtil.developBranch;
+            prefixFeature = gitflowConfigUtil.featurePrefix;
+            prefixRelease = gitflowConfigUtil.releasePrefix;
+            prefixHotfix = gitflowConfigUtil.hotfixPrefix;
+            prefixBugfix = gitflowConfigUtil.bugfixPrefix;
 
             initRemoteBranches();
             initLocalBranchNames();

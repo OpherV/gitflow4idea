@@ -23,7 +23,8 @@ public class PublishHotfixAction extends AbstractPublishAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         super.actionPerformed(anActionEvent);
 
-        final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, myRepo, currentBranchName);
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+        final String hotfixName = gitflowConfigUtil.getHotfixNameFromBranch(currentBranchName);
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
         new Task.Backgroundable(myProject, "Publishing hotfix " + hotfixName, false) {

@@ -31,8 +31,9 @@ public class FinishHotfixAction extends AbstractBranchAction {
 
         if (currentBranchName.isEmpty() == false){
 
+            GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
             //TODO HOTFIX NAME
-            final String hotfixName = GitflowConfigUtil.getHotfixNameFromBranch(myProject, myRepo, currentBranchName);
+            final String hotfixName = gitflowConfigUtil.getHotfixNameFromBranch(currentBranchName);
 
             final String tagMessage;
             String tagMessageTemplate = GitflowConfigurable.getOptionTextString(myProject, "HOTFIX_customHotfixCommitMessage").replace("%name%", hotfixName);

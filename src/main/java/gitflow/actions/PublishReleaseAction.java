@@ -23,7 +23,8 @@ public class PublishReleaseAction extends AbstractPublishAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         super.actionPerformed(anActionEvent);
 
-        final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, currentBranchName);
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+        final String releaseName= gitflowConfigUtil.getReleaseNameFromBranch(currentBranchName);
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
         new Task.Backgroundable(myProject,"Publishing release "+releaseName,false){

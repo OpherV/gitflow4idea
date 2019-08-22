@@ -23,7 +23,8 @@ public class PublishBugfixAction extends AbstractPublishAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         super.actionPerformed(anActionEvent);
 
-        final String bugfixName= GitflowConfigUtil.getBugfixNameFromBranch(myProject, myRepo, currentBranchName);
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+        final String bugfixName = gitflowConfigUtil.getBugfixNameFromBranch(currentBranchName);
 
         new Task.Backgroundable(myProject,"Publishing bugfix "+bugfixName,false){
             @Override

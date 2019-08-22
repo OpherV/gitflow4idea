@@ -43,8 +43,10 @@ public class FinishReleaseAction extends AbstractBranchAction {
             final String tagMessage;
             final String releaseName;
 
+            GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+
 	        // Check if a release name was specified, otherwise take name from current branch
-	        releaseName = customReleaseName!=null ? customReleaseName:GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, currentBranchName);
+	        releaseName = customReleaseName!=null ? customReleaseName:gitflowConfigUtil.getReleaseNameFromBranch(currentBranchName);
 
             final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
             

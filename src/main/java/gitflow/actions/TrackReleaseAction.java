@@ -44,7 +44,8 @@ public class TrackReleaseAction extends AbstractTrackAction {
             branchChoose.show();
             if (branchChoose.isOK()){
                 String branchName= branchChoose.getSelectedBranchName();
-                final String releaseName= GitflowConfigUtil.getReleaseNameFromBranch(myProject, myRepo, branchName);
+                GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+                final String releaseName = gitflowConfigUtil.getReleaseNameFromBranch(branchName);
                 final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
                 new Task.Backgroundable(myProject,"Tracking release "+releaseName,false){

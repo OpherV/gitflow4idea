@@ -45,7 +45,6 @@ public abstract class GitflowAction extends DumbAwareAction {
         myRepo = repo;
 
         branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
-        setupPrefixes();
     }
 
     @Override
