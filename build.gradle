@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.6.8'
+version '0.6.9'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,17 +22,26 @@ dependencies {
 }
 
 intellij {
-    version '2019.1'
+    version '2019.2'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.6.8'
+    version '0.6.9'
     sinceBuild '182.0'
     untilBuild '192.*'
     changeNotes """
+
+      <H2>Changelog for 0.6.9</H2>
+      <ul>
+        <li>Support for Idea build 192 #241 (@opherv)</li>
+        <li>Feature: No Fast-forward option is not working #225 (@opherv)</li>
+        <li>Hotfix: option -k to keep branch after performing finish #199 (@opherv)</li>
+        <li>Exceptions #243 #235 #323 #223 (@bmwsedee)</li>                             
+      </ul>
+      
       <H2>Changelog for 0.6.8</H2>         
       <ul>
         <li>Support for Idea build 191 #221 (@ottnorml)</li>
