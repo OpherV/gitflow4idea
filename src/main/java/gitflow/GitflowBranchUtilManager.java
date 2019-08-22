@@ -25,12 +25,7 @@ import java.util.concurrent.Future;
 public class GitflowBranchUtilManager {
     private static HashMap<GitRepository, GitflowBranchUtil> repoBranchUtilMap;
 
-    @Nullable
-    static public GitflowBranchUtil getBranchUtil(@Nullable GitRepository repo){
-        if (repo == null) {
-            return null;
-        }
-
+    static public GitflowBranchUtil getBranchUtil(GitRepository repo){
         return repoBranchUtilMap.get(repo);
     }
 
