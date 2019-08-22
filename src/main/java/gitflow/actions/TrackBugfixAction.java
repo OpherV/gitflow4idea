@@ -45,7 +45,9 @@ public class TrackBugfixAction extends AbstractTrackAction {
             branchChoose.show();
             if (branchChoose.isOK()) {
                 String branchName = branchChoose.getSelectedBranchName();
-                final String bugfixName = GitflowConfigUtil.getBugfixNameFromBranch(myProject, myRepo, branchName);
+
+                GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+                final String bugfixName = gitflowConfigUtil.getBugfixNameFromBranch(branchName);
                 final GitRemote remote = branchUtil.getRemoteByBranch(branchName);
                 final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 

@@ -22,7 +22,8 @@ public class PublishFeatureAction extends AbstractPublishAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         super.actionPerformed(anActionEvent);
 
-        final String featureName= GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, currentBranchName);
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+        final String featureName= gitflowConfigUtil.getFeatureNameFromBranch(currentBranchName);
 
         new Task.Backgroundable(myProject,"Publishing feature "+featureName,false){
             @Override

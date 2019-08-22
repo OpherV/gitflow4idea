@@ -36,6 +36,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.swing.JFrame;
 
@@ -149,7 +151,14 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         Project project = getProject();
 
         //repopulate the branchUtil
-        GitflowBranchUtilManager.update(project);
+        Future<Void> f = GitflowBranchUtilManager.update(project);
+        try {
+            f.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         if (project == null) {
             emptyTextAndTooltip();

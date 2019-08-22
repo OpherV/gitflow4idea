@@ -67,14 +67,16 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         gitflowState = ServiceManager.getService(GitflowState.class);
         gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
 
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, myRepo);
 
-        String defaultFeatureBranch = GitflowConfigUtil.getDevelopBranch(project, myRepo);
+
+        String defaultFeatureBranch = gitflowConfigUtil.developBranch;
         featureBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultFeatureBranch));
 
-        String defaultHotfixBranch = GitflowConfigUtil.getMasterBranch(project, myRepo);
+        String defaultHotfixBranch = gitflowConfigUtil.masterBranch;
         hotfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultHotfixBranch));
 
-        String defaultBugfixBranch = GitflowConfigUtil.getDevelopBranch(project, myRepo);
+        String defaultBugfixBranch = gitflowConfigUtil.developBranch;
         bugfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultBugfixBranch));
 
         myRepo = GitBranchUtil.getCurrentRepository(project);
@@ -120,15 +122,17 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         final GitflowBranchUtil.ComboEntry selectedHotfixBaseBranch = (GitflowBranchUtil.ComboEntry) hotfixBaseBranch.getModel().getSelectedItem();
         final GitflowBranchUtil.ComboEntry selectedBugfixBaseBranch = (GitflowBranchUtil.ComboEntry) bugfixBaseBranch.getModel().getSelectedItem();
 
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+
         if (startFeatureRadioButton.isSelected()) {
-            final String branchName = GitflowConfigUtil.getFeaturePrefix(myProject, myRepo) + featureName.getText();
+            final String branchName = gitflowConfigUtil.featurePrefix + featureName.getText();
             attachTaskAndRunAction(new StartFeatureAction(myRepo), selectedFeatureBaseBranch.getBranchName(), branchName);
         }
         else if (startHotfixRadioButton.isSelected()) {
-            final String branchName = GitflowConfigUtil.getHotfixPrefix(myProject, myRepo) + hotfixName.getText();
+            final String branchName = gitflowConfigUtil.hotfixPrefix + hotfixName.getText();
             attachTaskAndRunAction(new StartHotfixAction(myRepo), selectedHotfixBaseBranch.getBranchName(), branchName);
         } else if (startBugfixRadioButton.isSelected()) {
-            final String branchName = GitflowConfigUtil.getBugfixPrefix(myProject, myRepo) + bugfixName.getText();
+            final String branchName = gitflowConfigUtil.bugfixPrefix + bugfixName.getText();
             attachTaskAndRunAction(new StartBugfixAction(myRepo), selectedBugfixBaseBranch.getBranchName(), branchName);
         }
     }

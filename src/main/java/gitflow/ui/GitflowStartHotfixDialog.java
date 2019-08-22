@@ -1,9 +1,9 @@
 package gitflow.ui;
 
 import com.intellij.openapi.project.Project;
-
 import git4idea.repo.GitRepository;
 import gitflow.GitflowConfigUtil;
+import gitflow.ui.AbstractBranchStartDialog;
 
 public class GitflowStartHotfixDialog extends AbstractBranchStartDialog {
 
@@ -18,6 +18,6 @@ public class GitflowStartHotfixDialog extends AbstractBranchStartDialog {
 
     @Override
     protected String getDefaultBranch() {
-        return GitflowConfigUtil.getMasterBranch(getProject(), myRepo);
+        return GitflowConfigUtil.getInstance(getProject(), myRepo).masterBranch;
     }
 }
