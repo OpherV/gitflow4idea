@@ -59,13 +59,13 @@ public class FinishFeatureAction extends AbstractBranchAction {
 
         //get the base branch for this feature
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, myRepo);
-        final String baseBranch = gitflowConfigUtil.getBaseBranch(featurePrefix+featureName);
 
         new Task.Backgroundable(myProject,"Finishing feature "+featureName,false){
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 GitCommandResult result =  myGitflow.finishFeature(myRepo,featureName,errorLineHandler);
 
+                final String baseBranch = gitflowConfigUtil.getBaseBranch(featurePrefix+featureName);
 
                 if (result.success()) {
                     String finishedFeatureMessage = String.format("The feature branch '%s%s' was merged into '%s'", featurePrefix, featureName, baseBranch);
