@@ -41,6 +41,7 @@ public class GitflowOptionsFactory {
 
         addBranchType(TYPE.HOTFIX);
         addOption(TYPE.HOTFIX, "Fetch from Origin", "fetchFromOrigin" , "-F");
+        addOption(TYPE.HOTFIX, "Keep branch after performing finish", "keepBranch" , "-k");
         addOption(TYPE.HOTFIX, "Push on finish Hotfix", "pushOnFinish" , "-p");
         addOption(TYPE.HOTFIX, "Don't tag Hotfix", "dontTag" , "-n");
         addOption(TYPE.HOTFIX, "Use custom hotfix commit message", "customHotfixCommitMessage" , null, DefaultOptions.getOption("HOTFIX_customHotfixCommitMessage") ,"Use %name% for the branch name");

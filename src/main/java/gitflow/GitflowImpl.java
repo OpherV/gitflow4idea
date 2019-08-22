@@ -327,6 +327,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         h.addParameters("hotfix");
         h.addParameters("finish");
 
+        addOptionsCommand(h, repository.getProject(),"HOTFIX_keepBranch");
         addOptionsCommand(h, repository.getProject(),"HOTFIX_fetchFromOrigin");
         addOptionsCommand(h, repository.getProject(),"HOTFIX_pushOnFinish");
 
