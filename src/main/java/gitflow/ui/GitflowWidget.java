@@ -151,14 +151,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         Project project = getProject();
 
         //repopulate the branchUtil
-        Future<Void> f = GitflowBranchUtilManager.update(project);
-        try {
-            f.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        GitflowBranchUtilManager.update(project);
 
         if (project == null) {
             emptyTextAndTooltip();

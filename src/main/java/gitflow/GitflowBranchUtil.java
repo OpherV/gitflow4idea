@@ -41,19 +41,24 @@ public class GitflowBranchUtil {
         myRepo = repo;
 
         if (repo != null) {
-            currentBranchName = GitBranchUtil.getBranchNameOrRev(repo);
-
-            GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, repo);
-            branchnameMaster = gitflowConfigUtil.masterBranch;
-            branchnameDevelop = gitflowConfigUtil.developBranch;
-            prefixFeature = gitflowConfigUtil.featurePrefix;
-            prefixRelease = gitflowConfigUtil.releasePrefix;
-            prefixHotfix = gitflowConfigUtil.hotfixPrefix;
-            prefixBugfix = gitflowConfigUtil.bugfixPrefix;
-
-            initRemoteBranches();
-            initLocalBranchNames();
+           update();
         }
+    }
+
+    public void update(){
+        currentBranchName = GitBranchUtil.getBranchNameOrRev(myRepo);
+
+        GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
+        gitflowConfigUtil.update();
+        branchnameMaster = gitflowConfigUtil.masterBranch;
+        branchnameDevelop = gitflowConfigUtil.developBranch;
+        prefixFeature = gitflowConfigUtil.featurePrefix;
+        prefixRelease = gitflowConfigUtil.releasePrefix;
+        prefixHotfix = gitflowConfigUtil.hotfixPrefix;
+        prefixBugfix = gitflowConfigUtil.bugfixPrefix;
+
+        initRemoteBranches();
+        initLocalBranchNames();
     }
 
     public String getCurrentBranchName() {
@@ -62,12 +67,12 @@ public class GitflowBranchUtil {
 
     public boolean hasGitflow(){
         boolean hasGitflow = myRepo != null
-                       && branchnameMaster != null
-                       && branchnameDevelop != null
-                       && prefixFeature != null
-                       && prefixRelease != null
-                       && prefixHotfix != null
-                       && prefixBugfix != null;
+                       && getBranchnameMaster() != null
+                       && getBranchnameDevelop() != null
+                       && getPrefixFeature() != null
+                       && getPrefixRelease() != null
+                       && getPrefixHotfix() != null
+                       && getPrefixBugfix() != null;
 
         return hasGitflow;
     }

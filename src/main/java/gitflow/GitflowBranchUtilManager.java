@@ -38,24 +38,17 @@ public class GitflowBranchUtilManager {
      * Repopulates the branchUtils for each repo
      * @param project
      */
-    static public Future<Void> update(Project proj){
-        final Project project = proj;
-        return (Future<Void>) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                if (repoBranchUtilMap == null){
-                    repoBranchUtilMap = new HashMap<GitRepository, gitflow.GitflowBranchUtil>();
-                }
+    static public void update(Project proj){
+        if (repoBranchUtilMap == null){
+            repoBranchUtilMap = new HashMap<GitRepository, gitflow.GitflowBranchUtil>();
+        }
 
-                List<GitRepository> gitRepositories = GitUtil.getRepositoryManager(project).getRepositories();
+        List<GitRepository> gitRepositories = GitUtil.getRepositoryManager(proj).getRepositories();
 
-                Iterator gitRepositoriesIterator = gitRepositories.iterator();
-                while(gitRepositoriesIterator.hasNext()){
-                    GitRepository repo = (GitRepository) gitRepositoriesIterator.next();
-                    GitflowBranchUtilManager.setupBranchUtil(project, repo);
-                }
-            }
-        });
-
+        Iterator gitRepositoriesIterator = gitRepositories.iterator();
+        while(gitRepositoriesIterator.hasNext()){
+            GitRepository repo = (GitRepository) gitRepositoriesIterator.next();
+            GitflowBranchUtilManager.setupBranchUtil(proj, repo);
+        }
     }
 }
