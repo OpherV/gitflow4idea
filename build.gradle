@@ -34,6 +34,15 @@ patchPluginXml {
     untilBuild '192.*'
     changeNotes """
 
+      <H2>Changelog for 0.7.0</H2>
+      <ul>
+        <li>Fix NPE when clicking Gitflow menu #245 (@opherv)</li>
+        <li>Fix "Init gitflow" doesn't update widget #247 (@opherv)</li>
+        <li>Fix Wrong message when finishing a feature #144 (@opherv)</li>
+        <li>Feature: Re-init gitflow (access from VCS>Git>Gitflow>Advanced menu) #50 (@bmwsedee/@opherv)</li>                     
+        <li>"Feature": Don't show branch select combo on new Hotfix (@opherv)</li>                     
+      </ul>
+
       <H2>Changelog for 0.6.9</H2>
       <ul>
         <li>Support for Idea build 192 #241 (@opherv)</li>
