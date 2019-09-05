@@ -11,6 +11,10 @@ public class GitflowStartHotfixDialog extends AbstractBranchStartDialog {
         super(project, repo);
     }
 
+    protected boolean showBranchFromCombo(){
+        return false;
+    }
+
     @Override
     protected String getLabel() {
         return "hotfix";

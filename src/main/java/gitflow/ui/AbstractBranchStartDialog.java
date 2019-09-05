@@ -24,6 +24,7 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
     private JComboBox branchFromCombo;
     private JLabel branchNameLabel;
     private JLabel spacesLabel;
+    private JLabel branchFromTitle;
 
     private Project project;
     protected GitRepository myRepo;
@@ -71,6 +72,15 @@ public abstract class AbstractBranchStartDialog extends DialogWrapper {
                 }
             }
         });
+
+        if (showBranchFromCombo() == false){
+            branchFromTitle.setVisible(false);
+            branchFromCombo.setVisible(false);
+        }
+    }
+
+    protected boolean showBranchFromCombo(){
+        return true;
     }
 
     @Override
