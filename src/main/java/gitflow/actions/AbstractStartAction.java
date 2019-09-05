@@ -19,12 +19,13 @@ public abstract class AbstractStartAction extends GitflowAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
-
-        //Disable and hide when gitflow has not been setup
-        if (branchUtil.hasGitflow() == false) {
-            e.getPresentation().setEnabledAndVisible(false);
-        } else {
-            e.getPresentation().setEnabledAndVisible(true);
+        if (branchUtil != null) {
+            //Disable and hide when gitflow has not been setup
+            if (branchUtil.hasGitflow() == false) {
+                e.getPresentation().setEnabledAndVisible(false);
+            } else {
+                e.getPresentation().setEnabledAndVisible(true);
+            }
         }
     }
 }
