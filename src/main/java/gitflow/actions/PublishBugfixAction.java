@@ -24,14 +24,14 @@ public class PublishBugfixAction extends AbstractPublishAction {
         super.actionPerformed(anActionEvent);
 
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
-        final String bugfixName = gitflowConfigUtil.getBugfixNameFromBranch(currentBranchName);
+        final String bugfixName = gitflowConfigUtil.getBugfixNameFromBranch(branchUtil.getCurrentBranchName());
 
         new Task.Backgroundable(myProject,"Publishing bugfix "+bugfixName,false){
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 GitCommandResult result = myGitflow.publishBugfix(myRepo, bugfixName,new GitflowErrorsListener(myProject));
                 if (result.success()) {
-                    String publishedBugfixMessage = String.format("A new remote branch '%s%s' was created", bugfixPrefix, bugfixName);
+                    String publishedBugfixMessage = String.format("A new remote branch '%s%s' was created", branchUtil.getPrefixBugfix(), bugfixName);
                     NotifyUtil.notifySuccess(myProject, bugfixName, publishedBugfixMessage);
                 }
                 else {

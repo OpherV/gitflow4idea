@@ -27,16 +27,6 @@ public class GitflowAction extends DumbAwareAction {
 
     VirtualFileManager virtualFileMananger;
 
-
-    String currentBranchName;
-
-    String featurePrefix;
-    String releasePrefix;
-    String hotfixPrefix;
-    String bugfixPrefix;
-    String masterBranch;
-    String developBranch;
-
     GitflowAction( String actionName){ super(actionName); }
 
     GitflowAction(GitRepository repo, String actionName){
@@ -63,19 +53,6 @@ public class GitflowAction extends DumbAwareAction {
         repos.add(myRepo);
 
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
-
-        setupPrefixes();
-    }
-
-    private void setupPrefixes() {
-        featurePrefix = branchUtil.getPrefixFeature();
-        releasePrefix = branchUtil.getPrefixRelease();
-        hotfixPrefix = branchUtil.getPrefixHotfix();
-        bugfixPrefix = branchUtil.getPrefixBugfix();
-        masterBranch = branchUtil.getBranchnameMaster();
-        developBranch = branchUtil.getBranchnameDevelop();
-
-        currentBranchName = branchUtil.getCurrentBranchName();
     }
 
     public void runAction(Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){

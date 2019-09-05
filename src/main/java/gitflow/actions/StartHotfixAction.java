@@ -58,7 +58,7 @@ public class StartHotfixAction extends AbstractStartAction {
 
         if (result.success()) {
             String startedHotfixMessage = String.format("A new hotfix '%s%s' was created, based on '%s'",
-                    hotfixPrefix, hotfixBranchName, baseBranchName);
+                    branchUtil.getPrefixHotfix(), hotfixBranchName, baseBranchName);
             NotifyUtil.notifySuccess(myProject, hotfixBranchName, startedHotfixMessage);
         } else {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");

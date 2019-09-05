@@ -55,7 +55,7 @@ public class StartFeatureAction extends AbstractStartAction {
         GitCommandResult result = myGitflow.startFeature(myRepo, featureName, baseBranchName, errorListener);
 
         if (result.success()) {
-            String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, baseBranchName);
+            String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", branchUtil.getPrefixFeature(), featureName, baseBranchName);
             NotifyUtil.notifySuccess(myProject, featureName, startedFeatureMessage);
         } else {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");

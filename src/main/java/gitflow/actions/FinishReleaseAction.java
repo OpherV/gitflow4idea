@@ -82,7 +82,7 @@ public class FinishReleaseAction extends AbstractBranchAction {
                         GitCommandResult result =  myGitflow.finishRelease(myRepo, releaseName, tagMessage, errorLineHandler);
 
                         if (result.success()) {
-                            String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", releasePrefix, releaseName, developBranch, masterBranch);
+                            String finishedReleaseMessage = String.format("The release branch '%s%s' was merged into '%s' and '%s'", branchUtil.getPrefixRelease(), releaseName, branchUtil.getBranchnameDevelop(), branchUtil.getBranchnameMaster());
                             NotifyUtil.notifySuccess(myProject, releaseName, finishedReleaseMessage);
                         }
                         else if(errorLineHandler.hasMergeError){
