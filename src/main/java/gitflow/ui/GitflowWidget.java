@@ -164,7 +164,8 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             return;
         }
 
-        popupGroup = new GitflowPopupGroup(project);
+        //No advanced features in the status-bar widget
+        popupGroup = new GitflowPopupGroup(project, false);
 
         GitflowBranchUtil gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(repo);
         boolean hasGitflow = gitflowBranchUtil.hasGitflow();

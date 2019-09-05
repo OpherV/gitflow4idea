@@ -1,17 +1,12 @@
 package gitflow.actions;
 
-import com.intellij.diff.merge.TextMergeViewer;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.LayeredIcon;
-import git4idea.branch.GitBranchUtil;
+import git4idea.GitUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import org.jetbrains.annotations.NotNull;
-import git4idea.GitUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,25 +21,27 @@ public class GitflowPopupGroup {
     GitRepositoryManager myRepositoryManager;
     List<GitRepository> gitRepositories;
 
-    public GitflowPopupGroup(@NotNull Project project) {
+    public GitflowPopupGroup(@NotNull Project project, boolean includeAdvanced) {
         myProject = project;
 
         //fetch all the git repositories from the project;
         myRepositoryManager = GitUtil.getRepositoryManager(project);
         gitRepositories = myRepositoryManager.getRepositories();
 
-        createActionGroup();
+        createActionGroup(includeAdvanced);
     }
 
     /**
      * Generates the popup actions for the widget
      */
-    private void createActionGroup(){
+    private void createActionGroup(boolean includeAdvanced){
         actionGroup = new DefaultActionGroup(null, false);
 
 
         if (gitRepositories.size() == 1){
-            ActionGroup repoActions = (new RepoActions(myProject, gitRepositories.get(0))).getRepoActionGroup();
+            ActionGroup repoActions =
+                    (new RepoActions(myProject, gitRepositories.get(0)))
+                            .getRepoActionGroup(includeAdvanced);
             actionGroup.addAll(repoActions);
         }
         else{

@@ -2,10 +2,7 @@ package gitflow.actions;
 
 import com.intellij.dvcs.ui.BranchActionGroup;
 import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -20,7 +17,6 @@ import java.util.Iterator;
 class RepoActions extends BranchActionGroup implements PopupElementWithAdditionalInfo, FileEditorManagerListener {
     Project myProject;
     GitRepository myRepo;
-    private final ArrayList<AnAction> repoActions;
 
     RepoActions(@NotNull Project project, @NotNull GitRepository repo) {
         myProject = project;
@@ -30,11 +26,9 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         getTemplatePresentation().setText(repoName, false); // no mnemonics
         this.updateFavoriteIcon();
         project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
-
-        repoActions = getRepoActions();
     }
 
-    public ArrayList<AnAction> getRepoActions(){
+    public ArrayList<AnAction> getRepoActions(boolean includeAdvanced){
         ArrayList<AnAction> actionList = new ArrayList<AnAction>();
 
         actionList.add(new InitRepoAction(myRepo));
@@ -66,13 +60,26 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
         actionList.add(new FinishHotfixAction(myRepo));
         actionList.add(new PublishHotfixAction(myRepo));
 
+        if (includeAdvanced) {
+            actionList.add(new Separator("Advanced"));
+
+            actionList.add(new ActionGroup("Advanced", true) {
+                @NotNull
+                @Override
+                public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
+                    AnAction initRepoAction = new ReInitRepoAction(myRepo);
+                    return new AnAction[] { initRepoAction };
+                }
+            });
+        }
+
         return actionList;
     }
 
-    public DefaultActionGroup getRepoActionGroup(){
+    public DefaultActionGroup getRepoActionGroup(boolean includeAdvanced){
         DefaultActionGroup actionGroup = new DefaultActionGroup();
 
-        Iterator actionsIterator = this.getRepoActions().iterator();
+        Iterator actionsIterator = this.getRepoActions(includeAdvanced).iterator();
         while(actionsIterator.hasNext()){
             AnAction action = (AnAction) actionsIterator.next();
             actionGroup.add(action);
@@ -84,9 +91,8 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
     @NotNull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        ArrayList<AnAction> children = new ArrayList<AnAction>(this.repoActions);
-
-        return children.toArray(new AnAction[0]);
+        ArrayList<AnAction> children = this.getRepoActions(false);
+        return children.toArray(new AnAction[children.size()]);
     }
 
     @Override

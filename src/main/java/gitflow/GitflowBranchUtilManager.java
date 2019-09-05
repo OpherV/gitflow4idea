@@ -26,7 +26,11 @@ public class GitflowBranchUtilManager {
     private static HashMap<GitRepository, GitflowBranchUtil> repoBranchUtilMap;
 
     static public GitflowBranchUtil getBranchUtil(GitRepository repo){
-        return repoBranchUtilMap.get(repo);
+        if (repoBranchUtilMap != null) {
+            return repoBranchUtilMap.get(repo);
+        } else {
+            return null;
+        }
     }
 
     static public void setupBranchUtil(Project project, GitRepository repo){
