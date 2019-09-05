@@ -23,7 +23,7 @@ public class PublishFeatureAction extends AbstractPublishAction {
         super.actionPerformed(anActionEvent);
 
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
-        final String featureName= gitflowConfigUtil.getFeatureNameFromBranch(currentBranchName);
+        final String featureName= gitflowConfigUtil.getFeatureNameFromBranch(branchUtil.getCurrentBranchName());
 
         new Task.Backgroundable(myProject,"Publishing feature "+featureName,false){
             @Override
@@ -31,7 +31,7 @@ public class PublishFeatureAction extends AbstractPublishAction {
                 GitCommandResult result = myGitflow.publishFeature(myRepo, featureName,new GitflowErrorsListener(myProject));
 
                 if (result.success()) {
-                    String publishedFeatureMessage = String.format("A new remote branch '%s%s' was created", featurePrefix, featureName);
+                    String publishedFeatureMessage = String.format("A new remote branch '%s%s' was created", branchUtil.getPrefixFeature(), featureName);
                     NotifyUtil.notifySuccess(myProject, featureName, publishedFeatureMessage);
                 }
                 else {

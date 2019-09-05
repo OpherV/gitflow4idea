@@ -24,7 +24,7 @@ public class PublishHotfixAction extends AbstractPublishAction {
         super.actionPerformed(anActionEvent);
 
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
-        final String hotfixName = gitflowConfigUtil.getHotfixNameFromBranch(currentBranchName);
+        final String hotfixName = gitflowConfigUtil.getHotfixNameFromBranch(branchUtil.getCurrentBranchName());
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
         new Task.Backgroundable(myProject, "Publishing hotfix " + hotfixName, false) {
@@ -33,7 +33,7 @@ public class PublishHotfixAction extends AbstractPublishAction {
                 GitCommandResult result = myGitflow.publishHotfix(myRepo, hotfixName, errorLineHandler);
 
                 if (result.success()) {
-                    String publishedHotfixMessage = String.format("A new remote branch '%s%s' was created", hotfixPrefix, hotfixName);
+                    String publishedHotfixMessage = String.format("A new remote branch '%s%s' was created", branchUtil.getPrefixHotfix(), hotfixName);
                     NotifyUtil.notifySuccess(myProject, hotfixName, publishedHotfixMessage);
                 } else {
                     NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");

@@ -13,8 +13,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Gitflow extends Git {
 
-    public GitCommandResult initRepo(@NotNull GitRepository repository,
-                                     GitflowInitOptions initOptions, @Nullable GitLineHandlerListener... listeners);
+    GitCommandResult initRepo(@NotNull GitRepository repository,
+                              GitflowInitOptions initOptions,
+                              @Nullable GitLineHandlerListener... listeners);
+
+    GitCommandResult reInitRepo(@NotNull GitRepository repository,
+                                GitflowInitOptions initOptions,
+                                @Nullable GitLineHandlerListener... listeners);
 
 
     // feature

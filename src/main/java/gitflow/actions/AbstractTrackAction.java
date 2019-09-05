@@ -16,13 +16,13 @@ public abstract class AbstractTrackAction extends AbstractBranchAction {
         String prefix;
         switch (type) {
             case Feature:
-                prefix = featurePrefix;
+                prefix = branchUtil.getPrefixFeature();;
                 break;
             case Release:
-                prefix = releasePrefix;
+                prefix = branchUtil.getPrefixRelease();
                 break;
             case Bugfix:
-                prefix = bugfixPrefix;
+                prefix = branchUtil.getPrefixBugfix();
                 break;
             default:
                 return false;

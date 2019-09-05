@@ -33,7 +33,7 @@ public class TrackReleaseAction extends AbstractTrackAction {
         //get only the branches with the proper prefix
         for(Iterator<String> i = remoteBranches.iterator(); i.hasNext(); ) {
             String item = i.next();
-            if (item.contains(releasePrefix)){
+            if (item.contains(branchUtil.getPrefixRelease())){
                 remoteReleaseBranches.add(item);
             }
         }
@@ -54,7 +54,7 @@ public class TrackReleaseAction extends AbstractTrackAction {
                         GitCommandResult result = myGitflow.trackRelease(myRepo, releaseName, errorLineHandler);
 
                         if (result.success()) {
-                            String trackedReleaseMessage = String.format(" A new remote tracking branch '%s%s' was created", releasePrefix, releaseName);
+                            String trackedReleaseMessage = String.format(" A new remote tracking branch '%s%s' was created", branchUtil.getPrefixRelease(), releaseName);
                             NotifyUtil.notifySuccess(myProject, releaseName, trackedReleaseMessage);
                         }
                         else {

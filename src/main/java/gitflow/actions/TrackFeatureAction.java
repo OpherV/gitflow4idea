@@ -34,7 +34,7 @@ public class TrackFeatureAction extends AbstractTrackAction {
         //get only the branches with the proper prefix
         for(Iterator<String> i = remoteBranches.iterator(); i.hasNext(); ) {
             String item = i.next();
-            if (item.contains(featurePrefix)){
+                if (item.contains(branchUtil.getPrefixFeature())){
                 remoteFeatureBranches.add(item);
             }
         }
@@ -56,7 +56,7 @@ public class TrackFeatureAction extends AbstractTrackAction {
                         GitCommandResult result = myGitflow.trackFeature(myRepo, featureName, remote, errorLineHandler);
 
                         if (result.success()) {
-                            String trackedFeatureMessage = String.format("A new branch '%s%s' was created", featurePrefix, featureName);
+                            String trackedFeatureMessage = String.format("A new branch '%s%s' was created", branchUtil.getPrefixFeature(), featureName);
                             NotifyUtil.notifySuccess(myProject, featureName, trackedFeatureMessage);
                         }
                         else {

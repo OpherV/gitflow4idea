@@ -34,7 +34,7 @@ public class TrackBugfixAction extends AbstractTrackAction {
         //get only the branches with the proper prefix
         for (Iterator<String> i = remoteBranches.iterator(); i.hasNext(); ) {
             String item = i.next();
-            if (item.contains(bugfixPrefix)) {
+            if (item.contains(branchUtil.getPrefixBugfix())) {
                 remoteBugfixBranches.add(item);
             }
         }
@@ -56,7 +56,7 @@ public class TrackBugfixAction extends AbstractTrackAction {
                     public void run(@NotNull ProgressIndicator indicator) {
                         GitCommandResult result = myGitflow.trackBugfix(myRepo, bugfixName, remote, errorLineHandler);
                         if (result.success()) {
-                            String trackedBugfixMessage = String.format("A new branch '%s%s' was created", bugfixPrefix, bugfixName);
+                            String trackedBugfixMessage = String.format("A new branch '%s%s' was created", branchUtil.getPrefixBugfix(), bugfixName);
                             NotifyUtil.notifySuccess(myProject, bugfixName, trackedBugfixMessage);
                         } else {
                             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");

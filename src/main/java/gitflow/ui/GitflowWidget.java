@@ -151,14 +151,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         Project project = getProject();
 
         //repopulate the branchUtil
-        Future<Void> f = GitflowBranchUtilManager.update(project);
-        try {
-            f.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        GitflowBranchUtilManager.update(project);
 
         if (project == null) {
             emptyTextAndTooltip();
@@ -171,7 +164,8 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             return;
         }
 
-        popupGroup = new GitflowPopupGroup(project);
+        //No advanced features in the status-bar widget
+        popupGroup = new GitflowPopupGroup(project, false);
 
         GitflowBranchUtil gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(repo);
         boolean hasGitflow = gitflowBranchUtil.hasGitflow();

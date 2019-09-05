@@ -63,7 +63,7 @@ public class FinishHotfixAction extends AbstractBranchAction {
                     GitCommandResult result=  myGitflow.finishHotfix(myRepo, hotfixName, tagMessage, errorLineHandler);
 
                     if (result.success()) {
-                        String finishedHotfixMessage = String.format("The hotfix branch '%s%s' was merged into '%s' and '%s'", hotfixPrefix, hotfixName, developBranch, masterBranch);
+                        String finishedHotfixMessage = String.format("The hotfix branch '%s%s' was merged into '%s' and '%s'", branchUtil.getPrefixHotfix(), hotfixName, branchUtil.getBranchnameDevelop(), branchUtil.getBranchnameMaster());
                         NotifyUtil.notifySuccess(myProject, hotfixName, finishedHotfixMessage);
                     }
                     else {

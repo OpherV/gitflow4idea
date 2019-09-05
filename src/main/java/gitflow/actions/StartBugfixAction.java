@@ -55,7 +55,7 @@ public class StartBugfixAction extends AbstractStartAction {
         GitCommandResult result = myGitflow.startBugfix(myRepo, bugfixName, baseBranchName, errorListener);
 
         if (result.success()) {
-            String startedBugfixMessage = String.format("A new branch '%s%s' was created, based on '%s'", bugfixPrefix, bugfixName, baseBranchName);
+            String startedBugfixMessage = String.format("A new branch '%s%s' was created, based on '%s'", branchUtil.getPrefixBugfix(), bugfixName, baseBranchName);
             NotifyUtil.notifySuccess(myProject, bugfixName, startedBugfixMessage);
         } else {
             NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");

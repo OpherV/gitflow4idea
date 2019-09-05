@@ -41,7 +41,7 @@ public class StartReleaseAction extends AbstractStartAction {
                     GitCommandResult result=  myGitflow.startRelease(myRepo, releaseName, errorLineHandler);
 
                     if (result.success()) {
-                        String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", releasePrefix, releaseName, developBranch);
+                        String startedReleaseMessage = String.format("A new release '%s%s' was created, based on '%s'", branchUtil.getPrefixRelease(), releaseName, branchUtil.getBranchnameDevelop());
                         NotifyUtil.notifySuccess(myProject, releaseName, startedReleaseMessage);
                     }
                     else {

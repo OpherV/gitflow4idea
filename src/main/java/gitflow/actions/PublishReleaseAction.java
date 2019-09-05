@@ -24,7 +24,7 @@ public class PublishReleaseAction extends AbstractPublishAction {
         super.actionPerformed(anActionEvent);
 
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(myProject, myRepo);
-        final String releaseName= gitflowConfigUtil.getReleaseNameFromBranch(currentBranchName);
+        final String releaseName= gitflowConfigUtil.getReleaseNameFromBranch(branchUtil.getCurrentBranchName());
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
 
         new Task.Backgroundable(myProject,"Publishing release "+releaseName,false){
@@ -33,7 +33,7 @@ public class PublishReleaseAction extends AbstractPublishAction {
                 GitCommandResult result = myGitflow.publishRelease(myRepo, releaseName, errorLineHandler);
 
                 if (result.success()) {
-                    String publishedReleaseMessage = String.format("A new remote branch '%s%s' was created", releasePrefix, releaseName);
+                    String publishedReleaseMessage = String.format("A new remote branch '%s%s' was created", branchUtil.getPrefixRelease(), releaseName);
                     NotifyUtil.notifySuccess(myProject, releaseName, publishedReleaseMessage);
                 }
                 else {
