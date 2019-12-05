@@ -22,7 +22,7 @@ dependencies {
 }
 
 intellij {
-    version '2019.2'
+    version '2019.3'
     plugins 'git4idea', 'tasks'
 }
 
@@ -31,7 +31,7 @@ patchPluginXml {
     pluginDescription 'Git Flow Integration'
     version '0.7.0'
     sinceBuild '182.0'
-    untilBuild '192.*'
+    untilBuild '193.*'
     changeNotes """
 
       <H2>Changelog for 0.7.0</H2>
@@ -39,8 +39,8 @@ patchPluginXml {
         <li>Fix NPE when clicking Gitflow menu #245 (@opherv)</li>
         <li>Fix "Init gitflow" doesn't update widget #247 (@opherv)</li>
         <li>Fix Wrong message when finishing a feature #144 (@opherv)</li>
-        <li>Feature: Re-init gitflow (access from VCS>Git>Gitflow>Advanced menu) #50 (@bmwsedee/@opherv)</li>                     
-        <li>"Feature": Don't show branch select combo on new Hotfix (@opherv)</li>                     
+        <li>Feature: Re-init gitflow (access from VCS>Git>Gitflow>Advanced menu) #50 (@bmwsedee/@opherv)</li>
+        <li>"Feature": Don't show branch select combo on new Hotfix (@opherv)</li>
       </ul>
 
       <H2>Changelog for 0.6.9</H2>
@@ -48,15 +48,15 @@ patchPluginXml {
         <li>Support for Idea build 192 #241 (@opherv)</li>
         <li>Feature: No Fast-forward option is not working #225 (@opherv)</li>
         <li>Hotfix: option -k to keep branch after performing finish #199 (@opherv)</li>
-        <li>Exceptions #243 #235 #323 #223 (@bmwsedee)</li>                             
+        <li>Exceptions #243 #235 #323 #223 (@bmwsedee)</li>
       </ul>
-      
-      <H2>Changelog for 0.6.8</H2>         
+
+      <H2>Changelog for 0.6.8</H2>
       <ul>
         <li>Support for Idea build 191 #221 (@ottnorml)</li>
-        <li>Fix performance issues in plugin #195 (@bmwsedee)</li>            
+        <li>Fix performance issues in plugin #195 (@bmwsedee)</li>
       </ul>
-    
+
     <p>Note - if you see 'no gitflow' in the status bar you will need to re-init using <code>git flow init -f</code></p>
       """
 }
