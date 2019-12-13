@@ -18,43 +18,80 @@
                 text="Gitflow Operations Popup..." />
 
         <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction"
-                text="Initialize Gitflow Repository..." />
+                text="Initialize Gitflow Repository..."
+                icon="AllIcons.Actions.Lightning"
+        />
+
         <action id="Gitflow.ReInitRepo" class="gitflow.actions.ReInitRepoAction"
                 text="Re-initialize Gitflow Repository..." />
 
         <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction"
-                text="Start Feature..." />
+                text="Start Feature..."
+                icon="AllIcons.Vcs.Branch"
+        />
         <action id="Gitflow.FinishFeature" class="gitflow.actions.FinishFeatureAction"
-                text="Finish Feature" />
+                text="Finish Feature"
+                icon="AllIcons.Vcs.Merge"
+        />
         <action id="Gitflow.PublishFeature" class="gitflow.actions.PublishFeatureAction"
-                text="Publish Feature" />
+                text="Publish Feature"
+                icon="AllIcons.Vcs.Push"
+        />
         <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction"
-                text="Track Feature..." />
+                text="Track Feature..."
+                icon="AllIcons.Vcs."
+        />
 
         <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction"
-                text="Start Release..." />
+                text="Start Release..."
+                icon="AllIcons.Vcs.Branch"
+        />
         <action id="Gitflow.FinishRelease" class="gitflow.actions.FinishReleaseAction"
-                text="Finish Release" />
+                text="Finish Release"
+                icon="AllIcons.Vcs.Merge"
+        />
         <action id="Gitflow.PublishRelease" class="gitflow.actions.PublishReleaseAction"
-                text="Publish Release" />
+                text="Publish Release"
+                icon="AllIcons.Vcs.Push"
+        />
         <action id="Gitflow.TrackRelease" class="gitflow.actions.TrackReleaseAction"
-                text="Track Release..." />
+                text="Track Release..."
+                icon="AllIcons.Actions.CheckOut"
+        />
 
         <action id="Gitflow.StartHotfix" class="gitflow.actions.StartHotfixAction"
-                text="Start Hotfix..." />
+                text="Start Hotfix..."
+                icon="AllIcons.Vcs.Branch"
+        />
         <action id="Gitflow.FinishHotfix" class="gitflow.actions.FinishHotfixAction"
-                text="Finish Hotfix" />
+                text="Finish Hotfix"
+                icon="AllIcons.Vcs.Merge"
+        />
+
         <action id="Gitflow.PublishHotfix" class="gitflow.actions.PublishHotfixAction"
-                text="Publish Hotfix" />
+                text="Publish Hotfix"
+                icon="AllIcons.Vcs.Push"
+        />
 
         <action id="Gitflow.StartBugfix" class="gitflow.actions.StartBugfixAction"
-                text="Start Bugfix..." />
+                text="Start Bugfix..."
+                icon="AllIcons.Vcs.Branch"
+        />
+
         <action id="Gitflow.FinishBugfix" class="gitflow.actions.FinishBugfixAction"
-                text="Finish Bugfix" />
+                text="Finish Bugfix"
+                icon="AllIcons.Vcs.Merge"
+        />
+
         <action id="Gitflow.PublishBugfix" class="gitflow.actions.PublishBugfixAction"
-                text="Publish Bugfix" />
+                text="Publish Bugfix"
+                icon="AllIcons.Vcs.Push"
+        />
+
         <action id="Gitflow.TrackBugfix" class="gitflow.actions.TrackBugfixAction"
-                text="Track Bugfix..." />
+                text="Track Bugfix..."
+                icon="AllIcons.Actions.CheckOut"
+        />
 
         <group id="Gitflow.Menu" popup="true" text="Gitflow"
                 class="gitflow.GitflowMenu">
