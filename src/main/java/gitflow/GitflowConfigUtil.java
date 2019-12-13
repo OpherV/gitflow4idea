@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import git4idea.config.GitConfigUtil;
@@ -54,6 +55,10 @@ public class GitflowConfigUtil {
 
             gitflowConfigUtilMap.put(project_, innerMap);
             innerMap.put(repo_, instance);
+
+            //cleanup
+            Disposer.register(repo_, () -> innerMap.remove(repo_));
+            Disposer.register(project_, () -> gitflowConfigUtilMap.remove(project_));
         }
 
         return instance;
