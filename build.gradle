@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.0'
+version '0.7.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,17 +22,26 @@ dependencies {
 }
 
 intellij {
-    version '2019.2'
+    version '2019.3'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.0'
+    version '0.7.1'
     sinceBuild '182.0'
-    untilBuild '192.*'
+    untilBuild '193.*'
     changeNotes """
+
+      <H2>Changelog for 0.7.1</H2>
+      <ul>
+        <li>Support for Idea build 193 #259 (@opherv)</li>                     
+        <li>Check that the user has AVH version of git flow installed, show dialog otherwise #253 (@opherv)</li>
+        <li>Add safety which should help fix #249 - Init repo failed #259 (@opherv)</li>                     
+        <li>Fix Memory leak of ProjectImpl and GitRepositoryImpl after projet is closed #255 (@opherv)</li>                             
+        <li>Add icons to actions #232 (@opherv)</li>                             
+      </ul>
 
       <H2>Changelog for 0.7.0</H2>
       <ul>

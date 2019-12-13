@@ -6,6 +6,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import git4idea.GitUtil;
 import git4idea.repo.GitRepository;
 import gitflow.actions.GitflowActions;
@@ -36,6 +37,8 @@ public class GitflowBranchUtilManager {
     static public void setupBranchUtil(Project project, GitRepository repo){
         GitflowBranchUtil gitflowBranchUtil = new GitflowBranchUtil(project, repo);
         repoBranchUtilMap.put(repo, gitflowBranchUtil);
+        // clean up
+        Disposer.register(repo, () -> repoBranchUtilMap.remove(repo));
     }
 
     /**
