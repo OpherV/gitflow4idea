@@ -36,10 +36,12 @@ public class InitRepoAction extends GitflowAction {
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
 
         // Only show when gitflow isn't setup
-        if (branchUtil.hasGitflow()) {
-            e.getPresentation().setEnabledAndVisible(false);
-        } else {
-            e.getPresentation().setEnabledAndVisible(true);
+        if (branchUtil != null) {
+            if (branchUtil.hasGitflow()) {
+                e.getPresentation().setEnabledAndVisible(false);
+            } else {
+                e.getPresentation().setEnabledAndVisible(true);
+            }
         }
     }
 
@@ -47,33 +49,35 @@ public class InitRepoAction extends GitflowAction {
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
-        GitflowInitOptionsDialog optionsDialog = new GitflowInitOptionsDialog(myProject, branchUtil.getLocalBranchNames());
-        optionsDialog.show();
+        if (branchUtil != null) {
+            GitflowInitOptionsDialog optionsDialog = new GitflowInitOptionsDialog(myProject, branchUtil.getLocalBranchNames());
+            optionsDialog.show();
 
-        if(optionsDialog.isOK()) {
-            final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
-            final GitflowLineHandler localLineHandler = getLineHandler();
-            final GitflowInitOptions initOptions = optionsDialog.getOptions();
+            if (optionsDialog.isOK()) {
+                final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
+                final GitflowLineHandler localLineHandler = getLineHandler();
+                final GitflowInitOptions initOptions = optionsDialog.getOptions();
 
-            new Task.Backgroundable(myProject, getTitle(),false){
-                @Override
-                public void run(@NotNull ProgressIndicator indicator) {
-                    GitCommandResult result =
-                            executeCommand(initOptions, errorLineHandler,
-                                    localLineHandler);
+                new Task.Backgroundable(myProject, getTitle(), false) {
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        GitCommandResult result =
+                                executeCommand(initOptions, errorLineHandler,
+                                        localLineHandler);
 
-                    if (result.success()) {
-                        String successMessage = getSuccessMessage();
-                        NotifyUtil.notifySuccess(myProject, "", successMessage);
-                    } else {
-                        NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                        if (result.success()) {
+                            String successMessage = getSuccessMessage();
+                            NotifyUtil.notifySuccess(myProject, "", successMessage);
+                        } else {
+                            NotifyUtil.notifyError(myProject, "Error", "Please have a look at the Version Control console for more details");
+                        }
+
+                        //update the widget
+                        myProject.getMessageBus().syncPublisher(GitRepository.GIT_REPO_CHANGE).repositoryChanged(myRepo);
+                        myRepo.update();
                     }
-
-                    //update the widget
-                    myProject.getMessageBus().syncPublisher(GitRepository.GIT_REPO_CHANGE).repositoryChanged(myRepo);
-                    myRepo.update();
-                }
-            }.queue();
+                }.queue();
+            }
         }
 
     }
