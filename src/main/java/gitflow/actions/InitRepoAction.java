@@ -34,12 +34,13 @@ public class InitRepoAction extends GitflowAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
-
-        // Only show when gitflow isn't setup
-        if (branchUtil.hasGitflow()) {
-            e.getPresentation().setEnabledAndVisible(false);
-        } else {
-            e.getPresentation().setEnabledAndVisible(true);
+        if (branchUtil != null) {
+            // Only show when gitflow isn't setup
+            if (branchUtil.hasGitflow()) {
+                e.getPresentation().setEnabledAndVisible(false);
+            } else {
+                e.getPresentation().setEnabledAndVisible(true);
+            }
         }
     }
 
