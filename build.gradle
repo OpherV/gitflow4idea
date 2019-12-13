@@ -34,6 +34,15 @@ patchPluginXml {
     untilBuild '193.*'
     changeNotes """
 
+      <H2>Changelog for 0.7.1</H2>
+      <ul>
+        <li>Support for Idea build 193 #259 (@opherv)</li>                     
+        <li>Check that the user has AVH version of git flow installed, show dialog otherwise #253 (@opherv)</li>
+        <li>Add safety which should help fix #249 - Init repo failed #259 (@opherv)</li>                     
+        <li>Fix Memory leak of ProjectImpl and GitRepositoryImpl after projet is closed #255 (@opherv)</li>                             
+        <li>Add icons to actions #232 (@opherv)</li>                             
+      </ul>
+
       <H2>Changelog for 0.7.0</H2>
       <ul>
         <li>Fix NPE when clicking Gitflow menu #245 (@opherv)</li>
