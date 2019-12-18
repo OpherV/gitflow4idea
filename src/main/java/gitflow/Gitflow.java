@@ -110,5 +110,5 @@ public interface Gitflow extends Git {
                                   @NotNull GitRemote remote,
                                   @Nullable GitLineHandlerListener... listeners);
 
-    GitCommandResult version(@NotNull Project project, @Nullable GitLineHandlerListener... listeners);
+    GitCommandResult version(@NotNull Project project, GitLineHandlerListener... listeners);
 }
