@@ -491,4 +491,20 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return runCommand(h);
     }
 
+    @Override
+    public GitCommandResult version(@NotNull Project project, @Nullable GitLineHandlerListener... listeners) {
+        //getProjectFile is null for default project.
+        if (project.isDefault()) {
+            throw new IllegalArgumentException("Cannot determine git flow version for default project");
+        }
+
+        final GitLineHandler h = new GitLineHandler(project, project.getProjectFile().getParent(), GitflowCommand());
+
+        h.addParameters("version");
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
 }

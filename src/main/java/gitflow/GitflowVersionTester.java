@@ -1,31 +1,58 @@
 package gitflow;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.util.ExecUtil;
-import com.intellij.execution.process.ProcessOutput;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GitflowVersionTester {
-	static Boolean isSupportedVersion = null;
 
-	static boolean isSupportedVersion(){
-		if (isSupportedVersion == null) {
+	private static final Logger logger = Logger.getInstance(GitflowVersionTester.class);
 
-			ProcessOutput output = null;
-			GeneralCommandLine commandLine = new GeneralCommandLine();
-			commandLine.setExePath("git");
-			commandLine.addParameters("flow");
-			commandLine.addParameters("version");
-			try {
-				output = ExecUtil.execAndGetOutput(commandLine);
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-			String stdout = output.getStdout();
-//			System.out.println("output: " + stdout);
-			// test that the installed git flow CLI version is AVH and not the unmaintained NVIE version
-			isSupportedVersion = stdout.contains("AVH");
+	private static final Map<Project, GitflowVersionTester> testers = new ConcurrentHashMap<>();
+
+	public static GitflowVersionTester forProject(Project project) {
+		// Java 8
+//		return testers.computeIfAbsent(
+//			project,
+//			p -> new GitflowVersionTester(ServiceManager.getService(Gitflow.class), p)
+//		);
+		GitflowVersionTester ret = testers.get(project);
+		if (ret == null) {
+			ret = new GitflowVersionTester(ServiceManager.getService(Gitflow.class), project);
+			testers.put(project, ret);
 		}
-		return isSupportedVersion;
+
+		return ret;
+	}
+
+	private final Gitflow gitflow;
+	private final Project project;
+
+	private String version;
+
+	private GitflowVersionTester(Gitflow gitflow, Project project) {
+		this.gitflow = gitflow;
+		this.project = project;
+	}
+
+	public String getVersion() {
+		if (version == null) {
+			try {
+				version = gitflow.version(project).getOutputOrThrow();
+				logger.info("git flow version: " + version);
+			} catch (Exception e) {
+				logger.error("Could not determine git flow version", e);
+			}
+		}
+
+		return version;
+	}
+
+	public boolean isSupportedVersion() {
+		String s = getVersion();
+		return s != null && s.contains("AVH");
 	}
 }

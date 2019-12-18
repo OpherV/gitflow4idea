@@ -1,6 +1,5 @@
 package gitflow;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
@@ -62,7 +61,7 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
             StatusBarWidget widgetToAdd;
 
             //make sure to not reinitialize the widget if it's already present
-            if (GitflowVersionTester.isSupportedVersion() && myGitflowWidget == null) {
+            if (GitflowVersionTester.forProject(myProject).isSupportedVersion() && myGitflowWidget == null) {
                 myGitflowWidget = new GitflowWidget(myProject);
                 widgetToAdd = (StatusBarWidget) myGitflowWidget;
             } else {
