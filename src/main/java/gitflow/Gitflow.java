@@ -1,5 +1,6 @@
 package gitflow;
 
+import com.intellij.openapi.project.Project;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
@@ -109,4 +110,5 @@ public interface Gitflow extends Git {
                                   @NotNull GitRemote remote,
                                   @Nullable GitLineHandlerListener... listeners);
 
+    GitCommandResult version(@NotNull Project project, GitLineHandlerListener... listeners);
 }
