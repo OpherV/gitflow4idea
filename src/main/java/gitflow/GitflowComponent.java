@@ -1,6 +1,6 @@
 package gitflow;
 
-import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
@@ -12,41 +12,29 @@ import com.intellij.util.messages.MessageBus;
 import git4idea.GitVcs;
 import gitflow.ui.GitflowUnsupportedVersionWidget;
 import gitflow.ui.GitflowWidget;
-import org.jetbrains.annotations.NotNull;
 
 
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
+ * One instance per project
  */
-public class GitflowComponent implements ProjectComponent, VcsListener {
+public class GitflowComponent implements VcsListener, Disposable {
     Project myProject;
     GitflowWidget myGitflowWidget;
     MessageBus messageBus;
 
     public GitflowComponent(Project project) {
         myProject = project;
-    }
-
-    public void initComponent() {
         messageBus = myProject.getMessageBus();
         messageBus.connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
+
+        // Seems the event triggering this component happens after the directory mapping change, hence the incentive.
+        directoryMappingChanged();
     }
 
-    public void disposeComponent() {
+    @Override
+    public void dispose() {
         // TODO: insert component disposal logic here
-    }
-
-    @NotNull
-    public String getComponentName() {
-        return "GitflowComponent";
-    }
-
-    public void projectOpened() {
-
-    }
-
-    public void projectClosed() {
-
     }
 
     @Override
@@ -63,18 +51,15 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
             //make sure to not reinitialize the widget if it's already present
             if (GitflowVersionTester.forProject(myProject).isSupportedVersion() && myGitflowWidget == null) {
                 myGitflowWidget = new GitflowWidget(myProject);
-                widgetToAdd = (StatusBarWidget) myGitflowWidget;
+                widgetToAdd = myGitflowWidget;
             } else {
                 widgetToAdd = new GitflowUnsupportedVersionWidget(myProject);
             }
 
             if (statusBar != null) {
-                statusBar.addWidget(widgetToAdd, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
+                statusBar.addWidget(widgetToAdd, StatusBar.Anchors.after(git4idea.ui.branch.GitBranchWidget.class.getName()), myProject);
             }
         } else {
-            if (myGitflowWidget != null) {
-                myGitflowWidget.deactivate();
-            }
             myGitflowWidget = null;
         }
     }

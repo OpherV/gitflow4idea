@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class GitflowAction extends DumbAwareAction {
+public abstract class GitflowAction extends DumbAwareAction {
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
@@ -55,28 +55,31 @@ public class GitflowAction extends DumbAwareAction {
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
+    public void runAction(final Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
         setup(project);
     }
 
     //returns true if merge successful, false otherwise
-    public boolean handleMerge(){
-        //ugly, but required for intellij to catch up with the external changes made by
-        //the CLI before being able to run the merge tool
-        virtualFileMananger.syncRefresh();
+    public boolean handleMerge(final Project project) {
+        // FIXME As of 201.0 the async version of this method doesn't call the callback,
+        // else we'd use a FutureTask (which is a Runnable) and its get() method.
+        // Hence this ugly hack, to let the time to intellij to catch up with the external changes made by the CLI
+        // before being able to run the merge tool. Else the tool won't display and the Y/N dialog will appear directly!
         try {
-            Thread.sleep(500);
-        }
-        catch (InterruptedException ignored) {
+            virtualFileMananger.syncRefresh();
+            Thread.sleep(750L); // delay had to be bumped with v 201
+        } catch (InterruptedException ignored) {
         }
 
-
-        GitflowActions.runMergeTool();
+        GitflowActions.runMergeTool(project);
         myRepo.update();
+        return askUserForMergeSuccess(project);
+    }
 
+    private static boolean askUserForMergeSuccess(Project myProject) {
         //if merge was completed successfully, finish the action
         //note that if it wasn't intellij is left in the "merging state", and git4idea provides no UI way to resolve it
-	    //merging can be done via intellij itself or any other util
+        //merging can be done via intellij itself or any other util
         int answer = Messages.showYesNoDialog(myProject, "Was the merge completed succesfully?", "Merge", Messages.getQuestionIcon());
         if (answer==0){
             GitMerger gitMerger=new GitMerger(myProject);

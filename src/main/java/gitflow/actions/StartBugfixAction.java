@@ -36,7 +36,8 @@ public class StartBugfixAction extends AbstractStartAction {
         this.runAction(e.getProject(), baseBranchName, bugfixName, null);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String bugfixName, @Nullable final Runnable callInAwtLater){
+    @Override
+    public void runAction(final Project project, final String baseBranchName, final String bugfixName, @Nullable final Runnable callInAwtLater){
         super.runAction(project, baseBranchName, bugfixName, callInAwtLater);
 
         new Task.Backgroundable(myProject, "Starting bugfix " + bugfixName, false) {

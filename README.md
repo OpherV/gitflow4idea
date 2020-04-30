@@ -50,6 +50,6 @@ Feedback and suggestions are also very welcome.
 ## License
 
 This plugin is under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
-Copyright 2013-2019, Opher Vishnia.
+Copyright 2013-2020, Opher Vishnia.
 
 
