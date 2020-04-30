@@ -39,7 +39,7 @@
         />
         <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction"
                 text="Track Feature..."
-                icon="AllIcons.Vcs."
+                icon="AllIcons.Vcs.Equal"
         />
 
         <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction"
