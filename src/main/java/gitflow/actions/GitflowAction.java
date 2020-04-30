@@ -61,19 +61,33 @@ public abstract class GitflowAction extends DumbAwareAction {
 
     //returns true if merge successful, false otherwise
     public boolean handleMerge(final Project project) {
-        // FIXME As of 201.0 the async version of this method doesn't call the callback,
-        // else we'd use a FutureTask (which is a Runnable) and its get() method.
-        // Hence this ugly hack, to let the time to intellij to catch up with the external changes made by the CLI
-        // before being able to run the merge tool. Else the tool won't display and the Y/N dialog will appear directly!
-        try {
-            virtualFileMananger.syncRefresh();
-            Thread.sleep(750L); // delay had to be bumped with v 201
-        } catch (InterruptedException ignored) {
-        }
+        // FIXME As of 201.0 the async version of this method still doesn't make use of the callback, else we'd
+        //  simply use a FutureTask (which is a Runnable) and its get() method prior to launching the merge tool.
+        virtualFileMananger.syncRefresh();
 
-        GitflowActions.runMergeTool(project);
-        myRepo.update();
-        return askUserForMergeSuccess(project);
+        try {
+            long start, end = System.currentTimeMillis();
+            do {
+                start = end;
+                // Hence this ugly hack, to let the time to intellij to catch up with the external changes made by the
+                // CLI before being able to run the merge tool. Else the tool won't have the right state, won't display,
+                // and the merge success Y/N dialog will appear directly! Anyway, in v193 500ms was sufficient,
+                // but in v201 the right value seems to be in the [700-750]ms range (on the committer's machine).
+                Thread.sleep(750L);
+
+                GitflowActions.runMergeTool(project); // The window is modal, so we can measure how long it's opened.
+                end = System.currentTimeMillis();
+            } while(end - start < 1000L); // Additional hack: a window open <1s obviously didn't open, let's try again.
+
+            myRepo.update();
+
+            // TODO it's still not perfect: an onscreen file will still display in a conflicted state when this dialog
+            //  appears and might confuse the user
+            return askUserForMergeSuccess(project);
+        }
+        catch (InterruptedException ignored) {
+            return false;
+        }
     }
 
     private static boolean askUserForMergeSuccess(Project myProject) {
