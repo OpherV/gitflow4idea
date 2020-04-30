@@ -19,6 +19,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public abstract class GitflowAction extends DumbAwareAction {
+
+    private static final long VFM_REFRESH_DELAY = 750L;
+
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
@@ -73,7 +76,7 @@ public abstract class GitflowAction extends DumbAwareAction {
                 // CLI before being able to run the merge tool. Else the tool won't have the right state, won't display,
                 // and the merge success Y/N dialog will appear directly! Anyway, in v193 500ms was sufficient,
                 // but in v201 the right value seems to be in the [700-750]ms range (on the committer's machine).
-                Thread.sleep(750L);
+                Thread.sleep(VFM_REFRESH_DELAY);
 
                 GitflowActions.runMergeTool(project); // The window is modal, so we can measure how long it's opened.
                 end = System.currentTimeMillis();
@@ -81,8 +84,10 @@ public abstract class GitflowAction extends DumbAwareAction {
 
             myRepo.update();
 
-            // TODO it's still not perfect: an onscreen file will still display in a conflicted state when this dialog
-            //  appears and might confuse the user
+            // And refreshing again so an onscreen file doesn't show in a conflicted state when the Y/N dialog show up.
+            virtualFileMananger.syncRefresh();
+            Thread.sleep(VFM_REFRESH_DELAY);
+
             return askUserForMergeSuccess(project);
         }
         catch (InterruptedException ignored) {
