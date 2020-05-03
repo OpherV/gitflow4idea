@@ -102,7 +102,7 @@ public class FinishReleaseAction extends AbstractBranchAction {
 
 	                    //merge conflicts if necessary
 	                    if (errorLineHandler.hasMergeError){
-		                    if (handleMerge()) {
+		                    if (handleMerge(myProject)) {
 			                    FinishReleaseAction completeFinisReleaseAction = new FinishReleaseAction(releaseName, tagMessage);
 			                    completeFinisReleaseAction.actionPerformed(event);
 		                    }

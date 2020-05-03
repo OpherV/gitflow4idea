@@ -1,19 +1,10 @@
 package gitflow.actions;
 
-import com.intellij.dvcs.ui.BranchActionGroup;
-import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
-import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import git4idea.branch.GitBranchUtil;
-import git4idea.repo.GitRepository;
-import gitflow.Gitflow;
-import gitflow.GitflowBranchUtil;
-import gitflow.GitflowBranchUtilManager;
-import gitflow.GitflowConfigUtil;
+import git4idea.actions.GitResolveConflictsAction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * All actions associated with Gitflow
@@ -22,9 +13,33 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GitflowActions {
 
-    public static void runMergeTool(){
-        git4idea.actions.GitResolveConflictsAction resolveAction= new git4idea.actions.GitResolveConflictsAction();
-        AnActionEvent e = new AnActionEvent(null, DataManager.getInstance().getDataContext(), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
+    public static void runMergeTool(Project project){
+        GitResolveConflictsAction resolveAction = new GitResolveConflictsAction();
+        AnActionEvent e = new AnActionEvent(null, new ProjectDataContext(project), ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
         resolveAction.actionPerformed(e);
+    }
+
+
+    /**
+     * Simple wrapper containing just enough to let the conflicts resolver to launch
+     * We could have transferred the DataContext or wrapped a HackyDataContext from the previous action,
+     * but that would make the semantics terrible
+     */
+    private final static class ProjectDataContext implements DataContext {
+        private Project project;
+
+        private ProjectDataContext(Project project) {
+            this.project = project;
+        }
+
+        @Nullable
+        @Override
+        public Object getData(@NotNull String dataId) {
+            if(CommonDataKeys.PROJECT.getName().equals(dataId)) {
+                return project;
+            } else {
+                throw new UnsupportedOperationException(dataId);
+            }
+        }
     }
 }

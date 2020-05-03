@@ -38,7 +38,7 @@ public class StartHotfixAction extends AbstractStartAction {
         this.runAction(e.getProject(), baseBranchName, hotfixName, null);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String hotfixName, @Nullable final Runnable callInAwtLater){
+    public void runAction(final Project project, final String baseBranchName, final String hotfixName, @Nullable final Runnable callInAwtLater){
         super.runAction(project, baseBranchName, hotfixName, callInAwtLater);
 
         new Task.Backgroundable(myProject, "Starting hotfix " + hotfixName, false) {

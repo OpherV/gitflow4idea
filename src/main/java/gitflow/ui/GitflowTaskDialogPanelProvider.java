@@ -1,5 +1,4 @@
 package gitflow.ui;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.Task;
@@ -13,14 +12,19 @@ import gitflow.GitflowBranchUtilManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Enumeration;
-import java.util.HashMap;
 
 public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider {
 
+    @Deprecated
     @Nullable
     @Override
     public TaskDialogPanel getOpenTaskPanel(@NotNull Project project, @NotNull Task task) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public TaskDialogPanel getOpenTaskPanel(@NotNull Project project, @NotNull LocalTask task) {
         GitRepository currentRepo = GitBranchUtil.getCurrentRepository(project);
         GitflowBranchUtil branchUtil = GitflowBranchUtilManager.getBranchUtil(currentRepo);
         if (branchUtil.hasGitflow()) {
