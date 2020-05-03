@@ -4,13 +4,9 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
-import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
-import git4idea.GitVcs;
-import gitflow.ui.GitflowUnsupportedVersionWidget;
 import gitflow.ui.GitflowWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GitflowComponent implements ProjectComponent, VcsListener {
     Project myProject;
-    GitflowWidget myGitflowWidget;
     MessageBus messageBus;
 
     public GitflowComponent(Project project) {
@@ -51,32 +46,12 @@ public class GitflowComponent implements ProjectComponent, VcsListener {
 
     @Override
     public void directoryMappingChanged() {
-        VcsRoot[] vcsRoots = ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots();
         StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
-
-        //git repo present
-        if (vcsRoots.length > 0 && vcsRoots[0].getVcs() instanceof GitVcs) {
-
-
-            StatusBarWidget widgetToAdd;
-
-            //make sure to not reinitialize the widget if it's already present
-            if (GitflowVersionTester.forProject(myProject).isSupportedVersion() && myGitflowWidget == null) {
-                myGitflowWidget = new GitflowWidget(myProject);
-                widgetToAdd = (StatusBarWidget) myGitflowWidget;
-            } else {
-                widgetToAdd = new GitflowUnsupportedVersionWidget(myProject);
-            }
-
-            if (statusBar != null) {
-                statusBar.addWidget(widgetToAdd, "after " + git4idea.ui.branch.GitBranchWidget.class.getName(), myProject);
-            }
+        GitflowWidget widget = (GitflowWidget) statusBar.getWidget(GitflowWidget.class.getName());
+        if (widget != null) {
+            widget.updateAsync();
         } else {
-            if (myGitflowWidget != null) {
-                myGitflowWidget.deactivate();
-            }
-            myGitflowWidget = null;
+            throw new NullPointerException("widget");
         }
     }
-
 }

@@ -110,5 +110,6 @@
         <applicationService serviceInterface="gitflow.GitflowState" serviceImplementation="gitflow.GitflowState"></applicationService>
         <projectConfigurable instance="gitflow.GitflowConfigurable"/>
         <tasks.dialogPanelProvider implementation="gitflow.ui.GitflowTaskDialogPanelProvider"/>
+        <statusBarWidgetFactory id="gitflowWidget" implementation="gitflow.ui.GitflowStatusBarWidgetFactory" order="after inspectionProfileWidget"/>
     </extensions>
 </idea-plugin>
