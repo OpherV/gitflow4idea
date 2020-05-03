@@ -38,6 +38,7 @@ patchPluginXml {
       <ul>
         <li>Support for Idea build 200 #276 (@fabmars, @tumb1er )</li>                                                          
         <li>Fix Icon cannot be found in 'AllIcons.Vcs.' #286 (@fabmars)</li>                                                          
+        <li>Fix finish release error (Mac OS) #273 (@opherv)</li>                                                          
       </ul>
 
       <H2>Changelog for 0.7.1</H2>
