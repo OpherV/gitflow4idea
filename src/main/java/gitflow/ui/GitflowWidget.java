@@ -31,6 +31,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
+import com.intellij.openapi.vcs.VcsRoot;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
@@ -49,6 +51,7 @@ import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
+import git4idea.GitVcs;
 
 /**
  * Status bar widget which displays actions for git flow
@@ -64,18 +67,6 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     public GitflowWidget(@NotNull Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
-
-        // init the gitflow cli version check in a new thread and not on the EDT
-        final Runnable runnable = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                GitflowVersionTester.forProject(myProject).init();
-            }
-        };
-        new Thread(runnable).start();
-
     }
 
     @Override
@@ -111,6 +102,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
 
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
+        initVersionCheck();
         updateAsync();
     }
 
@@ -278,6 +270,25 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
 
     public boolean getIsSupportedVersion(){
         return GitflowVersionTester.forProject(myProject).isSupportedVersion();
+    }
+
+    private void initVersionCheck(){
+
+        // init the gitflow cli version check in a new thread and not on the EDT
+        String version = GitflowVersionTester.forProject(myProject).getVersion();
+        if (version == null) {
+            final Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    VcsRoot[] vcsRoots = ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots();
+                    if (vcsRoots.length > 0 && vcsRoots[0].getVcs() instanceof GitVcs) {
+                        GitflowVersionTester.forProject(myProject).init();
+                    }
+
+                }
+            };
+            new Thread(runnable).start();
+        }
     }
 
 }

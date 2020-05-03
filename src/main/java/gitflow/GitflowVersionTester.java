@@ -29,7 +29,7 @@ public class GitflowVersionTester {
 	@NotNull private final Gitflow gitflow;
 	@NotNull private final Project project;
 
-	private String version;
+	private String version = null;
 
 	private GitflowVersionTester(@NotNull Gitflow gitflow, @NotNull Project project) {
 		this.gitflow = gitflow;

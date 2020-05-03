@@ -20,7 +20,7 @@ public class ReInitRepoAction extends InitRepoAction {
         gitflow.GitflowBranchUtil branchUtil = gitflow.GitflowBranchUtilManager.getBranchUtil(myRepo);
 
         // Only show when gitflow is setup
-        if (branchUtil.hasGitflow()) {
+        if (branchUtil !=null && branchUtil.hasGitflow()) {
             e.getPresentation().setEnabledAndVisible(true);
         } else {
             e.getPresentation().setEnabledAndVisible(false);
