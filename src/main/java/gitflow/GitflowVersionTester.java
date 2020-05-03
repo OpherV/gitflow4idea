@@ -46,15 +46,6 @@ public class GitflowVersionTester {
 	 */
 	@Nullable
 	public String getVersion() {
-		if (version == null) {
-			try {
-				version = gitflow.version(project).getOutputOrThrow();
-				logger.info("git flow version: " + version);
-			} catch (Exception e) {
-				logger.error("Could not determine git flow version", e);
-			}
-		}
-
 		return version;
 	}
 
@@ -66,7 +57,19 @@ public class GitflowVersionTester {
 	 * @return true if we think the git flow version is an AVH version.
 	 */
 	public boolean isSupportedVersion() {
-		String s = getVersion();
-		return s != null && s.contains("AVH");
+		return version != null && version.contains("AVH");
+	}
+
+	public void init(){
+		String returnedVersion = null;
+		try {
+			returnedVersion = gitflow.version(project).getOutputOrThrow();
+			logger.info("git flow version: " + version);
+		} catch (Exception e) {
+			logger.error("Could not determine git flow version", e);
+		}
+		if (returnedVersion != null){
+			version = returnedVersion;
+		}
 	}
 }

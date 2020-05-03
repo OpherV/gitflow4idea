@@ -58,14 +58,24 @@ import git4idea.ui.branch.GitBranchWidget;
 public class GitflowWidget extends GitBranchWidget implements GitRepositoryChangeListener, StatusBarWidget.TextPresentation {
     private volatile String myText = "";
     private volatile String myTooltip = "";
-    private volatile boolean myGitFlowVersionSupported;
 
     private GitflowPopupGroup popupGroup;
 
     public GitflowWidget(@NotNull Project project) {
         super(project);
         project.getMessageBus().connect().subscribe(GitRepository.GIT_REPO_CHANGE, this);
-        updateAsync();
+
+        // init the gitflow cli version check in a new thread and not on the EDT
+        final Runnable runnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                GitflowVersionTester.forProject(myProject).init();
+            }
+        };
+        new Thread(runnable).start();
+
     }
 
     @Override
@@ -125,7 +135,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     @NotNull
     @Override
     public String getSelectedValue() {
-        if (!myGitFlowVersionSupported) {
+        if (!getIsSupportedVersion()) {
             return "Unsupported Git Flow Version";
         }
         return myText;
@@ -133,7 +143,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
 
     @Override
     public String getTooltipText() {
-        if (!myGitFlowVersionSupported) {
+        if (!getIsSupportedVersion()) {
             return "Click for details";
         }
         return myTooltip;
@@ -143,7 +153,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     @Override
     public Consumer<MouseEvent> getClickConsumer() {
         return mouseEvent -> {
-            if (myGitFlowVersionSupported) {
+            if (getIsSupportedVersion()) {
                 final ListPopup popup = getPopupStep();
                 if (popup == null) return;
                 final Dimension dimension = popup.getContent().getPreferredSize();
@@ -160,19 +170,6 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         };
 
     }
-//
-//    @Override
-//    // Updates branch information on click
-//    public Consumer<MouseEvent> getClickConsumer() {
-////        if (!myGitFlowVersionSupported) {
-////            return getUnsupportedGitFlowVersionClickConsumer();
-////        }
-//        return new Consumer<MouseEvent>() {
-//            public void consume(MouseEvent mouseEvent) {
-//                updateAsync();
-//            }
-//        };
-//    }
 
     public void updateAsync() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -203,7 +200,6 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             emptyTextAndTooltip();
             return;
         }
-        checkSupportedVersion();
 
 
         //No advanced features in the status-bar widget
@@ -269,10 +265,6 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             popupStep.showInCenterOf(frame);
     }
 
-    public void setSupportedVersion(boolean supported) {
-        myGitFlowVersionSupported = supported;
-    }
-
     @NotNull
     @Override
     public String getText() {
@@ -284,7 +276,8 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         return 0;
     }
 
-    public void checkSupportedVersion() {
-        myGitFlowVersionSupported = GitflowVersionTester.forProject(myProject).isSupportedVersion();
+    public boolean getIsSupportedVersion(){
+        return GitflowVersionTester.forProject(myProject).isSupportedVersion();
     }
+
 }
