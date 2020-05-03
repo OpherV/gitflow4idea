@@ -39,7 +39,7 @@
         />
         <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction"
                 text="Track Feature..."
-                icon="AllIcons.Vcs."
+                icon="AllIcons.Vcs.CheckOut"
         />
 
         <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction"
@@ -99,16 +99,11 @@
         </group>
     </actions>
 
-    <project-components>
-        <component>
-            <implementation-class>gitflow.GitflowComponent</implementation-class>
-        </component>
-    </project-components>
-
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="gitflow.Gitflow" serviceImplementation="gitflow.GitflowImpl"/>
         <applicationService serviceInterface="gitflow.GitflowState" serviceImplementation="gitflow.GitflowState"></applicationService>
         <projectConfigurable instance="gitflow.GitflowConfigurable"/>
         <tasks.dialogPanelProvider implementation="gitflow.ui.GitflowTaskDialogPanelProvider"/>
+        <statusBarWidgetFactory id="gitflowWidget" implementation="gitflow.ui.GitflowStatusBarWidgetFactory" order="after inspectionProfileWidget"/>
     </extensions>
 </idea-plugin>

@@ -244,6 +244,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         addOptionsCommand(h, repository.getProject(),"RELEASE_keepBranch");
 //        addOptionsCommand(h, repository.getProject(),"RELEASE_squash");
 
+        h.addParameters(releaseName);
+
         HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("RELEASE_dontTag");
         if (GitflowConfigurable.isOptionActive(repository.getProject(), dontTag.get("id"))){
             h.addParameters(dontTag.get("flag"));
@@ -252,8 +254,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
-
-        h.addParameters(releaseName);
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -339,6 +339,8 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         addOptionsCommand(h, repository.getProject(),"HOTFIX_fetchFromOrigin");
         addOptionsCommand(h, repository.getProject(),"HOTFIX_pushOnFinish");
 
+        h.addParameters(hotfixName);
+
         HashMap<String,String> dontTag = GitflowOptionsFactory.getOptionById("HOTFIX_dontTag");
         if (GitflowConfigurable.isOptionActive(repository.getProject(), dontTag.get("id"))){
             h.addParameters(dontTag.get("flag"));
@@ -347,8 +349,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             h.addParameters("-m");
             h.addParameters(tagMessage);
         }
-
-        h.addParameters(hotfixName);
 
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
@@ -491,4 +491,22 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return runCommand(h);
     }
 
+    @Override
+    public GitCommandResult version(@NotNull Project project, GitLineHandlerListener... listeners) {
+        //getProjectFile is null for default project.
+        if (project.isDefault()) {
+            throw new IllegalArgumentException("Cannot determine git flow version for default project");
+        } else {
+            assert project.getProjectFile() != null : "No project file for " + project;
+        }
+
+        final GitLineHandler h = new GitLineHandler(project, project.getProjectFile().getParent(), GitflowCommand());
+
+        h.addParameters("version");
+
+        for (GitLineHandlerListener listener : listeners) {
+            h.addLineListener(listener);
+        }
+        return runCommand(h);
+    }
 }

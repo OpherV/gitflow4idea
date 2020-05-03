@@ -18,7 +18,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class GitflowAction extends DumbAwareAction {
+public abstract class GitflowAction extends DumbAwareAction {
+
+    private static final long VFM_REFRESH_DELAY = 750L;
+
     Project myProject;
     Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
@@ -55,28 +58,47 @@ public class GitflowAction extends DumbAwareAction {
         branchUtil= GitflowBranchUtilManager.getBranchUtil(myRepo);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
+    public void runAction(final Project project, final String baseBranchName, final String branchName, @Nullable final Runnable callInAwtLater){
         setup(project);
     }
 
     //returns true if merge successful, false otherwise
-    public boolean handleMerge(){
-        //ugly, but required for intellij to catch up with the external changes made by
-        //the CLI before being able to run the merge tool
+    public boolean handleMerge(final Project project) {
+        // FIXME As of 201.0 the async version of this method still doesn't make use of the callback, else we'd
+        //  simply use a FutureTask (which is a Runnable) and its get() method prior to launching the merge tool.
         virtualFileMananger.syncRefresh();
+
         try {
-            Thread.sleep(500);
+            long start, end = System.currentTimeMillis();
+            do {
+                start = end;
+                // Hence this ugly hack, to let the time to intellij to catch up with the external changes made by the
+                // CLI before being able to run the merge tool. Else the tool won't have the right state, won't display,
+                // and the merge success Y/N dialog will appear directly! Anyway, in v193 500ms was sufficient,
+                // but in v201 the right value seems to be in the [700-750]ms range (on the committer's machine).
+                Thread.sleep(VFM_REFRESH_DELAY);
+
+                GitflowActions.runMergeTool(project); // The window is modal, so we can measure how long it's opened.
+                end = System.currentTimeMillis();
+            } while(end - start < 1000L); // Additional hack: a window open <1s obviously didn't open, let's try again.
+
+            myRepo.update();
+
+            // And refreshing again so an onscreen file doesn't show in a conflicted state when the Y/N dialog show up.
+            virtualFileMananger.syncRefresh();
+            Thread.sleep(VFM_REFRESH_DELAY);
+
+            return askUserForMergeSuccess(project);
         }
         catch (InterruptedException ignored) {
+            return false;
         }
+    }
 
-
-        GitflowActions.runMergeTool();
-        myRepo.update();
-
+    private static boolean askUserForMergeSuccess(Project myProject) {
         //if merge was completed successfully, finish the action
         //note that if it wasn't intellij is left in the "merging state", and git4idea provides no UI way to resolve it
-	    //merging can be done via intellij itself or any other util
+        //merging can be done via intellij itself or any other util
         int answer = Messages.showYesNoDialog(myProject, "Was the merge completed succesfully?", "Merge", Messages.getQuestionIcon());
         if (answer==0){
             GitMerger gitMerger=new GitMerger(myProject);

@@ -36,7 +36,7 @@ public class StartFeatureAction extends AbstractStartAction {
         this.runAction(e.getProject(), baseBranchName, featureName, null);
     }
 
-    public void runAction(Project project, final String baseBranchName, final String featureName, @Nullable final Runnable callInAwtLater){
+    public void runAction(final Project project, final String baseBranchName, final String featureName, @Nullable final Runnable callInAwtLater){
         super.runAction(project, baseBranchName, featureName, callInAwtLater);
 
         new Task.Backgroundable(myProject, "Starting feature " + featureName, false) {

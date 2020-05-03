@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.7'
+    id 'org.jetbrains.intellij' version '0.4.18'
 }
 
 compileJava {
@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.1'
+version '0.7.2'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,17 +22,25 @@ dependencies {
 }
 
 intellij {
-    version '2019.3'
+    version '2020.1'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.1'
-    sinceBuild '182.0'
-    untilBuild '193.*'
+    version '0.7.2'
+    sinceBuild '201.0'
+    untilBuild '201.*'
     changeNotes """
+
+      <H2>Changelog for 0.7.2</H2>
+      <ul>
+        <li>Support for Idea build 200 #276 (@fabmars, @tumb1er )</li>                                                          
+        <li>Fix Icon cannot be found in 'AllIcons.Vcs.' #286 (@fabmars)</li>                                                          
+        <li>Fix finish release error (Mac OS) #273 (@opherv)</li>                                                          
+        <li>Breaking 'Search Everywhere' dialog window for projects without git #265 (@opherv)</li>                                                          
+      </ul>
 
       <H2>Changelog for 0.7.1</H2>
       <ul>
