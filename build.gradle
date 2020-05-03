@@ -37,6 +37,7 @@ patchPluginXml {
       <H2>Changelog for 0.7.2</H2>
       <ul>
         <li>Support for Idea build 200 #276 (@fabmars, @tumb1er )</li>                                                          
+        <li>Fix Icon cannot be found in 'AllIcons.Vcs.' #286 (@fabmars)</li>                                                          
       </ul>
 
       <H2>Changelog for 0.7.1</H2>
