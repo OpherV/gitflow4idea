@@ -15,7 +15,7 @@ public class UnsupportedVersionWidgetPresentation implements StatusBarWidget.Tex
 	@NotNull
 	@Override
 	public String getText() {
-		return "Unsupported Git Flow Verison";
+		return "Unsupported Git Flow Version";
 	}
 
 	@Override
