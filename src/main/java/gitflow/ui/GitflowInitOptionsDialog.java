@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,13 +31,14 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
     private JTextField versionPrefixTextField;
     private JTextField bugfixPrefixTextField;
 
-    public GitflowInitOptionsDialog(Project project, List<String> localBranches) {
+    private List<String> localBranches;
+
+    public GitflowInitOptionsDialog(Project project, List<String> _localBranches) {
         super(project);
+        localBranches = _localBranches;
 
         setTitle("Options for gitflow init");
-
-        productionBranchComboBox.setModel(new CollectionComboBoxModel(localBranches));
-        developmentBranchComboBox.setModel(new CollectionComboBoxModel(localBranches));
+        setLocalBranchesComboBox(false);
 
         init();
         useNonDefaultConfigurationCheckBox.addItemListener(new ItemListener() {
@@ -47,7 +49,19 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
         });
     }
 
+    private void setLocalBranchesComboBox(boolean isNonDefault){
+        if (isNonDefault){
+            developmentBranchComboBox.setModel(new CollectionComboBoxModel(localBranches));
+            productionBranchComboBox.setModel(new CollectionComboBoxModel(localBranches));
+        } else {
+            developmentBranchComboBox.setModel(new CollectionComboBoxModel(Arrays.asList("develop")));
+            productionBranchComboBox.setModel(new CollectionComboBoxModel(Arrays.asList("master")));
+        }
+    }
+
     private void enableFields(boolean enable) {
+        setLocalBranchesComboBox(enable);
+
         productionBranchComboBox.setEnabled(enable);
         developmentBranchComboBox.setEnabled(enable);
         featurePrefixTextField.setEnabled(enable);
