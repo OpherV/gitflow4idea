@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.2'
+version '0.7.3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,10 +29,18 @@ intellij {
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.2'
+    version '0.7.3'
     sinceBuild '201.0'
     untilBuild '201.*'
     changeNotes """
+
+      <H2>Changelog for 0.7.3</H2>
+      <ul>
+        <li>Implemented sorting and filtering of track branch dialog #290 (@mmopitz)</li>                                                                                                                   
+        <li>Fix Version 0.7.2 causes that Active Tool Windows only is showed in one project if you have several open #301 (@tumb1er)</li>                                                                                                                   
+        <li>Fix Unsupported Git Flow version Fix #302 (@opherv)</li>                                                                                                                   
+        <li>Fix init settings shown in UI are misleading (do not match default) #283 (@opherv)</li>                                                                                                                   
+      </ul>
 
       <H2>Changelog for 0.7.2</H2>
       <ul>
