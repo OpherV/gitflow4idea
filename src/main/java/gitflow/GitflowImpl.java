@@ -7,6 +7,7 @@ import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -493,14 +494,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     @Override
     public GitCommandResult version(@NotNull Project project, GitLineHandlerListener... listeners) {
-        //getProjectFile is null for default project.
-        if (project.isDefault()) {
-            throw new IllegalArgumentException("Cannot determine git flow version for default project");
-        } else {
-            assert project.getProjectFile() != null : "No project file for " + project;
-        }
-
-        final GitLineHandler h = new GitLineHandler(project, project.getProjectFile().getParent(), GitflowCommand());
+        final GitLineHandler h = new GitLineHandler(project, new File(project.getBasePath()), GitflowCommand());
 
         h.addParameters("version");
 
