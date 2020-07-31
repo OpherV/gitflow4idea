@@ -1,10 +1,10 @@
 package gitflow.ui;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.LocalTask;
-import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
+import com.intellij.tasks.actions.vcs.VcsTaskDialogPanelProvider;
 import com.intellij.tasks.ui.TaskDialogPanel;
-import com.intellij.tasks.ui.TaskDialogPanelProvider;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowBranchUtil;
@@ -13,14 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class GitflowTaskDialogPanelProvider extends TaskDialogPanelProvider {
-
-    @Deprecated
-    @Nullable
-    @Override
-    public TaskDialogPanel getOpenTaskPanel(@NotNull Project project, @NotNull Task task) {
-        return null;
-    }
+public class GitflowTaskDialogPanelProvider extends VcsTaskDialogPanelProvider {
 
     @Nullable
     @Override
