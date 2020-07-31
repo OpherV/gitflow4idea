@@ -34,6 +34,12 @@ patchPluginXml {
     untilBuild '202.*'
     changeNotes """
 
+      <H2>Changelog for 0.7.4</H2>
+      <ul>
+        <li>Fix deprecations #298 (@fabmars)</li>                                                                                                                   
+        <li>Support for 2020.2 build</li>                                                                                                                                                                                                                                             
+      </ul>
+
       <H2>Changelog for 0.7.3</H2>
       <ul>
         <li>Implemented sorting and filtering of track branch dialog #290 (@mmopitz)</li>                                                                                                                   
