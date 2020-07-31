@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.3'
+version '0.7.4'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,16 +22,16 @@ dependencies {
 }
 
 intellij {
-    version '2020.1'
+    version '2020.2'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.3'
+    version '0.7.4'
     sinceBuild '201.0'
-    untilBuild '201.*'
+    untilBuild '202.*'
     changeNotes """
 
       <H2>Changelog for 0.7.3</H2>
