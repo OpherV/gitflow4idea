@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.6.4'
+    id 'org.jetbrains.intellij' version '0.7.2'
 }
 
 compileJava {
@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.5'
+version '0.7.6'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,18 +22,23 @@ dependencies {
 }
 
 intellij {
-    version '2020.3'
+    version '2021.1'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.5'
-    sinceBuild '203.0'
-    untilBuild '203.*'
+    version '0.7.6'
+    sinceBuild '211.1'
+    untilBuild '211.*'
     changeNotes """
 
+      <H2>Changelog for 0.7.6</H2>
+      <ul>
+        <li>Support for 2021.1 build</li>                                                                                                                                                                                                                                             
+      </ul>
+      
       <H2>Changelog for 0.7.5</H2>
       <ul>
         <li>PluginException: Icon cannot be found in 'AllIcons.Vcs.CheckOut' #314 (@tumb1er)</li>                                                                                                                   
