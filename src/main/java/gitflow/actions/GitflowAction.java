@@ -13,6 +13,7 @@ import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
+import gitflow.IDEAUtils;
 import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public abstract class GitflowAction extends DumbAwareAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getProject();
+        Project project = IDEAUtils.getActiveProject();
 
         // if repo isn't set explicitly, such as in the case of starting from keyboard shortcut, infer it
         if (myRepo == null){

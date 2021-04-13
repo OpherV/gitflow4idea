@@ -16,6 +16,8 @@
 package gitflow.ui;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -25,18 +27,19 @@ import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 
-import gitflow.GitflowBranchUtil;
-import gitflow.GitflowBranchUtilManager;
-import gitflow.GitflowVersionTester;
+import git4idea.GitBranch;
+import gitflow.*;
 import gitflow.actions.GitflowPopupGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,9 +110,10 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     }
 
     @Nullable
-    @Override
+    @ Override
     public ListPopup getPopupStep() {
-        Project project = getProject();
+        Project project = IDEAUtils.getActiveProject();
+
         if (project == null) {
             return null;
         }
@@ -118,7 +122,17 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
             return null;
         }
 
-        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup.getActionGroup(), SimpleDataContext.getProjectContext(project), false, false, false, true, null, -1,
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner == null) {
+            IdeFocusManager focusManager = IdeFocusManager.getInstance(project);
+            Window frame = focusManager.getLastFocusedIdeWindow();
+            if (frame != null) {
+                focusOwner = focusManager.getLastFocusedFor(frame);
+            }
+        }
+
+        DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
+        ListPopup listPopup = new PopupFactoryImpl.ActionGroupPopup("Gitflow Actions", popupGroup.getActionGroup(), dataContext, false, false, false, true, null, -1,
                 null, null);
 
         return listPopup;

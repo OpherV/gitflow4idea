@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.5'
+version '0.7.6'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,17 +22,24 @@ dependencies {
 }
 
 intellij {
-    version '2020.3'
+    version '2021.1'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.5'
-    sinceBuild '203.0'
-    untilBuild '203.*'
+    version '0.7.6'
+    sinceBuild '211.0'
+    untilBuild '211.*'
     changeNotes """
+
+      <H2>Changelog for 0.7.6</H2>
+      <ul>
+        <li>Fix "Error using shortcuts" #322</li>
+        <li>fix Finishing BugFix throws stacktrace #320</li>                                                                                                                          
+        <li>Support for 2021.1 build</li>                                                                                                                                                                                                                                             
+      </ul>
 
       <H2>Changelog for 0.7.5</H2>
       <ul>
