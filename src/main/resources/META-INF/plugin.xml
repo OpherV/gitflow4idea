@@ -95,7 +95,7 @@
 
         <group id="Gitflow.Menu" popup="true" text="Gitflow"
                 class="gitflow.GitflowMenu">
-            <add-to-group group-id="Git.Menu" />
+            <add-to-group group-id="Git.MainMenu" />
         </group>
     </actions>
 

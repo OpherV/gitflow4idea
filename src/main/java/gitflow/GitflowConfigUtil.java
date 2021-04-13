@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import git4idea.config.GitConfigUtil;
 import git4idea.repo.GitRepository;
 import gitflow.ui.NotifyUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class GitflowConfigUtil {
     public String supportPrefix;
     public String versiontagPrefix;
 
-    public static GitflowConfigUtil getInstance(Project project_, GitRepository repo_)
+    public static GitflowConfigUtil getInstance(@NotNull Project project_, @NotNull GitRepository repo_)
     {
         GitflowConfigUtil instance;
         if (gitflowConfigUtilMap.containsKey(project_) && gitflowConfigUtilMap.get(project_).containsKey(repo_.getPresentableUrl())) {
