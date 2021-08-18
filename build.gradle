@@ -36,6 +36,7 @@ patchPluginXml {
 
       <H2>Changelog for 0.7.7</H2>
       <ul>                                                                                                                                 
+        <li>Fix issue with "Unsupported gitflow version" message presented at startup #328 #329</li>                                                                                                                                                                                                                                             
         <li>Support for 2021.2 build</li>                                                                                                                                                                                                                                             
       </ul>
 

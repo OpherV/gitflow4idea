@@ -141,7 +141,7 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     @NotNull
     @Override
     public String getSelectedValue() {
-        if (!getIsSupportedVersion()) {
+        if (getHasVersionBeenTested() && !getIsSupportedVersion()) {
             return "Unsupported Git Flow Version";
         }
         return myText;
@@ -283,7 +283,12 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
     }
 
     public boolean getIsSupportedVersion(){
-        return GitflowVersionTester.forProject(myProject).isSupportedVersion();
+        GitflowVersionTester versionTester = GitflowVersionTester.forProject(myProject);
+        return versionTester.hasVersionBeenTested() && versionTester.isSupportedVersion();
+    }
+
+    public boolean getHasVersionBeenTested(){
+        return GitflowVersionTester.forProject(myProject).hasVersionBeenTested();
     }
 
     private void initVersionCheck(){
