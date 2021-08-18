@@ -72,4 +72,8 @@ public class GitflowVersionTester {
 			version = returnedVersion;
 		}
 	}
+	
+	public boolean hasVersionBeenTested(){
+		return version != null;
+	}
 }
