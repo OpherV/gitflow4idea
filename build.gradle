@@ -22,7 +22,7 @@ dependencies {
 }
 
 intellij {
-    version '2021.2'
+    version '2021.3'
     plugins 'git4idea', 'tasks'
 }
 
@@ -31,7 +31,7 @@ patchPluginXml {
     pluginDescription 'Git Flow Integration'
     version '0.7.7'
     sinceBuild '212.0'
-    untilBuild '212.*'
+    untilBuild '213.*'
     changeNotes """
 
       <H2>Changelog for 0.7.7</H2>
