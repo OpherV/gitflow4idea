@@ -15,10 +15,18 @@
  */
 package gitflow.ui;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -26,35 +34,27 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
-import com.intellij.openapi.vcs.VcsRoot;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-
-import git4idea.GitBranch;
-import gitflow.*;
-import gitflow.actions.GitflowPopupGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JFrame;
-
 import git4idea.GitUtil;
+import git4idea.GitVcs;
 import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryChangeListener;
 import git4idea.ui.branch.GitBranchWidget;
-import git4idea.GitVcs;
+import gitflow.GitflowBranchUtil;
+import gitflow.GitflowBranchUtilManager;
+import gitflow.GitflowVersionTester;
+import gitflow.IDEAUtils;
+import gitflow.actions.GitflowPopupGroup;
 
 /**
  * Status bar widget which displays actions for git flow
@@ -211,8 +211,8 @@ public class GitflowWidget extends GitBranchWidget implements GitRepositoryChang
         //No advanced features in the status-bar widget
         popupGroup = new GitflowPopupGroup(project, false);
 
-        GitflowBranchUtil gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(repo);
-        boolean hasGitflow = gitflowBranchUtil.hasGitflow();
+		GitflowBranchUtil gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil( repo );
+		boolean hasGitflow = gitflowBranchUtil != null && gitflowBranchUtil.hasGitflow();
 
         myText = hasGitflow ? "Gitflow" : "No Gitflow";
         myTooltip = getDisplayableBranchTooltip(repo);
