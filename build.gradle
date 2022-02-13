@@ -8,7 +8,7 @@ compileJava {
 }
 
 group 'gitflow4idea'
-version '0.7.7'
+version '0.7.8'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,17 +22,23 @@ dependencies {
 }
 
 intellij {
-    version '2021.2'
+    version '2021.3.2'
     plugins 'git4idea', 'tasks'
 }
 
 patchPluginXml {
     pluginId "Gitflow"
     pluginDescription 'Git Flow Integration'
-    version '0.7.7'
+    version '0.7.8'
     sinceBuild '212.0'
-    untilBuild '212.*'
+    untilBuild '213.*'
     changeNotes """
+
+      <H2>Changelog for 0.7.8</H2>
+      <ul>
+        <li>Fix null pointer when finishing branch</li>
+        <li>Support for 2021.3 build</li>
+      </ul>
 
       <H2>Changelog for 0.7.7</H2>
       <ul>                                                                                                                                 
