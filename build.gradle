@@ -22,7 +22,7 @@ dependencies {
 }
 
 intellij {
-    version '2021.3'
+    version '2021.3.1'
     plugins 'git4idea', 'tasks'
 }
 
