@@ -35,7 +35,7 @@ Huge shoutout [to Kirill Likhodedov](https://github.com/klikh), who wrote much o
 
 The plugin is available via the IntelliJ plugin manager. Just search for "Git Flow Integration" to get the latest version!
 
-**The plugin requires that you have gitflow installed, specifically the [AVH edition](https://github.com/petervanderdoes/gitflow). This is because the [Vanilla Git Flow](https://github.com/nvie/gitflow) hasn't been maintained in years.** See this page [for details](https://github.com/OpherV/gitflow4idea/blob/develop/GITFLOW_VERSION.md)
+**The plugin requires that you have gitflow installed, specifically the [AVH edition](https://github.com/petervanderdoes/gitflow) or [CJS edition](https://github.com/CJ-Systems/gitflow-cjs). This is because the [Vanilla Git Flow](https://github.com/nvie/gitflow) hasn't been maintained in years.** See this page [for details](https://github.com/OpherV/gitflow4idea/blob/develop/GITFLOW_VERSION.md)
 
 ## Caveats
 

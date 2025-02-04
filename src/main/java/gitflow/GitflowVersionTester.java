@@ -51,13 +51,13 @@ public class GitflowVersionTester {
 
 	/**
 	 * Returns true if the {@code git flow} version can be determined
-	 * and is any AVH version ({@code #contains("AVH")}) and
+	 * and is any AVH version ({@code #contains("AVH")}) or CJS version ({@code #contains("CJS")}) and
 	 * not the unmaintained NVIE version.
 	 *
-	 * @return true if we think the git flow version is an AVH version.
+	 * @return true if we think the git flow version is an AVH or CJS version.
 	 */
 	public boolean isSupportedVersion() {
-		return version != null && version.contains("AVH");
+		return version != null && (version.contains("AVH") || version.contains("CJS"));
 	}
 
 	public void init(){
