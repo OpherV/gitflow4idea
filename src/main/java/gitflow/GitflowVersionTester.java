@@ -51,13 +51,21 @@ public class GitflowVersionTester {
 
 	/**
 	 * Returns true if the {@code git flow} version can be determined
-	 * and is any AVH version ({@code #contains("AVH")}) and
+	 * and is any AVH version ({@code #contains("AVH")}), any Tower version ({@code #contains("Tower")}) ,
+	 * any Next version ({@code #contains("Next")}) and
 	 * not the unmaintained NVIE version.
 	 *
 	 * @return true if we think the git flow version is an AVH version.
 	 */
 	public boolean isSupportedVersion() {
-		return version != null && version.contains("AVH");
+		if (version == null) {
+            return false;
+        }
+        
+        String versionLower = version.toLowerCase();
+        return versionLower.contains("avh") || 
+               versionLower.contains("tower") || 
+               versionLower.contains("next");
 	}
 
 	public void init(){
