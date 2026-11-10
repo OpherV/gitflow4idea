@@ -57,8 +57,22 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
-          name: "${{ steps.meta.outputs.version }} — WebStorm / PyCharm 2026.2 support"
+          name: "${{ steps.meta.outputs.version }} — WebStorm / PyCharm 2026.2–2026.3 support"
           fail_on_unmatched_files: true
+          body: |
+            IntelliJ Platform **2026.2 / 2026.3** support — verified with WebStorm 2026.2.3 and 2026.3
+            as well as PyCharm 2026.2.3 and 2026.3.
+
+            **Install from disk**
+            1. Download `gitflow4idea-${{ steps.meta.outputs.version }}.zip` from the Assets section below.
+            2. In WebStorm / PyCharm: **Settings → Plugins → ⚙ → Install Plugin from Disk…** → select the ZIP.
+            3. Restart the IDE.
+
+            **Install or update from the IDE**
+            Add a custom plugin repository in *Settings → Plugins → ⚙ → Manage Plugin Repositories…*:
+            `https://github.com/${{ github.repository }}/releases/latest/download/updatePlugins.xml`
+
+            Requires the [git-flow (AVH edition)](https://github.com/petervanderdoes/gitflow) CLI.
           files: |
             build/distributions/gitflow4idea-*.zip
             build/distributions/updatePlugins.xml

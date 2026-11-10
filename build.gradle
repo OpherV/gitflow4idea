@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'gitflow4idea'
-version = '0.7.8'
+version = '0.7.9'
 
 repositories {
     mavenCentral()
@@ -77,7 +77,7 @@ intellijPlatform {
     pluginConfiguration {
         id = 'Gitflow'
         name = 'Git Flow Integration'
-        version = '0.7.8'
+        version = '0.7.9'
         description = "Git Flow Integration - a UI layer for Vincent Driessen's git-flow branching model (feature, release, hotfix and bugfix branches) right inside the IDE."
 
         ideaVersion {
@@ -87,6 +87,12 @@ intellijPlatform {
         }
 
         changeNotes = """
+
+      <H2>Changelog for 0.7.9</H2>
+      <ul>
+        <li>Verified compatibility with WebStorm 2026.3 and PyCharm 2026.3</li>
+        <li>Plugin verification can now check locally installed JetBrains IDEs</li>
+      </ul>
 
       <H2>Changelog for 0.7.8</H2>
       <ul>
