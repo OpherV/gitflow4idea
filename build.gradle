@@ -1,112 +1,122 @@
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.6.4'
+    id 'org.jetbrains.intellij.platform' version '2.19.0'
 }
 
-compileJava {
-    options.compilerArgs += ["-Xlint"]
-}
-
-group 'gitflow4idea'
-version '0.7.7'
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+group = 'gitflow4idea'
+version = '0.7.8'
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    intellijPlatform {
+        // Target WebStorm 2026.2.3 (build 262.*).
+        // Git4Idea and the Tasks plugin are bundled with WebStorm and PyCharm,
+        // which makes WebStorm the smallest common denominator for both IDEs.
+        webstorm('2026.2.3')
+
+        bundledPlugin('Git4Idea')
+        bundledPlugin('com.intellij.tasks')
+
+        // Git4Idea's bundled-plugin descriptor does not declare its platform
+        // module dependencies, so the shared DVCS modules have to be added
+        // explicitly. Without them com.intellij.dvcs.* is not on the classpath.
+        bundledModule('intellij.platform.vcs.dvcs')
+        bundledModule('intellij.platform.vcs.dvcs.impl')
+        bundledModule('intellij.platform.vcs.dvcs.impl.shared')
+
+        pluginVerifier()
+        zipSigner()
+    }
 }
 
-intellij {
-    version '2021.2'
-    plugins 'git4idea', 'tasks'
+// The IntelliJ Platform 2026.x is built with Java 25.
+// A JDK 25 toolchain is required; Gradle auto-detects it from /usr/lib/jvm.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
-patchPluginXml {
-    pluginId "Gitflow"
-    pluginDescription 'Git Flow Integration'
-    version '0.7.7'
-    sinceBuild '212.0'
-    untilBuild '212.*'
-    changeNotes """
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+}
+
+intellijPlatform {
+    // Skipping the searchable options index keeps the build fast and does not
+    // require launching a full IDE instance.
+    buildSearchableOptions = false
+    instrumentCode = true
+
+    pluginVerification {
+        // Verify against the platforms this plugin targets: the IntelliJ Platform
+        // it is built against (WebStorm 2026.2.3) and PyCharm 2026.2.3.
+        ides {
+            current()
+            create(IntelliJPlatformType.PyCharm, '2026.2.3')
+
+            // Locally installed Toolbox IDEs (if present) are verified without
+            // downloading anything - handy for checking a new IDE release.
+            def toolboxApps = file("${System.getProperty('user.home')}/.local/share/JetBrains/Toolbox/apps")
+            ['webstorm', 'pycharm'].each { name ->
+                def ideDir = new File(toolboxApps, name)
+                if (ideDir.isDirectory()) {
+                    local(ideDir.absolutePath)
+                }
+            }
+        }
+    }
+    pluginConfiguration {
+        id = 'Gitflow'
+        name = 'Git Flow Integration'
+        version = '0.7.8'
+        description = "Git Flow Integration - a UI layer for Vincent Driessen's git-flow branching model (feature, release, hotfix and bugfix branches) right inside the IDE."
+
+        ideaVersion {
+            sinceBuild = '262'
+            // No upper bound: stay compatible with all future IDE builds.
+            untilBuild = provider { null }
+        }
+
+        changeNotes = """
+
+      <H2>Changelog for 0.7.8</H2>
+      <ul>
+        <li>Support for IntelliJ Platform 2026.2 (WebStorm / PyCharm 2026.2)</li>
+        <li>Migrated to the IntelliJ Platform Gradle Plugin 2.x</li>
+        <li>Target the Java 25 runtime required by the 2026.x platform</li>
+      </ul>
 
       <H2>Changelog for 0.7.7</H2>
-      <ul>                                                                                                                                 
-        <li>Fix issue with "Unsupported gitflow version" message presented at startup #328 #329</li>                                                                                                                                                                                                                                             
-        <li>Support for 2021.2 build</li>                                                                                                                                                                                                                                             
+      <ul>
+        <li>Fix issue with "Unsupported gitflow version" message presented at startup #328 #329</li>
+        <li>Support for 2021.2 build</li>
       </ul>
 
       <H2>Changelog for 0.7.6</H2>
       <ul>
         <li>Fix "Error using shortcuts" #322</li>
-        <li>fix Finishing BugFix throws stacktrace #320</li>                                                                                                                          
-        <li>Support for 2021.1 build</li>                                                                                                                                                                                                                                             
+        <li>fix Finishing BugFix throws stacktrace #320</li>
+        <li>Support for 2021.1 build</li>
       </ul>
 
       <H2>Changelog for 0.7.5</H2>
       <ul>
-        <li>PluginException: Icon cannot be found in 'AllIcons.Vcs.CheckOut' #314 (@tumb1er)</li>                                                                                                                   
-        <li>Support for 2020.3 build</li>                                                                                                                                                                                                                                             
+        <li>PluginException: Icon cannot be found in 'AllIcons.Vcs.CheckOut' #314 (@tumb1er)</li>
+        <li>Support for 2020.3 build</li>
       </ul>
 
-      <H2>Changelog for 0.7.4</H2>
-      <ul>
-        <li>Fix deprecations #298 (@fabmars)</li>                                                                                                                   
-        <li>Support for 2020.2 build</li>                                                                                                                                                                                                                                             
-      </ul>
-
-      <H2>Changelog for 0.7.3</H2>
-      <ul>
-        <li>Implemented sorting and filtering of track branch dialog #290 (@mmopitz)</li>                                                                                                                   
-        <li>Fix Version 0.7.2 causes that Active Tool Windows only is showed in one project if you have several open #301 (@tumb1er)</li>                                                                                                                   
-        <li>Fix Unsupported Git Flow version Fix #302 (@opherv)</li>                                                                                                                   
-        <li>Fix init settings shown in UI are misleading (do not match default) #283 (@opherv)</li>                                                                                                                   
-      </ul>
-
-      <H2>Changelog for 0.7.2</H2>
-      <ul>
-        <li>Support for Idea build 200 #276 (@fabmars, @tumb1er )</li>                                                          
-        <li>Fix Icon cannot be found in 'AllIcons.Vcs.' #286 (@fabmars)</li>                                                          
-        <li>Fix finish release error (Mac OS) #273 (@opherv)</li>                                                          
-        <li>Breaking 'Search Everywhere' dialog window for projects without git #265 (@opherv)</li>                                                          
-      </ul>
-
-      <H2>Changelog for 0.7.1</H2>
-      <ul>
-        <li>Support for Idea build 193 #259 (@opherv)</li>                     
-        <li>Check that the user has AVH version of git flow installed, show dialog otherwise #253 (@opherv)</li>
-        <li>Add safety which should help fix #249 - Init repo failed #259 (@opherv)</li>                     
-        <li>Fix Memory leak of ProjectImpl and GitRepositoryImpl after projet is closed #255 (@opherv)</li>                             
-        <li>Add icons to actions #232 (@opherv)</li>                             
-      </ul>
-
-      <H2>Changelog for 0.7.0</H2>
-      <ul>
-        <li>Fix NPE when clicking Gitflow menu #245 (@opherv)</li>
-        <li>Fix "Init gitflow" doesn't update widget #247 (@opherv)</li>
-        <li>Fix Wrong message when finishing a feature #144 (@opherv)</li>
-        <li>Feature: Re-init gitflow (access from VCS>Git>Gitflow>Advanced menu) #50 (@bmwsedee/@opherv)</li>                     
-        <li>"Feature": Don't show branch select combo on new Hotfix (@opherv)</li>                     
-      </ul>
-
-      <H2>Changelog for 0.6.9</H2>
-      <ul>
-        <li>Support for Idea build 192 #241 (@opherv)</li>
-        <li>Feature: No Fast-forward option is not working #225 (@opherv)</li>
-        <li>Hotfix: option -k to keep branch after performing finish #199 (@opherv)</li>
-        <li>Exceptions #243 #235 #323 #223 (@bmwsedee)</li>                             
-      </ul>
-      
-      <H2>Changelog for 0.6.8</H2>         
-      <ul>
-        <li>Support for Idea build 191 #221 (@ottnorml)</li>
-        <li>Fix performance issues in plugin #195 (@bmwsedee)</li>            
-      </ul>
-    
     <p>Note - if you see 'no gitflow' in the status bar you will need to re-init using <code>git flow init -f</code></p>
       """
+    }
 }
+
+

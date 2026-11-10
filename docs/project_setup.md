@@ -6,8 +6,12 @@ This document shall assist you in setting up the development project in IntelliJ
 ## Gradle Setup
 
 ### Prerequisites
-- The environment variable `JAVA_HOME` is set to a valid Java environment.
-- The *Gradle* plugin is enable in IntelliJ IDEA.
+- JDK 25. The IntelliJ Platform 2026.x is built with Java 25, so a matching toolchain is required.
+  Make sure `JAVA_HOME` points to a JDK 25 installation (the toolchain is auto-detected from `/usr/lib/jvm`).
+- The *Gradle* plugin is enabled in IntelliJ IDEA.
+- The build uses the bundled Gradle wrapper (Gradle 9.8.1) and the IntelliJ Platform Gradle Plugin 2.x.
+- The plugin is compiled against the IntelliJ Platform of WebStorm 2026.2.3. Use `./gradlew buildPlugin`
+  to produce the installable ZIP and `./gradlew runIde` to launch a sandbox IDE with the plugin loaded.
 
 ### Setup Steps
 1. Fork the original repository and checkout the fork.
@@ -101,5 +105,6 @@ And that's it. You can now make changes to the source and run them.
 
 #### Language level
 
-This project is written to target Java 8, so make sure to set the project language level appropriately
- to avoid accidentally using newer features. You can do so in the module settings under "modules -> gitflow4idea -> sources -> Language level".
+This project targets Java 25 to match the IntelliJ Platform 2026.x. The Gradle build declares
+the toolchain explicitly in `build.gradle`, so the project language level in the IDE does not
+need manual adjustment.

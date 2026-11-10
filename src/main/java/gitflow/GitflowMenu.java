@@ -27,6 +27,6 @@ public class GitflowMenu extends ActionGroup {
 
         GitflowPopupGroup popupGroup = new GitflowPopupGroup(project, true);
 
-        return popupGroup.getActionGroup().getChildren(anActionEvent);
+        return popupGroup.getChildren();
     }
 }

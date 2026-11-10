@@ -1,6 +1,6 @@
 package gitflow.ui;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.tasks.LocalTask;
@@ -8,12 +8,12 @@ import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.tasks.ui.TaskDialogPanel;
-import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
 import gitflow.GitflowBranchUtil;
 import gitflow.GitflowBranchUtilManager;
 import gitflow.GitflowConfigUtil;
 import gitflow.GitflowState;
+import gitflow.IDEAUtils;
 import gitflow.actions.GitflowAction;
 import gitflow.actions.StartBugfixAction;
 import gitflow.actions.StartFeatureAction;
@@ -64,7 +64,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
             myVcsTaskHandler = vcsTaskHAndlers[0];
         }
 
-        gitflowState = ServiceManager.getService(GitflowState.class);
+        gitflowState = ApplicationManager.getApplication().getService(GitflowState.class);
         gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
 
         GitflowConfigUtil gitflowConfigUtil = GitflowConfigUtil.getInstance(project, myRepo);
@@ -79,7 +79,7 @@ public class GitflowOpenTaskPanel extends TaskDialogPanel implements ItemListene
         String defaultBugfixBranch = gitflowConfigUtil.developBranch;
         bugfixBaseBranch.setModel(gitflowBranchUtil.createBranchComboModel(defaultBugfixBranch));
 
-        myRepo = GitBranchUtil.getCurrentRepository(project);
+        myRepo = IDEAUtils.getCurrentRepository(project);
 
         String branchName = myVcsTaskHandler != null
                                             ? myVcsTaskHandler.cleanUpBranchName(myTaskManager.constructDefaultBranchName(task))

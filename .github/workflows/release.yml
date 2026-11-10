@@ -1,0 +1,64 @@
+name: Release plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Build plugin
+        run: ./gradlew --no-daemon buildPlugin
+
+      - name: Resolve version and tag
+        id: meta
+        run: |
+          VERSION=$(sed -n "s/^version = '\([^']*\)'/\1/p" build.gradle | head -1)
+          TAG="${GITHUB_REF_NAME}"
+          if [ -z "$TAG" ] || [[ "$TAG" != v* ]]; then TAG="v${VERSION}"; fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Resolved version=$VERSION tag=$TAG"
+
+      - name: Generate updatePlugins.xml
+        run: |
+          mkdir -p build/distributions
+          cat > build/distributions/updatePlugins.xml <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <plugins>
+            <plugin id="Gitflow"
+                    url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.meta.outputs.tag }}/gitflow4idea-${{ steps.meta.outputs.version }}.zip"
+                    version="${{ steps.meta.outputs.version }}">
+              <idea-version since-build="262" />
+              <name>Git Flow Integration</name>
+              <description>Git Flow Integration - a UI layer for Vincent Driessen's git-flow branching model (feature, release, hotfix and bugfix branches) right inside the IDE.</description>
+              <vendor>Opher Vishnia</vendor>
+            </plugin>
+          </plugins>
+          EOF
+          cat build/distributions/updatePlugins.xml
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: "${{ steps.meta.outputs.version }} — WebStorm / PyCharm 2026.2 support"
+          fail_on_unmatched_files: true
+          files: |
+            build/distributions/gitflow4idea-*.zip
+            build/distributions/updatePlugins.xml
