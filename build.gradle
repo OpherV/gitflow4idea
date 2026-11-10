@@ -62,6 +62,16 @@ intellijPlatform {
         ides {
             current()
             create(IntelliJPlatformType.PyCharm, '2026.2.3')
+
+            // Locally installed Toolbox IDEs (if present) are verified without
+            // downloading anything - handy for checking a new IDE release.
+            def toolboxApps = file("${System.getProperty('user.home')}/.local/share/JetBrains/Toolbox/apps")
+            ['webstorm', 'pycharm'].each { name ->
+                def ideDir = new File(toolboxApps, name)
+                if (ideDir.isDirectory()) {
+                    local(ideDir.absolutePath)
+                }
+            }
         }
     }
     pluginConfiguration {
