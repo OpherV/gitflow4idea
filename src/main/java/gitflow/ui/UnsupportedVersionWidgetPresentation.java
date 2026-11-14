@@ -2,7 +2,6 @@ package gitflow.ui;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +35,7 @@ public class UnsupportedVersionWidgetPresentation implements StatusBarWidget.Tex
 			MessageDialogBuilder.YesNo builder = MessageDialogBuilder.yesNo("Unsupported Git Flow version", "The Git Flow CLI version installed isn't supported by the Git Flow Integration plugin")
 					.yesText("More information (open browser)")
 					.noText("no");
-			if (builder.show() == Messages.OK) {
+			if (builder.guessWindowAndAsk()) {
 				BrowserUtil.browse("https://github.com/OpherV/gitflow4idea/blob/develop/GITFLOW_VERSION.md");
 			}
 		};

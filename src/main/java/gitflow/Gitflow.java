@@ -1,7 +1,6 @@
 package gitflow;
 
 import com.intellij.openapi.project.Project;
-import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandlerListener;
 import git4idea.repo.GitRemote;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
  */
-public interface Gitflow extends Git {
+public interface Gitflow {
 
     GitCommandResult initRepo(@NotNull GitRepository repository,
                               GitflowInitOptions initOptions,

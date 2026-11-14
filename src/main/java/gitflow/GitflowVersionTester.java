@@ -1,12 +1,12 @@
 package gitflow;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,7 +21,7 @@ public class GitflowVersionTester {
 			project,
 			p -> {
 				Disposer.register(p, () -> testers.remove(p));
-				return new GitflowVersionTester(ServiceManager.getService(Gitflow.class), p);
+				return new GitflowVersionTester(ApplicationManager.getApplication().getService(Gitflow.class), p);
 			}
 		);
 	}

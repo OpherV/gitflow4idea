@@ -3,11 +3,12 @@ package gitflow.actions;
 import com.intellij.dvcs.ui.BranchActionGroup;
 import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
-import git4idea.branch.GitBranchUtil;
 import git4idea.repo.GitRepository;
+import gitflow.IDEAUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,7 +103,16 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
     }
 
     public void updateFavoriteIcon(){
-        boolean isFavorite = GitBranchUtil.getCurrentRepository(myProject) == myRepo;
+        // Resolving the "current" repository relies on the selected file and is
+        // therefore EDT-only. If we are called from a background thread (the
+        // platform may do so when updating menu actions), re-dispatch to the EDT.
+        if (!ApplicationManager.getApplication().isDispatchThread()) {
+            if (!myProject.isDisposed()) {
+                ApplicationManager.getApplication().invokeLater(this::updateFavoriteIcon);
+            }
+            return;
+        }
+        boolean isFavorite = IDEAUtils.getCurrentRepository(myProject) == myRepo;
         setFavorite(isFavorite);
     }
 

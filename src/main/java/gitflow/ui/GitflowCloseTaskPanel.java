@@ -1,6 +1,6 @@
 package gitflow.ui;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.tasks.Task;
@@ -43,7 +43,7 @@ public class GitflowCloseTaskPanel extends TaskDialogPanel {
         myProject = project;
         myTask = task;
         myRepo = repo;
-        gitflowState = ServiceManager.getService(GitflowState.class);
+        gitflowState = ApplicationManager.getApplication().getService(GitflowState.class);
 
         gitflowBranchUtil = GitflowBranchUtilManager.getBranchUtil(myRepo);
         myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);

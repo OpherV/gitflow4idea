@@ -1,18 +1,14 @@
 package gitflow;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitLineHandler;
-import git4idea.commands.GitTextHandler;
+import git4idea.commands.GitLineHandlerListener;
 import git4idea.util.GitVcsConsoleWriter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -31,16 +27,17 @@ public class GitInitLineHandler extends GitLineHandler {
         super(project, vcsRoot, command);
         consoleWriter = GitVcsConsoleWriter.getInstance(project);
         _initOptions = initOptions;
+
+        // `GitHandler.onTextAvailable` was removed from the platform, so the
+        // interactive answers are provided through a line listener instead.
+        addLineListener(new GitLineHandlerListener() {
+            @Override
+            public void onLineAvailable(@NotNull String line, @NotNull Key outputType) {
+                answerPrompt(line);
+            }
+        });
     }
 
-    @Override
-    protected OSProcessHandler createProcess(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
-        return new MyOSProcessHandler(commandLine,
-                this.myWithMediator && Registry
-                        .is("git.execute.with.mediator"));
-    }
-
-    @Nullable
     @Override
     protected Process startProcess() throws ExecutionException {
         Process p = super.startProcess();
@@ -48,9 +45,7 @@ public class GitInitLineHandler extends GitLineHandler {
         return p;
     }
 
-    @Override
-    protected void onTextAvailable(String s, Key key) {
-        super.onTextAvailable(s, key);
+    private void answerPrompt(@NotNull String s) {
         try {
             if (s.contains("name for production releases")) {
                 consoleWriter.showCommandLine(_initOptions.getProductionBranch());
@@ -118,13 +113,6 @@ public class GitInitLineHandler extends GitLineHandler {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    class MyOSProcessHandler extends GitTextHandler.MyOSProcessHandler {
-        MyOSProcessHandler(@NotNull GeneralCommandLine commandLine,
-                boolean withMediator) throws ExecutionException {
-            super(commandLine, withMediator);
         }
     }
 }

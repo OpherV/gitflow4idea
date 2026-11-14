@@ -1,13 +1,12 @@
 package gitflow.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import git4idea.branch.GitBranchUtil;
 import git4idea.merge.GitMerger;
 import git4idea.repo.GitRepository;
 import gitflow.Gitflow;
@@ -24,7 +23,7 @@ public abstract class GitflowAction extends DumbAwareAction {
     private static final long VFM_REFRESH_DELAY = 750L;
 
     Project myProject;
-    Gitflow myGitflow = ServiceManager.getService(Gitflow.class);
+    Gitflow myGitflow = ApplicationManager.getApplication().getService(Gitflow.class);
     ArrayList<GitRepository> repos = new ArrayList<GitRepository>();
     GitRepository myRepo;
     GitflowBranchUtil branchUtil;
@@ -46,7 +45,7 @@ public abstract class GitflowAction extends DumbAwareAction {
 
         // if repo isn't set explicitly, such as in the case of starting from keyboard shortcut, infer it
         if (myRepo == null){
-            myRepo = GitBranchUtil.getCurrentRepository(project);
+            myRepo = IDEAUtils.getCurrentRepository(project);
         }
         setup(project);
     }
