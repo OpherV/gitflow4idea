@@ -1,6 +1,7 @@
 package gitflow;
 
 import com.intellij.dvcs.DvcsUtil;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,7 +31,10 @@ public class IDEAUtils {
     public static GitRepository getCurrentRepository(@NotNull Project project) {
         GitRepositoryManager manager = GitUtil.getRepositoryManager(project);
 
-        VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
+        // DvcsUtil.getSelectedFile() may only be called on the EDT.
+        VirtualFile selectedFile = ApplicationManager.getApplication().isDispatchThread()
+                ? DvcsUtil.getSelectedFile(project)
+                : null;
         if (selectedFile != null) {
             GitRepository repository = manager.getRepositoryForFileQuick(selectedFile);
             if (repository != null) {
